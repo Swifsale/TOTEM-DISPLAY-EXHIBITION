@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { CATEGORIES, PRODUCTS } from './data.js';
+import { CATEGORIES, PRODUCTS, TRUSTED_BY, FIELDS_OF_BUSINESS } from './data.js';
 
 /* ------------------------------------------------------------
    1. Kiosk viewport fix (locks height even if the browser
@@ -47,6 +47,7 @@ function renderCards(){
     <article class="product-card" data-id="${p.id}">
       <div class="pc-top">
         <span class="pc-code">${p.code}</span>
+        ${p.isNew ? '<span class="pc-new">New</span>' : ''}
       </div>
       <h3 class="pc-title">${p.name}</h3>
       <p class="pc-desc">${p.desc}</p>
@@ -64,6 +65,19 @@ function renderCards(){
 
 renderTabs();
 renderCards();
+
+/* ------------------------------------------------------------
+   2b. "Trusted by" & "Field of Business" badges (stats screen)
+------------------------------------------------------------ */
+const trustedByEl = document.getElementById('trusted-by-list');
+const fieldOfBusinessEl = document.getElementById('field-of-business-list');
+
+if (trustedByEl){
+  trustedByEl.innerHTML = TRUSTED_BY.map(name => `<span class="badge">${name}</span>`).join('');
+}
+if (fieldOfBusinessEl){
+  fieldOfBusinessEl.innerHTML = FIELDS_OF_BUSINESS.map(name => `<span class="badge">${name}</span>`).join('');
+}
 
 /* ------------------------------------------------------------
    3. Section dots — highlight active screen while scrolling
