@@ -1,21 +1,65 @@
 /* ==========================================================
    SWIF ASIA — Product & case-study data
-   Sumber: brosur produk (swifasia.com), SWIFA_Al_Holding_Furnace
-   Rev1.pdf, dan Technical_data_sheet_SWIF_Asia_product.doc.
-   Harga sengaja tidak ditampilkan di totem publik — lihat
-   catatan di README.
+   Struktur kategori & katalog produk disamakan dengan
+   www.swifasia.com (menu "Product & Services"): Melting
+   Furnace, Heat Treatment, Holding Furnace, Other Equipment,
+   Spare Parts, Service.
+   Spesifikasi teknis detail (kapasitas, suhu, standar
+   combustion) tetap mengacu ke brosur/technical data sheet
+   internal SWIF Asia untuk unit yang datanya tersedia.
+   Harga sengaja tidak ditampilkan di totem publik.
    Tambah/ubah produk cukup di sini, index.html & script.js
    tidak perlu disentuh.
    ========================================================== */
 
 export const CATEGORIES = [
-  { id: 'melting',   label: 'Melting & Holding' },
-  { id: 'heat',      label: 'Heat Treatment' },
-  { id: 'drying',    label: 'Drying & Curing' },
-  { id: 'handling',  label: 'Material Handling' },
+  { id: 'melting',     label: 'Melting Furnace' },
+  { id: 'heat',        label: 'Heat Treatment' },
+  { id: 'holding',     label: 'Holding Furnace' },
+  { id: 'other',       label: 'Other Equipment' },
+  { id: 'spareparts',  label: 'Spare Parts' },
+  { id: 'service',     label: 'Service' },
 ];
 
+/* Perusahaan yang sudah menggunakan produk SWIF Asia — ditampilkan
+   sebagai strip "Trusted by" di section statistik. */
+export const TRUSTED_BY = ['TOYOTA', 'DAIHATSU', 'YAMAHA', 'SUZUKI', 'ASTRA'];
+
+/* Industri yang dilayani — ditampilkan sebagai tag "Field of Business". */
+export const FIELDS_OF_BUSINESS = ['ALUMINIUM', 'GOLD', 'GLASS', 'DUST COLLECTOR', 'STEEL', 'GALVANIZE'];
+
 export const PRODUCTS = [
+
+  /* ---------------- MELTING FURNACE ---------------- */
+
+  {
+    id: 'tower-melting-furnace',
+    category: 'melting',
+    code: 'TWM',
+    name: 'Tower Melting Furnace',
+    model: 'models/tower-melting-furnace.glb',
+    desc: 'Furnace peleburan tipe tower untuk lini produksi aluminium dengan kebutuhan throughput tinggi dan efisiensi ruang lantai produksi.',
+    specs: [
+      { label: 'Tipe', value: 'Tower melting' },
+      { label: 'Material', value: 'Ingot & scrap aluminium' },
+    ],
+    cases: [],
+  },
+
+  {
+    id: 'crucible-melting-furnace',
+    category: 'melting',
+    code: 'CMF',
+    name: 'Crucible Melting Furnace',
+    model: 'models/crucible-melting-furnace.glb',
+    desc: 'Furnace untuk melebur sekaligus menahan (holding) logam cair di sisi sel casting. Kapasitas dapat disesuaikan permintaan pelanggan, dengan standar keamanan combustion sesuai JIS B8415:2008 untuk opsi teknologi combustion terbaru dengan tingkat keselamatan tertinggi.',
+    specs: [
+      { label: 'Fungsi', value: 'Melting + holding di sisi casting cell' },
+      { label: 'Standar combustion', value: 'JIS B8415:2008' },
+      { label: 'Kapasitas', value: 'Disesuaikan permintaan pelanggan' },
+    ],
+    cases: [],
+  },
 
   {
     id: 'csmf',
@@ -34,20 +78,23 @@ export const PRODUCTS = [
   {
     id: 'hybrid-melter',
     category: 'melting',
-    code: 'HYBRID',
-    name: 'Hybrid Melting Furnace',
+    code: 'HybM',
+    name: 'Hybrid Melter',
     model: 'models/hybrid-melter.glb',
-    desc: 'Pilihan hybrid hari ini — memadukan combustion burner dan pemanas listrik untuk emisi karbon lebih rendah dan kualitas molten lebih tinggi.',
+    isNew: true,
+    desc: 'Pilihan hybrid hari ini — melting furnace yang memadukan gas burner dan electric heater sebagai sumber panas, untuk emisi karbon lebih rendah dan kualitas molten lebih tinggi.',
     specs: [
-      { label: 'Sumber panas', value: 'Combustion burner + electric heater' },
+      { label: 'Sumber panas', value: 'Gas burner + electric heater' },
       { label: 'Keunggulan', value: 'Emisi karbon lebih rendah' },
     ],
     cases: [],
   },
 
+  /* ---------------- HOLDING FURNACE ---------------- */
+
   {
     id: 'al-holding-furnace',
-    category: 'melting',
+    category: 'holding',
     code: 'AL-HF',
     name: 'Aluminium Holding Furnace',
     model: 'models/al-holding-furnace.glb',
@@ -66,13 +113,15 @@ export const PRODUCTS = [
     ],
   },
 
+  /* ---------------- HEAT TREATMENT ---------------- */
+
   {
     id: 'rotary-ht',
     category: 'heat',
     code: 'ROTARY HT',
     name: 'Rotary Heat Treatment Furnace',
     model: 'models/rotary-ht.glb',
-    desc: 'Flow material tersusun pada rack yang terhubung mekanisme rotary, dengan pilihan sumber pemanas sesuai kebutuhan proses.',
+    desc: 'Flow material tersusun pada rack yang terhubung mekanisme rotary, dengan pilihan sumber pemanas — combustion burner, hybrid, atau electric heater — sesuai kebutuhan proses.',
     specs: [
       { label: 'Sumber panas', value: 'Combustion burner / Hybrid / Electric heater' },
       { label: 'Mekanisme', value: 'Rack berputar (rotary)' },
@@ -83,8 +132,8 @@ export const PRODUCTS = [
   {
     id: 't5-heat-treatment',
     category: 'heat',
-    code: 'T5-HT',
-    name: 'T5 Heat Treatment Furnace',
+    code: 'ROLLER HT — T5',
+    name: 'Roller Heat Treatment Furnace (T5)',
     model: 'models/t5-heat-treatment.glb',
     desc: 'Furnace kontinu tipe roller hearth untuk heat treatment komponen compressor, memanfaatkan panas buang furnace & cooling chamber untuk pre-heating.',
     specs: [
@@ -94,7 +143,7 @@ export const PRODUCTS = [
       { label: 'Sumber panas', value: 'Gas burner 116 kW' },
       { label: 'Alur furnace', value: 'Loading → pre-heating → heating → cooling' },
       { label: 'Suhu operasi', value: '240°C (maks. 300°C)' },
-      { label: 'Waktu proses', value: 'Heating 30\' · Soaking 30\' · Cooling 30\'' },
+      { label: 'Waktu proses', value: "Heating 30' · Soaking 30' · Cooling 30'" },
       { label: 'Standar combustion', value: 'JIS B8514' },
     ],
     cases: [],
@@ -103,8 +152,8 @@ export const PRODUCTS = [
   {
     id: 't6-heat-treatment',
     category: 'heat',
-    code: 'T6-HT',
-    name: 'T6 Heat Treatment Furnace',
+    code: 'ROLLER HT — T6',
+    name: 'Roller Heat Treatment Furnace (T6)',
     model: 'models/t6-heat-treatment.glb',
     desc: 'Furnace roller hearth untuk cylinder head dengan alur solution–quenching–aging lengkap, memanfaatkan sisa panas solution furnace untuk efisiensi aging furnace.',
     specs: [
@@ -122,7 +171,7 @@ export const PRODUCTS = [
 
   {
     id: 'drying-oven',
-    category: 'drying',
+    category: 'heat',
     code: 'DRY-OVEN',
     name: 'Drying Oven Furnace',
     model: 'models/drying-oven.glb',
@@ -140,7 +189,7 @@ export const PRODUCTS = [
 
   {
     id: 'heating-furnace-boggie',
-    category: 'drying',
+    category: 'heat',
     code: 'BATCH-BOGGIE',
     name: 'Heating Furnace (Batch – Boggie Type)',
     model: 'models/heating-furnace-boggie.glb',
@@ -157,9 +206,24 @@ export const PRODUCTS = [
     cases: [],
   },
 
+  /* ---------------- OTHER EQUIPMENT ---------------- */
+
+  {
+    id: 'ladle-device',
+    category: 'other',
+    code: 'LADLE',
+    name: 'Ladle Device',
+    model: 'models/ladle-device.glb',
+    desc: 'Perangkat penuang (ladle) untuk memindahkan logam cair secara terkendali dari furnace ke titik proses berikutnya.',
+    specs: [
+      { label: 'Fungsi', value: 'Penuangan molten metal terkendali' },
+    ],
+    cases: [],
+  },
+
   {
     id: 'porter',
-    category: 'handling',
+    category: 'other',
     code: 'PORTER',
     name: 'Porter Metal Transfer',
     model: 'models/porter.glb',
@@ -168,6 +232,92 @@ export const PRODUCTS = [
       { label: 'Fungsi', value: 'Transfer molten metal otomatis' },
       { label: 'Fokus desain', value: 'Kestabilan suhu & keamanan operator' },
     ],
+    cases: [],
+  },
+
+  {
+    id: 'dust-collector',
+    category: 'other',
+    code: 'DC',
+    name: 'Dust Collector',
+    model: 'models/dust-collector.glb',
+    desc: 'Sistem penangkap debu & partikel hasil proses thermal, menjaga kualitas udara area produksi sesuai standar lingkungan kerja.',
+    specs: [
+      { label: 'Fungsi', value: 'Filtrasi debu & partikel proses' },
+    ],
+    cases: [],
+  },
+
+  /* ---------------- SPARE PARTS ---------------- */
+
+  {
+    id: 'immersion-heater-atherm',
+    category: 'spareparts',
+    code: 'HEATER',
+    name: 'Immersion Heater Atherm',
+    model: 'models/immersion-heater-atherm.glb',
+    desc: 'Spare part heater tipe immersion untuk kebutuhan penggantian & perawatan berkala unit holding/melting furnace.',
+    specs: [
+      { label: 'Tipe', value: 'Immersion heater' },
+      { label: 'Kegunaan', value: 'Spare part perawatan furnace' },
+    ],
+    cases: [],
+  },
+
+  /* ---------------- SERVICE ---------------- */
+
+  {
+    id: 'maintenance-service',
+    category: 'service',
+    code: 'SERVICE',
+    name: 'Other Maintenance Service',
+    model: 'models/maintenance-service.glb',
+    desc: 'Layanan perawatan berkala untuk menjaga performa dan usia pakai unit furnace serta peralatan pendukungnya.',
+    specs: [],
+    cases: [],
+  },
+
+  {
+    id: 'fabrication-service',
+    category: 'service',
+    code: 'FABRICATION',
+    name: 'Fabrication Service',
+    model: 'models/fabrication-service.glb',
+    desc: 'Layanan fabrikasi komponen & struktur logam sesuai kebutuhan khusus pelanggan.',
+    specs: [],
+    cases: [],
+  },
+
+  {
+    id: 'control-panel-service',
+    category: 'service',
+    code: 'CONTROL PANEL',
+    name: 'Control Panel Renewal / Modification Works',
+    model: 'models/control-panel-service.glb',
+    desc: 'Peremajaan atau modifikasi panel kontrol furnace untuk mengikuti kebutuhan proses atau standar terbaru.',
+    specs: [],
+    cases: [],
+  },
+
+  {
+    id: 'refractory-repair-service',
+    category: 'service',
+    code: 'REFRACTORY',
+    name: 'Refractory Repair / Modification Works',
+    model: 'models/refractory-repair-service.glb',
+    desc: 'Perbaikan atau modifikasi lapisan refractory pada ruang bakar furnace untuk menjaga efisiensi panas dan keamanan operasi.',
+    specs: [],
+    cases: [],
+  },
+
+  {
+    id: 'mechanical-repair-service',
+    category: 'service',
+    code: 'MECHANICAL',
+    name: 'Mechanical Repair / Modification Works',
+    model: 'models/mechanical-repair-service.glb',
+    desc: 'Perbaikan atau modifikasi komponen mekanikal furnace dan peralatan pendukung produksi.',
+    specs: [],
     cases: [],
   },
 
