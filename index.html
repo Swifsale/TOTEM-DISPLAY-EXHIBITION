@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SWIF ASIA — Totem Display</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- progress dots -->
+  <nav class="dots" aria-hidden="true">
+    <button class="dot active" data-target="hero"></button>
+    <button class="dot" data-target="stats"></button>
+    <button class="dot" data-target="products"></button>
+    <button class="dot" data-target="contact"></button>
+  </nav>
+
+  <!-- SECTION 1 — HERO -->
+  <section id="hero" class="screen hero">
+    <div class="glow"></div>
+    <div class="hero-content">
+      <span class="brandmark">SWIF ASIA</span>
+      <h1 class="hero-title">Heartful<br>Thermal<br>Technology</h1>
+      <p class="hero-sub">Teknologi thermal industri untuk presisi, efisiensi, dan emisi karbon lebih rendah — didukung 75+ tahun keahlian Jepang.</p>
+    </div>
+    <div class="hero-cue">
+      <span>Sentuh untuk menjelajah</span>
+      <svg viewBox="0 0 24 24" class="cue-arrow"><path d="M12 4v14m0 0l-6-6m6 6l6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <!-- SECTION 2 — HERITAGE / STATS -->
+  <section id="stats" class="screen stats">
+    <p class="section-kicker">Warisan Sanken Sangyo, Jepang</p>
+    <h2 class="section-title">#1 Produsen Furnace di ASEAN</h2>
+    <div class="stat-grid">
+      <div class="stat">
+        <span class="stat-num">75<small>+</small></span>
+        <span class="stat-label">Tahun pengalaman</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">250<small>+</small></span>
+        <span class="stat-label">Proyek terselesaikan</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">50<small>+</small></span>
+        <span class="stat-label">Perusahaan dilayani</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">24/7</span>
+        <span class="stat-label">Dukungan &amp; perawatan</span>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><span class="tl-year">1949</span><span class="tl-text">Sanken Sangyo didirikan di Jepang</span></div>
+      <div class="tl-item"><span class="tl-year">2011</span><span class="tl-text">PT SWIF Asia berdiri di Indonesia</span></div>
+      <div class="tl-item"><span class="tl-year">ISO</span><span class="tl-text">Sistem manajemen mutu tersertifikasi</span></div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — PRODUCTS -->
+  <section id="products" class="screen products">
+    <p class="section-kicker">Lini Produk</p>
+    <h2 class="section-title">Rasakan mesinnya dalam 3D</h2>
+    <p class="section-hint">Ketuk salah satu produk untuk melihat penjelasan lengkap dan model 3D yang bisa diputar &amp; diperbesar.</p>
+
+    <div class="product-list">
+
+      <article class="product-card" data-model="models/csmf.glb" data-name="Chip Smelter Melting Furnace" data-code="CSMF">
+        <div class="pc-top">
+          <span class="pc-code">CSMF</span>
+          <span class="pc-spec">100 kg/jam – 4 ton/jam</span>
+        </div>
+        <h3 class="pc-title">Chip Smelter<br>Melting Furnace</h3>
+        <p class="pc-desc">Melebur chip &amp; scrap aluminium menjadi molten metal berkualitas tinggi dengan konsumsi energi yang efisien.</p>
+        <button class="pc-cta">Lihat model 3D</button>
+      </article>
+
+      <article class="product-card" data-model="models/hybrid-melter.glb" data-name="Hybrid Melting Furnace" data-code="HYBRID">
+        <div class="pc-top">
+          <span class="pc-code">HYBRID</span>
+          <span class="pc-spec">Burner + Electric</span>
+        </div>
+        <h3 class="pc-title">Hybrid Melting<br>Furnace</h3>
+        <p class="pc-desc">Pilihan hybrid hari ini — memadukan combustion burner dan pemanas listrik untuk emisi karbon lebih rendah dan molten lebih berkualitas.</p>
+        <button class="pc-cta">Lihat model 3D</button>
+      </article>
+
+      <article class="product-card" data-model="models/rotary-ht.glb" data-name="Rotary Heat Treatment Furnace" data-code="ROTARY HT">
+        <div class="pc-top">
+          <span class="pc-code">ROTARY HT</span>
+          <span class="pc-spec">Burner · Hybrid · Electric</span>
+        </div>
+        <h3 class="pc-title">Rotary Heat<br>Treatment Furnace</h3>
+        <p class="pc-desc">Flow material tersusun pada rack yang terhubung mekanisme rotary, dengan pilihan sumber pemanas sesuai kebutuhan proses.</p>
+        <button class="pc-cta">Lihat model 3D</button>
+      </article>
+
+      <article class="product-card" data-model="models/porter.glb" data-name="Porter Metal Transfer" data-code="PORTER">
+        <div class="pc-top">
+          <span class="pc-code">PORTER</span>
+          <span class="pc-spec">Automated transfer</span>
+        </div>
+        <h3 class="pc-title">Porter Metal<br>Transfer</h3>
+        <p class="pc-desc">Memindahkan logam cair dari furnace ke titik tuang secara otomatis, menjaga suhu dan keamanan sepanjang proses.</p>
+        <button class="pc-cta">Lihat model 3D</button>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- SECTION 4 — CONTACT / FOOTER -->
+  <section id="contact" class="screen contact">
+    <span class="brandmark small">SWIF ASIA</span>
+    <p class="contact-line">Kawasan GIIC Blok CC No.10, Kota Deltamas<br>Cikarang Pusat, Kabupaten Bekasi, Jawa Barat</p>
+    <p class="contact-line">021&nbsp;2851-7980 / 7981 / 7982</p>
+    <p class="contact-sub">Subsidiari Sanken Sangyo Ltd. — Jepang, sejak 1949</p>
+  </section>
+
+</div>
+
+<!-- 3D VIEWER OVERLAY -->
+<div id="viewer" class="viewer" aria-hidden="true">
+  <div class="viewer-top">
+    <button id="viewer-close" class="viewer-close" aria-label="Tutup">
+      <svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    </button>
+    <div class="viewer-heading">
+      <span id="viewer-code" class="viewer-code">CSMF</span>
+      <span id="viewer-name" class="viewer-name">Chip Smelter Melting Furnace</span>
+    </div>
+  </div>
+
+  <div id="viewer-canvas-wrap" class="viewer-canvas-wrap">
+    <div id="viewer-loading" class="viewer-loading">Memuat model…</div>
+    <div id="viewer-empty" class="viewer-empty" hidden>
+      <svg viewBox="0 0 24 24" class="empty-icon"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/><path d="M12 3v18M4 7.5l8 4.5 8-4.5" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      <p>Model 3D belum tersedia.<br>Letakkan file <code id="viewer-empty-path">models/csmf.glb</code> di repository untuk menampilkannya di sini.</p>
+    </div>
+  </div>
+
+  <div class="viewer-bottom">
+    <div class="gesture-hints">
+      <span class="hint"><svg viewBox="0 0 24 24"><path d="M12 3a4 4 0 00-4 4v6a4 4 0 008 0V7a4 4 0 00-4-4z" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M12 3v5" stroke="currentColor" stroke-width="1.4"/></svg>Putar dengan satu jari</span>
+      <span class="hint"><svg viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Cubit untuk zoom</span>
+    </div>
+    <button id="viewer-reset" class="viewer-reset">Reset tampilan</button>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="script.js"></script>
+</body>
+</html>
