@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { CATEGORIES, PRODUCTS } from './data.js';
 
 /* ------------------------------------------------------------
    1. Kiosk viewport fix (locks height even if the browser
@@ -13,7 +14,59 @@ setVH();
 window.addEventListener('resize', setVH);
 
 /* ------------------------------------------------------------
-   2. Section dots — highlight active screen while scrolling
+   2. Render category chips + product cards from data.js
+------------------------------------------------------------ */
+const tabsEl = document.getElementById('category-tabs');
+const listEl = document.getElementById('product-list');
+
+let activeCategory = 'all';
+
+function renderTabs(){
+  const all = [{ id: 'all', label: 'Semua' }, ...CATEGORIES];
+  tabsEl.innerHTML = all.map(cat => `
+    <button class="chip ${cat.id === activeCategory ? 'active' : ''}" data-cat="${cat.id}">
+      ${cat.label}
+    </button>
+  `).join('');
+
+  tabsEl.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      activeCategory = chip.dataset.cat;
+      renderTabs();
+      renderCards();
+    });
+  });
+}
+
+function renderCards(){
+  const items = activeCategory === 'all'
+    ? PRODUCTS
+    : PRODUCTS.filter(p => p.category === activeCategory);
+
+  listEl.innerHTML = items.map(p => `
+    <article class="product-card" data-id="${p.id}">
+      <div class="pc-top">
+        <span class="pc-code">${p.code}</span>
+      </div>
+      <h3 class="pc-title">${p.name}</h3>
+      <p class="pc-desc">${p.desc}</p>
+      <div class="pc-tags">
+        ${p.specs.slice(0, 2).map(s => `<span class="pc-tag">${s.value}</span>`).join('')}
+      </div>
+      <button class="pc-cta">Lihat detail &amp; 3D</button>
+    </article>
+  `).join('');
+
+  listEl.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', () => openViewer(card.dataset.id));
+  });
+}
+
+renderTabs();
+renderCards();
+
+/* ------------------------------------------------------------
+   3. Section dots — highlight active screen while scrolling
 ------------------------------------------------------------ */
 const screens = Array.from(document.querySelectorAll('.screen'));
 const dots = Array.from(document.querySelectorAll('.dot'));
@@ -36,29 +89,68 @@ const sectionObserver = new IntersectionObserver((entries) => {
 screens.forEach(s => sectionObserver.observe(s));
 
 /* ------------------------------------------------------------
-   3. Product cards -> open 3D viewer
+   4. Viewer overlay — heading, tabs (3D / specs), open/close
 ------------------------------------------------------------ */
-const viewer        = document.getElementById('viewer');
-const viewerClose    = document.getElementById('viewer-close');
-const viewerCode     = document.getElementById('viewer-code');
-const viewerName     = document.getElementById('viewer-name');
-const viewerLoading  = document.getElementById('viewer-loading');
-const viewerEmpty    = document.getElementById('viewer-empty');
-const viewerEmptyPath= document.getElementById('viewer-empty-path');
-const canvasWrap     = document.getElementById('viewer-canvas-wrap');
-const resetBtn       = document.getElementById('viewer-reset');
+const viewer         = document.getElementById('viewer');
+const viewerClose     = document.getElementById('viewer-close');
+const viewerCode      = document.getElementById('viewer-code');
+const viewerName      = document.getElementById('viewer-name');
+const viewerLoading   = document.getElementById('viewer-loading');
+const viewerEmpty     = document.getElementById('viewer-empty');
+const viewerEmptyPath = document.getElementById('viewer-empty-path');
+const canvasWrap      = document.getElementById('viewer-canvas-wrap');
+const resetBtn        = document.getElementById('viewer-reset');
+const viewerDesc      = document.getElementById('viewer-desc');
+const viewerSpecs     = document.getElementById('viewer-specs');
+const casesWrap       = document.getElementById('viewer-cases-wrap');
+const casesList       = document.getElementById('viewer-cases');
 
-document.querySelectorAll('.product-card').forEach(card => {
-  card.addEventListener('click', () => openViewer(card.dataset));
+document.querySelectorAll('.viewer-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.viewer-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.viewer-pane').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.pane).classList.add('active');
+    if (tab.dataset.pane === 'pane-3d' && renderer) resizeRenderer();
+  });
 });
 
-function openViewer(data){
-  viewerCode.textContent = data.code;
-  viewerName.textContent = data.name;
-  viewerEmptyPath.textContent = data.model;
+function openViewer(productId){
+  const p = PRODUCTS.find(item => item.id === productId);
+  if (!p) return;
+
+  viewerCode.textContent = p.code;
+  viewerName.textContent = p.name;
+  viewerEmptyPath.textContent = p.model;
+  viewerDesc.textContent = p.desc;
+
+  viewerSpecs.innerHTML = p.specs.map(s => `
+    <div class="spec-row">
+      <span class="spec-label">${s.label}</span>
+      <span class="spec-value">${s.value}</span>
+    </div>
+  `).join('');
+
+  if (p.cases && p.cases.length){
+    casesWrap.hidden = false;
+    casesList.innerHTML = p.cases.map(c => `
+      <div class="case-item">
+        <div class="case-top">
+          <span class="case-customer">${c.customer}</span>
+          <span class="case-year">${c.year}</span>
+        </div>
+        <span class="case-capacity">${c.capacity}</span>
+        <span class="case-note">${c.note}</span>
+      </div>
+    `).join('');
+  } else {
+    casesWrap.hidden = true;
+    casesList.innerHTML = '';
+  }
+
   viewer.classList.add('open');
   viewer.setAttribute('aria-hidden', 'false');
-  loadModel(data.model);
+  loadModel(p.model);
 }
 
 function closeViewer(){
@@ -68,7 +160,7 @@ function closeViewer(){
 viewerClose.addEventListener('click', closeViewer);
 
 /* ------------------------------------------------------------
-   4. Three.js scene — one renderer, reused for every product.
+   5. Three.js scene — one renderer, reused for every product.
       Drop matching .glb files into /models to replace the
       placeholder shown when a file isn't found yet.
 ------------------------------------------------------------ */
@@ -84,11 +176,12 @@ function initThree(){
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   canvasWrap.appendChild(renderer.domElement);
 
-  scene.add(new THREE.HemisphereLight(0xfff3e0, 0x14161a, 1.1));
-  const key = new THREE.DirectionalLight(0xffffff, 1.4);
+  // HUD-tinted lighting: cool sky key + warm alert rim, matching the palette
+  scene.add(new THREE.HemisphereLight(0x89daff, 0x2b193d, 1.1));
+  const key = new THREE.DirectionalLight(0xf0f0c9, 1.3);
   key.position.set(4, 6, 4);
   scene.add(key);
-  const rim = new THREE.DirectionalLight(0xff7a29, 0.8);
+  const rim = new THREE.DirectionalLight(0xdb222a, 0.6);
   rim.position.set(-4, 2, -3);
   scene.add(rim);
 
@@ -159,8 +252,8 @@ function frameObject(object){
 function showPlaceholder(){
   const geo = new THREE.IcosahedronGeometry(0.9, 0);
   const mat = new THREE.MeshStandardMaterial({
-    color: 0x2a2e33, metalness: 0.6, roughness: 0.35,
-    emissive: 0xff7a29, emissiveIntensity: 0.06, wireframe: false
+    color: 0x391f52, metalness: 0.55, roughness: 0.35,
+    emissive: 0x89daff, emissiveIntensity: 0.12
   });
   currentMesh = new THREE.Mesh(geo, mat);
   scene.add(currentMesh);
