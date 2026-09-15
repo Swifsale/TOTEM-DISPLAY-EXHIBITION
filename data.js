@@ -1,223 +1,124 @@
-const COMPANY_STATS = [
-  { value: 75, suffix: "+", label: "Tahun warisan Sanken Sangyo, Jepang" },
-  { value: 50, suffix: "+", label: "Perusahaan besar dilayani (Toyota, Daihatsu, Yamaha, Suzuki, Astra, Komatsu, dll)" },
-  { value: 100, suffix: "%", label: "Kontrol mutu manufaktur mengikuti standar Sanken Sangyo" },
-  { value: 24, suffix: "/7", label: "Dukungan & perawatan purna jual" },
-];
 
 // ---------------------------------------------------------------------------
-// Linimasa perusahaan (section "Perjalanan Kami")
+// Identitas di header & footer totem
 // ---------------------------------------------------------------------------
-const COMPANY_TIMELINE = [
-  { year: "1949", title: "Sanken Sangyo didirikan", text: "Berdiri di Jepang, memulai spesialisasi di bidang furnace industri." },
-  { year: "2011", title: "PT SWIF Asia berdiri", text: "Didirikan di Indonesia untuk melayani pasar Indonesia & ASEAN sebagai bagian dari SANKEN Group." },
-  { year: "Kini", title: "No. 1 Furnace Manufacturer di ASEAN", text: "50+ perusahaan telah dilayani, dengan kontrol mutu manufaktur mengikuti standar ketat Sanken Sangyo." },
-];
+const TOTEM_HEADER = {
+  logoText: "SWIF",                 // teks singkat di kotak logo (dipakai jika logo image gagal dimuat)
+  logoImage: "assets/logo-swifasia.png",
+  company: "PT SWIF ASIA",
+  companySub: "Industrial Furnace & Heat Treatment",
+  eventLine1: "TOTEM DISPLAY",
+  eventLine2: "EXHIBITION 2026",
+};
+
+const TOTEM_FOOTER = {
+  sloganPlain: "Heartful ",
+  sloganEmphasis: "Thermal Technology.",
+  cta: "Sentuh model untuk memutar  •  No.1 Furnace Manufacturer di ASEAN",
+};
 
 // ---------------------------------------------------------------------------
-// Klien / mitra yang pernah dilayani (nama sesuai halaman resmi swifasia.com)
-// Logo asli belum disertakan — tampil sebagai wordmark sementara.
-// Ganti PLACEHOLDER_LOGO di bawah dengan path logo asli saat sudah tersedia.
+// Slide pembuka (intro perusahaan) — tampil sebagai slide pertama
 // ---------------------------------------------------------------------------
-const TRUSTED_CLIENTS = [
-  { name: "Toyota" },
-  { name: "Daihatsu" },
-  { name: "Yamaha" },
-  { name: "Suzuki" },
-  { name: "Astra" },
-  { name: "Komatsu" },
-];
+const INTRO_SLIDE = {
+  badge: "TENTANG KAMI",
+  title: "Heartful Thermal Technology",
+  tag: '"75+ tahun keahlian Jepang, sejak 1949."',
+  timeline: [
+    { year: "1949", title: "Sanken Sangyo didirikan", text: "Berdiri di Jepang, memulai spesialisasi furnace industri." },
+    { year: "2011", title: "PT SWIF Asia berdiri", text: "Melayani pasar Indonesia & ASEAN sebagai bagian dari SANKEN Group." },
+    { year: "Kini", title: "No.1 Furnace Manufacturer ASEAN", text: "50+ perusahaan dilayani, kontrol mutu mengikuti standar Sanken Sangyo." },
+  ],
+  stats: [
+    { value: "75+", label: "Tahun warisan" },
+    { value: "50+", label: "Perusahaan dilayani" },
+    { value: "ISO", label: "Manajemen mutu" },
+    { value: "24/7", label: "Dukungan" },
+  ],
+  backgroundImage: "assets/background-hero.jpg",
+  trustedClients: ["Toyota", "Daihatsu", "Yamaha", "Suzuki", "Astra", "Komatsu"],
+};
 
 // ---------------------------------------------------------------------------
-// Lini produk lengkap — 7 kategori resmi SWIF Asia
-// image: "PLACEHOLDER:<nama-slot>" → ganti dengan path file asli di /models
-//        atau /assets saat tersedia. Selama masih placeholder, totem akan
-//        menampilkan panel bertekstur dengan label nama slot (bukan gambar
-//        rusak) supaya tetap enak dilihat di pameran.
+// Slide produk — tiap kategori jadi satu slide, tiap item jadi satu "feat"
+// yang bisa disentuh untuk mengganti model 3D di panel kanan/stage.
 // ---------------------------------------------------------------------------
-const PRODUCT_CATEGORIES = [
+const PRODUCT_SLIDES = [
   {
-    id: "melting",
-    name: "Melting Furnace",
-    tagline: "Kapasitas 100 kg/jam – 4 ton/jam",
-    intro: "Furnace peleburan logam dengan pilihan sumber panas gas burner, hybrid, atau elektrik, disesuaikan kebutuhan lini produksi pelanggan.",
-    items: [
+    badge: "LINI PRODUK",
+    title: "Melting Furnace",
+    tag: '"Kapasitas 100 kg/jam – 4 ton/jam."',
+    products: [
       {
-        code: "TWM",
-        name: "Tower Melting Furnace",
-        desc: "Furnace peleburan tipe menara (tower) untuk lini produksi dengan alur vertikal.",
-        image: "assets/tower_melting.jpg",
-        specs: ["Kapasitas: -- lengkapi --", "Sumber panas: -- lengkapi --", "Standar keselamatan: -- lengkapi --"],
-        hasModel: false,
+        name: "Tower Melting Furnace", short: "Tower Melting", code: "TWM",
+        desc: "Furnace peleburan tipe menara untuk lini produksi dengan alur vertikal.",
+        modelFile: "", // -- lengkapi path .glb/.stl/.obj bila sudah ada --
       },
       {
-        code: "CMF",
-        name: "Crucible Melting Furnace",
-        desc: "Untuk melebur dan/atau menahan (holding) logam cair di sisi sel pengecoran. Kapasitas dapat disesuaikan permintaan pelanggan, dengan opsi kepatuhan standar keselamatan pembakaran JIS B8415:2008.",
-        image: "PLACEHOLDER:produk-crucible-melting-furnace",
-        specs: ["Kapasitas: menyesuaikan permintaan", "Standar: JIS B8415:2008 (opsional)", "Fungsi: melting & holding"],
-        hasModel: false,
+        name: "Crucible Melting Furnace", short: "Crucible", code: "CMF",
+        desc: "Melt & holding logam cair di sisi sel pengecoran, opsi standar JIS B8415:2008.",
+        modelFile: "",
       },
       {
-        code: "CSMF",
-        name: "Chip Smelter Melting Furnace",
+        name: "Chip Smelter Melting Furnace", short: "Chip Smelter", code: "CSMF",
         desc: "Furnace peleburan khusus untuk material berbentuk chip/serpihan logam.",
-        image: "PLACEHOLDER:produk-chip-smelter-melting-furnace",
-        specs: ["Kapasitas: -- lengkapi --", "Material input: chip logam", "Sumber panas: -- lengkapi --"],
-        hasModel: true,
-        modelFile: "models/csmf.stl",
+        modelFile: "models/csmf.stl", // contoh: sudah terisi (masih placeholder kubus)
       },
       {
-        code: "HybM",
-        name: "Hybrid Melter",
-        desc: "Melting furnace yang menggabungkan gas burner dan pemanas elektrik sebagai sumber panasnya, untuk efisiensi energi lebih tinggi.",
-        image: "PLACEHOLDER:produk-hybrid-melter",
-        specs: ["Sumber panas: Gas Burner + Elektrik Heater", "Status: Produk terbaru", "Kapasitas: -- lengkapi --"],
-        hasModel: false,
+        name: "Hybrid Melter", short: "Hybrid Melter", code: "HybM",
+        desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
+        modelFile: "",
       },
     ],
   },
   {
-    id: "heat-treatment",
-    name: "Heat Treatment",
-    tagline: "Emisi karbon lebih rendah, kualitas hasil lebih tinggi",
-    intro: "Furnace perlakuan panas dengan mekanisme alur material yang dapat disesuaikan lini produksi.",
-    items: [
+    badge: "LINI PRODUK",
+    title: "Heat Treatment",
+    tag: '"Emisi lebih rendah, kualitas hasil lebih konsisten."',
+    products: [
       {
-        code: "RHT",
-        name: "Roller Heat Treatment",
+        name: "Roller Heat Treatment", short: "Roller HT", code: "RHT",
         desc: "Heat treatment furnace dengan alur material menggunakan sistem roller.",
-        image: "PLACEHOLDER:produk-roller-heat-treatment",
-        specs: ["Sistem alur: roller", "Sumber panas: -- lengkapi --", "Kapasitas: -- lengkapi --"],
-        hasModel: false,
+        modelFile: "",
       },
       {
-        code: "ROTARY HT",
-        name: "Rotary Heat Treatment Furnace",
-        desc: "Heat treatment furnace dengan alur material yang disusun pada rack terhubung mekanisme rotary. Opsi sumber panas: combustion burner, hybrid (burner + elektrik), atau elektrik heater.",
-        image: "assets/ROTARY_HT.jpg",
-        specs: ["Sumber panas: Burner / Hybrid / Elektrik", "Sistem alur: rack rotary", "Kapasitas: -- lengkapi --"],
-        hasModel: false,
+        name: "Rotary Heat Treatment Furnace", short: "Rotary HT", code: "ROTARY HT",
+        desc: "Alur material pada rack rotary. Opsi panas: burner, hybrid, atau elektrik.",
+        modelFile: "",
       },
     ],
   },
   {
-    id: "holding",
-    name: "Holding Furnace",
-    tagline: "Menjaga suhu logam cair siap tuang",
-    intro: "Furnace untuk menahan logam cair pada suhu kerja sebelum proses penuangan/pengecoran.",
-    items: [
+    badge: "LINI PRODUK",
+    title: "Holding Furnace",
+    tag: '"Menjaga suhu logam cair siap tuang."',
+    products: [
       {
-        code: "HF",
-        name: "Holding Furnace",
+        name: "Holding Furnace", short: "Holding", code: "HF",
         desc: "-- lengkapi deskripsi teknis --",
-        image: "PLACEHOLDER:produk-holding-furnace",
-        specs: ["Kapasitas: -- lengkapi --", "Sumber panas: -- lengkapi --"],
-        hasModel: false,
+        modelFile: "",
       },
     ],
   },
   {
-    id: "other-equipment",
-    name: "Peralatan Pendukung",
-    tagline: "Kelengkapan lini produksi furnace",
-    intro: "Perangkat pendukung operasional furnace, dari penanganan logam cair hingga kualitas udara area kerja.",
-    items: [
-      {
-        code: "LD",
-        name: "Ladle Device",
-        desc: "Perangkat bantu penuangan/pemindahan logam cair.",
-        image: "PLACEHOLDER:produk-ladle-device",
-        specs: ["Kapasitas: -- lengkapi --"],
-        hasModel: false,
-      },
-      {
-        code: "PMT",
-        name: "Porter Metal Transfer",
-        desc: "Sistem transfer logam antar-stasiun produksi.",
-        image: "PLACEHOLDER:produk-porter-metal-transfer",
-        specs: ["Kapasitas: -- lengkapi --"],
-        hasModel: false,
-      },
-      {
-        code: "DC",
-        name: "Dust Collector",
-        desc: "Sistem penangkap debu untuk menjaga kualitas udara area produksi.",
-        image: "PLACEHOLDER:produk-dust-collector",
-        specs: ["Kapasitas hisap: -- lengkapi --"],
-        hasModel: false,
-      },
+    badge: "PERALATAN PENDUKUNG",
+    title: "Peralatan Pendukung",
+    tag: '"Kelengkapan lini produksi furnace."',
+    products: [
+      { name: "Ladle Device", short: "Ladle", code: "LD", desc: "Perangkat bantu penuangan/pemindahan logam cair.", modelFile: "" },
+      { name: "Porter Metal Transfer", short: "Porter", code: "PMT", desc: "Sistem transfer logam antar-stasiun produksi.", modelFile: "" },
+      { name: "Dust Collector", short: "Dust Collector", code: "DC", desc: "Sistem penangkap debu untuk menjaga kualitas udara area produksi.", modelFile: "" },
     ],
   },
   {
-    id: "spare-parts",
-    name: "Spare Parts",
-    tagline: "Komponen pengganti orisinal",
-    intro: "Suku cadang untuk menjaga performa furnace tetap optimal.",
-    items: [
-      {
-        code: "HEATER",
-        name: "Immersion Heater Atherm",
-        desc: "-- lengkapi deskripsi teknis --",
-        image: "PLACEHOLDER:produk-immersion-heater",
-        specs: ["Daya: -- lengkapi --"],
-        hasModel: false,
-      },
+    badge: "SPARE PARTS & LAYANAN",
+    title: "Spare Parts & Layanan",
+    tag: '"Dukungan purna jual 24/7."',
+    products: [
+      { name: "Immersion Heater Atherm", short: "Heater", code: "HEATER", desc: "-- lengkapi deskripsi teknis --", modelFile: "" },
+      { name: "Perawatan Berkala", short: "Perawatan", code: "SVC-01", desc: "-- lengkapi cakupan layanan --", modelFile: "" },
+      { name: "Jasa Fabrikasi", short: "Fabrikasi", code: "SVC-02", desc: "-- lengkapi cakupan layanan --", modelFile: "" },
+      { name: "Modifikasi Panel Kontrol", short: "Panel Kontrol", code: "SVC-03", desc: "-- lengkapi cakupan layanan --", modelFile: "" },
     ],
   },
-  {
-    id: "service",
-    name: "Layanan & Perawatan",
-    tagline: "Dukungan purna jual 24/7",
-    intro: "Layanan perawatan, perbaikan, dan modifikasi untuk memastikan umur pakai furnace tetap panjang.",
-    items: [
-      { code: "SVC-01", name: "Perawatan Berkala", desc: "-- lengkapi cakupan layanan --", image: "PLACEHOLDER:layanan-perawatan", specs: [], hasModel: false },
-      { code: "SVC-02", name: "Jasa Fabrikasi", desc: "-- lengkapi cakupan layanan --", image: "PLACEHOLDER:layanan-fabrikasi", specs: [], hasModel: false },
-      { code: "SVC-03", name: "Perbaikan/Modifikasi Panel Kontrol", desc: "-- lengkapi cakupan layanan --", image: "PLACEHOLDER:layanan-panel-kontrol", specs: [], hasModel: false },
-      { code: "SVC-04", name: "Perbaikan/Modifikasi Refraktori", desc: "-- lengkapi cakupan layanan --", image: "PLACEHOLDER:layanan-refraktori", specs: [], hasModel: false },
-      { code: "SVC-05", name: "Perbaikan/Modifikasi Mekanikal", desc: "-- lengkapi cakupan layanan --", image: "PLACEHOLDER:layanan-mekanikal", specs: [], hasModel: false },
-    ],
-  },
-];
-
-// ---------------------------------------------------------------------------
-// Produk unggulan yang ditampilkan di viewer 3D utama.
-// Tambahkan produk lain ke array ini (dengan modelFile .stl masing-masing)
-// agar muncul sebagai pilihan tab di section "Rasakan Mesinnya dalam 3D".
-// ---------------------------------------------------------------------------
-const FEATURED_3D_PRODUCTS = [
-  {
-    code: "CSMF",
-    name: "Chip Smelter Melting Furnace",
-    modelFile: "models/csmf.stl", // ganti dengan file .stl asli di folder /models
-    specs: [
-      { label: "Kategori", value: "Melting Furnace" },
-      { label: "Material input", value: "Chip / serpihan logam" },
-      { label: "Kapasitas", value: "-- lengkapi --" },
-      { label: "Sumber panas", value: "-- lengkapi --" },
-      { label: "Standar keselamatan", value: "-- lengkapi --" },
-    ],
-  },
-   {
-    code: "HybM",
-    name: "Hybrid Melter",
-    modelFile: "models/MF_HYBRID.stl", 
-    specs: [
-      { label: "Kategori", value: "Melting Furnace" },
-      { label: "Material input", value: "Chip / serpihan logam" },
-      { label: "Kapasitas", value: "150-1 TON" },
-      { label: "Sumber panas", value: "GAS DAN LISTRIK" },
-      { label: "Standar keselamatan", value: "JIS,ISO,SNI" },
-    ],
-  },
-  // Contoh menambah produk kedua ke viewer:
-  // {
-  //   code: "ROTARY HT",
-  //   name: "Rotary Heat Treatment Furnace",
-  //   modelFile: "models/rotary-ht.stl",
-  //   specs: [
-  //     { label: "Kategori", value: "Heat Treatment" },
-  //     { label: "Sumber panas", value: "Burner / Hybrid / Elektrik" },
-  //   ],
-  // },
 ];
