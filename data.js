@@ -1,19 +1,3 @@
-/**
- * data.js — Konten Totem Display SWIF Asia
- * -----------------------------------------
- * Semua nama kategori & produk di bawah diambil dari struktur katalog resmi
- * di swifasia.com/productservices. Deskripsi singkat yang sudah tersedia
- * dari sumber resmi dipakai apa adanya; field yang ditandai "-- lengkapi --"
- * silakan diisi tim SWIF Asia dengan data teknis aktual (kapasitas, dimensi,
- * foto, file 3D) sebelum tampil di pameran.
- *
- * Menambah produk/kategori baru: cukup tambah objek baru di array yang sesuai,
- * tidak perlu mengubah script.js.
- */
-
-// ---------------------------------------------------------------------------
-// Statistik kredibilitas perusahaan (section "Skala Kami")
-// ---------------------------------------------------------------------------
 const COMPANY_STATS = [
   { value: 75, suffix: "+", label: "Tahun warisan Sanken Sangyo, Jepang" },
   { value: 50, suffix: "+", label: "Perusahaan besar dilayani (Toyota, Daihatsu, Yamaha, Suzuki, Astra, Komatsu, dll)" },
@@ -62,7 +46,7 @@ const PRODUCT_CATEGORIES = [
         code: "TWM",
         name: "Tower Melting Furnace",
         desc: "Furnace peleburan tipe menara (tower) untuk lini produksi dengan alur vertikal.",
-        image: "PLACEHOLDER:produk-tower-melting-furnace",
+        image: "assets/tower_melting.JPG",
         specs: ["Kapasitas: -- lengkapi --", "Sumber panas: -- lengkapi --", "Standar keselamatan: -- lengkapi --"],
         hasModel: false,
       },
