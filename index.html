@@ -1,136 +1,61 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>SWIF ASIA — Totem Display</title>
-<link rel="stylesheet" href="style.css" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<!--
+  ============================================================
+  SWIF ASIA — TOTEM DIGITAL SIGNAGE (1080 x 1920, 9:16)
+  ============================================================
+  SATU-SATUNYA FILE YANG PERLU DIEDIT UNTUK KONTEN: data.js
+
+  CARA MENAMBAHKAN MODEL 3D PRODUK ASLI:
+  1. Export model dari CAD ke salah satu format: .glb (disarankan,
+     mendukung warna/tekstur), .stl, atau .obj.
+  2. Taruh file di folder models/.
+  3. Isi properti modelFile pada produk terkait di data.js, contoh:
+        modelFile: "models/csmf.stl"
+  4. Loader otomatis dipilih sesuai ekstensi file (lihat loadModelAuto
+     di script.js). Jika modelFile kosong/gagal dimuat, totem
+     menampilkan bentuk 3D placeholder generik.
+  ============================================================
+-->
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js" onerror="window.__noGltf=true"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/loaders/STLLoader.js" onerror="window.__noStl=true"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/loaders/OBJLoader.js" onerror="window.__noObj=true"></script>
 </head>
 <body>
+<div id="fit">
+  <div class="page"><div class="frame">
+    <div class="rib tl"></div><div class="rib br"></div>
 
-<div class="navdots" id="navdots" aria-hidden="true"></div>
+    <header>
+      <div class="logo" id="headerLogo"></div>
+      <div class="co"><b id="coName"></b><span id="coSub"></span></div>
+      <div class="ev"><b id="evLine1"></b><span id="evLine2"></span></div>
+    </header>
 
-<div id="app">
+    <div id="slides"></div>
 
-  <!-- ============================= HERO ============================= -->
-  <section class="panel hero" data-section="hero">
-    <div class="panel__inner hero__top">
-      <img class="hero__logo" src="assets/logo-swifasia.png" alt="Logo PT SWIF Asia" />
-      <div class="hero__wordmark">
-        PT SWIF ASIA
-        <span>Thermal Systems</span>
-      </div>
-    </div>
+    <div class="picker" id="picker"></div>
 
-    <div class="panel__inner hero__mid">
-      <div class="hero__eyebrow">No. 1 Furnace Manufacturer di ASEAN</div>
-      <h1 class="hero__title">Heartful Thermal Technology</h1>
-      <p class="hero__desc">
-        Teknologi thermal industri untuk presisi, efisiensi, dan emisi karbon
-        lebih rendah — didukung 75+ tahun keahlian Sanken Sangyo, Jepang.
-      </p>
-    </div>
+    <footer>
+      <div class="slog" id="footerSlog"></div>
+      <div class="cta" id="footerCta"></div>
+    </footer>
 
-    <div class="panel__inner hero__cta">
-      <span class="chev">↓</span> Sentuh atau geser untuk menjelajah
-    </div>
-  </section>
-
-  <!-- ============================= STATS ============================= -->
-  <section class="panel stats" data-section="stats">
-    <div class="panel__inner">
-      <div class="stats__label">Skala kami</div>
-      <h2 class="stats__heading">Dipercaya industri manufaktur otomotif & logam nasional</h2>
-      <div class="stats__grid" id="statsGrid"></div>
-    </div>
-  </section>
-
-  <!-- ============================= TIMELINE ============================= -->
-  <section class="panel timeline-section" data-section="timeline">
-    <div class="panel__inner">
-      <div class="eyebrow">Perjalanan kami</div>
-      <h2>Warisan 75+ tahun dari Jepang ke Indonesia</h2>
-      <div class="timeline" id="timelineList"></div>
-    </div>
-  </section>
-
-  <!-- ============================= TRUSTED BY ============================= -->
-  <section class="panel trusted" data-section="trusted">
-    <div class="panel__inner">
-      <div class="eyebrow" style="color:var(--verde-deep)">Dipercaya oleh</div>
-      <h2>Mitra manufaktur terkemuka</h2>
-      <div class="trusted__row" id="trustedRow"></div>
-      <p class="timeline-item__text" style="margin-top:16px;">
-      </p>
-    </div>
-  </section>
-
-  <!-- ============================= LINI PRODUK ============================= -->
-  <section class="panel products" data-section="products">
-    <div class="panel__inner">
-      <div class="eyebrow">Lini produk</div>
-      <h2>Solusi furnace untuk tiap tahap produksi</h2>
-      <div class="category-tabs" id="categoryTabs"></div>
-      <p class="category-intro" id="categoryIntro"></p>
-      <div class="product-grid" id="productGrid"></div>
-    </div>
-  </section>
-
-  <!-- ============================= 3D VIEWER ============================= -->
-  <section class="panel viewer-section" data-section="viewer">
-    <div class="panel__inner">
-      <div class="eyebrow">Rasakan mesinnya dalam 3D</div>
-      <h2>Jelajahi model produk unggulan</h2>
-
-      <div class="viewer-product-tabs" id="viewerProductTabs"></div>
-
-      <div class="viewer-card">
-        <div class="viewer-toggle">
-          <button class="active" data-view="model" id="btnViewModel">Model 3D</button>
-          <button data-view="specs" id="btnViewSpecs">Spesifikasi</button>
-        </div>
-
-        <div id="viewModel">
-          <div class="viewer-canvas-wrap" id="viewerCanvasWrap">
-            <div class="viewer-loading" id="viewerLoading">Memuat model…</div>
-            <button class="viewer-reset" id="viewerReset">Reset tampilan</button>
-          </div>
-          <p class="viewer-hint">Putar dengan satu jari · Cubit untuk zoom</p>
-        </div>
-
-        <div id="viewSpecs" style="display:none;">
-          <div class="viewer-specs">
-            <div class="viewer-specs__title" id="specsTitle">—</div>
-            <div class="viewer-specs__code" id="specsCode">—</div>
-            <div id="specsList"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================= FOOTER ============================= -->
-  <section class="panel footer" data-section="footer">
-    <div class="panel__inner">
-      <img class="footer__logo" src="assets/logo-swifasia.png" alt="Logo PT SWIF Asia" />
-      <div class="footer__name">SWIF ASIA</div>
-      <div class="footer__line">
-        Kawasan GIIC Blok CC No.10, Kota Deltamas<br />
-        Cikarang Pusat, Kabupaten Bekasi, Jawa Barat
-      </div>
-      <div class="footer__line">021 2851-7980 / 7981 / 7982</div>
-      <div class="footer__heritage">Subsidiari Sanken Sangyo Ltd. — Jepang, sejak 1949</div>
-    </div>
-  </section>
-
+    <button class="nav" id="prev" aria-label="Slide sebelumnya">&#10094;</button>
+    <button class="nav" id="next" aria-label="Slide berikutnya">&#10095;</button>
+    <div class="dots" id="dots"></div>
+  </div></div>
 </div>
 
 <script src="data.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
