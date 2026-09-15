@@ -1,314 +1,367 @@
-/**
- * script.js — Totem Display SWIF Asia
- * ------------------------------------
- * - Merender konten dari data.js (stats, timeline, klien, produk)
- * - Navigasi titik di sisi kanan mengikuti scroll-snap section
- * - Viewer 3D memakai STLLoader (format .stl), menggantikan GLTFLoader (.glb)
- *   sebelumnya. STL tidak menyimpan warna/tekstur, jadi model diberi material
- *   metal abu-abu secara default di sini.
- */
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderStats();
-  renderTimeline();
-  renderTrusted();
-  renderProductCategories();
-  renderViewerTabs();
-  setupNavDots();
-  setupViewerToggle();
-  setupViewerProductTabs();
-  initViewer(FEATURED_3D_PRODUCTS[0]);
-});
 
-/* ---------------------------------------------------------------------- */
-/* Statistik                                                               */
-/* ---------------------------------------------------------------------- */
-function renderStats() {
-  const grid = document.getElementById("statsGrid");
-  grid.innerHTML = COMPANY_STATS.map(
-    (s) => `
-    <div class="stat-card">
-      <div class="stat-card__value">${s.value}<span class="unit">${s.suffix}</span></div>
-      <div class="stat-card__label">${s.label}</div>
-    </div>`
-  ).join("");
-}
+const SLIDE_MS = 30000, PRODUCT_MS = 8000, RESUME_MS = 20000;
 
-/* ---------------------------------------------------------------------- */
-/* Linimasa                                                                 */
-/* ---------------------------------------------------------------------- */
-function renderTimeline() {
-  const el = document.getElementById("timelineList");
-  el.innerHTML = COMPANY_TIMELINE.map(
-    (t) => `
-    <div class="timeline-item">
-      <div class="timeline-item__year">${t.year}</div>
-      <div class="timeline-item__title">${t.title}</div>
-      <div class="timeline-item__text">${t.text}</div>
-    </div>`
-  ).join("");
-}
+/* ================= GABUNGKAN SLIDE DARI data.js ================= */
+const SLIDES = [
+  { kind: "intro", ...INTRO_SLIDE },
+  ...PRODUCT_SLIDES.map((s) => ({ kind: "products", ...s })),
+];
 
-/* ---------------------------------------------------------------------- */
-/* Klien terpercaya                                                         */
-/* ---------------------------------------------------------------------- */
-function renderTrusted() {
-  const el = document.getElementById("trustedRow");
-  el.innerHTML = TRUSTED_CLIENTS.map((c) => `<div class="trusted__chip">${c.name}</div>`).join("");
-}
-
-/* ---------------------------------------------------------------------- */
-/* Lini produk — tab kategori + grid kartu                                 */
-/* ---------------------------------------------------------------------- */
-let activeCategoryId = PRODUCT_CATEGORIES[0].id;
-
-function renderProductCategories() {
-  const tabsEl = document.getElementById("categoryTabs");
-  tabsEl.innerHTML = PRODUCT_CATEGORIES.map(
-    (c) => `<button class="category-tab${c.id === activeCategoryId ? " active" : ""}" data-cat="${c.id}">${c.name}</button>`
-  ).join("");
-
-  tabsEl.querySelectorAll(".category-tab").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      activeCategoryId = btn.dataset.cat;
-      renderProductCategories();
-    });
-  });
-
-  const category = PRODUCT_CATEGORIES.find((c) => c.id === activeCategoryId);
-  document.getElementById("categoryIntro").textContent = category.intro;
-
-  const gridEl = document.getElementById("productGrid");
-  gridEl.innerHTML = category.items.map(renderProductCard).join("");
-}
-
-function renderProductCard(item) {
-  const isPlaceholder = item.image && item.image.startsWith("PLACEHOLDER:");
-  const media = isPlaceholder
-    ? `<div class="product-card__placeholder">Gambar: ${item.image.replace("PLACEHOLDER:", "")}</div>`
-    : `<img src="${item.image}" alt="${item.name}" />`;
-
-  return `
-    <div class="product-card">
-      <div class="product-card__media">${media}</div>
-      <div class="product-card__body">
-        <div class="product-card__code">${item.code}</div>
-        <div class="product-card__name">${item.name}</div>
-        <div class="product-card__desc">${item.desc}</div>
-      </div>
-    </div>`;
-}
-
-/* ---------------------------------------------------------------------- */
-/* Navigasi titik (mengikuti section yang sedang terlihat)                 */
-/* ---------------------------------------------------------------------- */
-function setupNavDots() {
-  const sections = Array.from(document.querySelectorAll(".panel"));
-  const nav = document.getElementById("navdots");
-  nav.innerHTML = sections.map((_, i) => `<button data-i="${i}" aria-label="Ke bagian ${i + 1}"></button>`).join("");
-  const dots = Array.from(nav.querySelectorAll("button"));
-
-  dots.forEach((dot, i) => {
-    dot.addEventListener("click", () => {
-      sections[i].scrollIntoView({ behavior: "smooth" });
-    });
-  });
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const idx = sections.indexOf(entry.target);
-          dots.forEach((d) => d.classList.remove("active"));
-          if (dots[idx]) dots[idx].classList.add("active");
-        }
-      });
-    },
-    { root: document.getElementById("app"), threshold: 0.6 }
-  );
-
-  sections.forEach((s) => observer.observe(s));
-}
-
-/* ---------------------------------------------------------------------- */
-/* Toggle "Model 3D" / "Spesifikasi"                                        */
-/* ---------------------------------------------------------------------- */
-function setupViewerToggle() {
-  const btnModel = document.getElementById("btnViewModel");
-  const btnSpecs = document.getElementById("btnViewSpecs");
-  const viewModel = document.getElementById("viewModel");
-  const viewSpecs = document.getElementById("viewSpecs");
-
-  btnModel.addEventListener("click", () => {
-    btnModel.classList.add("active");
-    btnSpecs.classList.remove("active");
-    viewModel.style.display = "";
-    viewSpecs.style.display = "none";
-  });
-
-  btnSpecs.addEventListener("click", () => {
-    btnSpecs.classList.add("active");
-    btnModel.classList.remove("active");
-    viewModel.style.display = "none";
-    viewSpecs.style.display = "";
-  });
-}
-
-/* ---------------------------------------------------------------------- */
-/* Tab pemilihan produk pada viewer 3D                                      */
-/* ---------------------------------------------------------------------- */
-function renderViewerTabs() {
-  const el = document.getElementById("viewerProductTabs");
-  el.innerHTML = FEATURED_3D_PRODUCTS.map(
-    (p, i) => `<button class="viewer-product-tab${i === 0 ? " active" : ""}" data-i="${i}">${p.name}</button>`
-  ).join("");
-}
-
-function setupViewerProductTabs() {
-  const el = document.getElementById("viewerProductTabs");
-  el.querySelectorAll(".viewer-product-tab").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      el.querySelectorAll(".viewer-product-tab").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-      const product = FEATURED_3D_PRODUCTS[Number(btn.dataset.i)];
-      initViewer(product);
-    });
-  });
-}
-
-/* ---------------------------------------------------------------------- */
-/* Panel spesifikasi teks                                                   */
-/* ---------------------------------------------------------------------- */
-function renderSpecs(product) {
-  document.getElementById("specsTitle").textContent = product.name;
-  document.getElementById("specsCode").textContent = product.code;
-  document.getElementById("specsList").innerHTML = product.specs
-    .map((s) => `<div class="spec-row"><span class="spec-row__label">${s.label}</span><span class="spec-row__value">${s.value}</span></div>`)
-    .join("");
-}
-
-/* ---------------------------------------------------------------------- */
-/* Viewer 3D — three.js + STLLoader                                        */
-/* ---------------------------------------------------------------------- */
-let renderer, scene, camera, controls, currentMesh;
-let viewerInitialized = false;
-
-function initViewer(product) {
-  renderSpecs(product);
-  const wrap = document.getElementById("viewerCanvasWrap");
-  const loading = document.getElementById("viewerLoading");
-  loading.style.display = "flex";
-  loading.textContent = "Memuat model…";
-
-  if (!viewerInitialized) {
-    setupThreeScene(wrap);
-    viewerInitialized = true;
+/* ================= HEADER / FOOTER ================= */
+function renderChrome() {
+  const logoEl = document.getElementById("headerLogo");
+  if (TOTEM_HEADER.logoImage) {
+    const img = document.createElement("img");
+    img.src = TOTEM_HEADER.logoImage;
+    img.alt = TOTEM_HEADER.company;
+    img.onerror = () => {
+      logoEl.classList.add("fallback");
+      logoEl.textContent = TOTEM_HEADER.logoText;
+    };
+    logoEl.appendChild(img);
+  } else {
+    logoEl.classList.add("fallback");
+    logoEl.textContent = TOTEM_HEADER.logoText;
   }
 
-  if (currentMesh) {
-    scene.remove(currentMesh);
-    currentMesh.geometry.dispose();
-    currentMesh.material.dispose();
-    currentMesh = null;
-  }
+  document.getElementById("coName").textContent = TOTEM_HEADER.company;
+  document.getElementById("coSub").textContent = TOTEM_HEADER.companySub;
+  document.getElementById("evLine1").textContent = TOTEM_HEADER.eventLine1;
+  document.getElementById("evLine2").textContent = TOTEM_HEADER.eventLine2;
 
-  const loader = new THREE.STLLoader();
-  loader.load(
-    product.modelFile,
-    (geometry) => {
-      geometry.center();
-      geometry.computeVertexNormals();
+  document.getElementById("footerSlog").innerHTML =
+    `${TOTEM_FOOTER.sloganPlain}<em>${TOTEM_FOOTER.sloganEmphasis}</em>`;
+  document.getElementById("footerCta").textContent = TOTEM_FOOTER.cta;
+}
 
-      const material = new THREE.MeshStandardMaterial({
-        color: 0x9aa1a6,
-        metalness: 0.35,
-        roughness: 0.55,
-      });
+/* ================= BUILD SLIDE DOM ================= */
+const slidesEl = document.getElementById("slides");
+const pickerEl = document.getElementById("picker");
+const dotsEl = document.getElementById("dots");
 
-      currentMesh = new THREE.Mesh(geometry, material);
-      currentMesh.rotation.x = -Math.PI / 2; // orientasi umum ekspor STL
-      scene.add(currentMesh);
-      fitCameraToObject(currentMesh);
+function buildSlideDom() {
+  SLIDES.forEach((s) => {
+    const d = document.createElement("div");
+    d.className = "slide";
 
-      loading.style.display = "none";
-    },
-    undefined,
-    () => {
-      // Gagal memuat — kemungkinan besar karena file .stl belum diunggah ke /models
-      loading.textContent = "Model 3D belum tersedia — unggah file .stl ke folder /models";
+    if (s.kind === "intro") {
+      d.innerHTML = `
+        <div class="badge">${s.badge}</div>
+        <h1>${s.title}</h1>
+        <div class="tag">${s.tag}</div>
+        <div class="feats">${s.timeline
+          .map(
+            (t) => `
+          <div class="feat static">
+            <div class="dot">${t.year}</div>
+            <div class="tx"><b>${t.title}</b><span>${t.text}</span></div>
+          </div>`
+          )
+          .join("")}
+        </div>
+        <div class="stage photo" style="background-image:url('${s.backgroundImage}')">
+          <div class="stName"><b>Warisan Sanken Sangyo</b><span>Sejak 1949, Jepang</span></div>
+          <div class="stat-chips">${s.stats
+            .map((st) => `<div class="stat-chip"><b>${st.value}</b><span>${st.label}</span></div>`)
+            .join("")}
+          </div>
+        </div>`;
+    } else {
+      d.innerHTML = `
+        <div class="badge">${s.badge}</div>
+        <h1>${s.title}</h1>
+        <div class="tag">${s.tag}</div>
+        <div class="feats">${s.products
+          .map(
+            (p, j) => `
+          <div class="feat" data-p="${j}">
+            <div class="dot">${j + 1}</div>
+            <div class="tx"><b>${p.name}</b><span>${p.desc}</span></div>
+          </div>`
+          )
+          .join("")}
+        </div>
+        <div class="stage">
+          <div class="stName"><b></b><span>3D Product View</span></div>
+          <div class="hint"><i>&#8635;</i> 360&deg;</div>
+          <div class="ph">Model belum diunggah — akan tampil placeholder generik</div>
+        </div>`;
     }
-  );
 
-  document.getElementById("viewerReset").onclick = () => {
-    if (currentMesh) fitCameraToObject(currentMesh);
-  };
+    slidesEl.appendChild(d);
+    dotsEl.appendChild(document.createElement("i"));
+  });
 }
 
-function setupThreeScene(wrap) {
-  const width = wrap.clientWidth;
-  const height = wrap.clientHeight;
+const slideEls = () => [...document.querySelectorAll(".slide")];
+const dotEls = () => [...dotsEl.children];
 
-  scene = new THREE.Scene();
-  scene.background = null;
+/* ================= THREE.JS VIEWER (dipakai bergantian di slide produk) ================= */
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+camera.position.set(0, 1.2, 6.4);
+camera.lookAt(0, 0.1, 0);
+scene.add(new THREE.AmbientLight(0xdce4ef, 0.6));
+const key = new THREE.DirectionalLight(0xffffff, 0.95);
+key.position.set(4, 6, 5);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0x93a0ae, 0.5);
+rim.position.set(-5, 3, -4);
+scene.add(rim);
+const ember = new THREE.PointLight(0xe2231a, 1.1, 12);
+ember.position.set(0, -2.2, 1.5);
+scene.add(ember);
 
-  camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 5000);
-  camera.position.set(0, 0, 200);
+const M = {
+  steel: () => new THREE.MeshStandardMaterial({ color: 0x93a0ae, metalness: 0.75, roughness: 0.32 }),
+  dark: () => new THREE.MeshStandardMaterial({ color: 0x22282a, metalness: 0.4, roughness: 0.55 }),
+  ink: () => new THREE.MeshStandardMaterial({ color: 0x141a16, metalness: 0.3, roughness: 0.7 }),
+  red: () => new THREE.MeshStandardMaterial({ color: 0xe2231a, metalness: 0.45, roughness: 0.4 }),
+  glow: () => new THREE.MeshStandardMaterial({ color: 0xff4b3e, emissive: 0xe2231a, emissiveIntensity: 0.9, roughness: 0.5 }),
+};
+function mesh(geo, mat) { return new THREE.Mesh(geo, mat); }
+function tube(r, len, mat, seg = 24) { return mesh(new THREE.CylinderGeometry(r, r, len, seg), mat); }
 
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
-  wrap.appendChild(renderer.domElement);
+/* --- placeholder generik: bentuk furnace abstrak, dipakai bila belum ada file 3D --- */
+function buildPlaceholder() {
+  const g = new THREE.Group();
+  const pot = mesh(new THREE.CylinderGeometry(1.05, 0.8, 1.9, 36), M.dark());
+  g.add(pot);
+  const lip = mesh(new THREE.TorusGeometry(1.05, 0.1, 12, 40), M.steel());
+  lip.rotation.x = Math.PI / 2;
+  lip.position.y = 0.95;
+  g.add(lip);
+  const glow = mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.08, 36), M.glow());
+  glow.position.y = 0.82;
+  g.add(glow);
+  for (let i = 0; i < 4; i++) {
+    const c = mesh(new THREE.TorusGeometry(1.0 - 0.05 * i, 0.06, 10, 36), M.red());
+    c.rotation.x = Math.PI / 2;
+    c.position.y = 0.4 - 0.45 * i;
+    g.add(c);
+  }
+  const base = tube(1.2, 0.25, M.ink(), 36);
+  base.position.y = -1.15;
+  g.add(base);
+  return g;
+}
 
-  const ambient = new THREE.AmbientLight(0xffffff, 0.7);
-  scene.add(ambient);
+/* --- loader universal: pilih loader berdasarkan ekstensi file --- */
+function loadModelAuto(url, onSuccess, onFail) {
+  const ext = (url.split(".").pop() || "").toLowerCase();
 
-  const dir1 = new THREE.DirectionalLight(0xffffff, 0.9);
-  dir1.position.set(1, 1, 1);
-  scene.add(dir1);
+  if ((ext === "glb" || ext === "gltf") && window.THREE && THREE.GLTFLoader && !window.__noGltf) {
+    new THREE.GLTFLoader().load(
+      url,
+      (g) => onSuccess(normalizeObject(g.scene)),
+      undefined,
+      onFail
+    );
+  } else if (ext === "stl" && window.THREE && THREE.STLLoader && !window.__noStl) {
+    new THREE.STLLoader().load(
+      url,
+      (geometry) => {
+        geometry.center();
+        geometry.computeVertexNormals();
+        const m = new THREE.Mesh(geometry, M.steel());
+        m.rotation.x = -Math.PI / 2;
+        onSuccess(normalizeObject(m));
+      },
+      undefined,
+      onFail
+    );
+  } else if (ext === "obj" && window.THREE && THREE.OBJLoader && !window.__noObj) {
+    new THREE.OBJLoader().load(
+      url,
+      (obj) => {
+        obj.traverse((c) => { if (c.isMesh) c.material = M.steel(); });
+        onSuccess(normalizeObject(obj));
+      },
+      undefined,
+      onFail
+    );
+  } else {
+    onFail();
+  }
+}
 
-  const dir2 = new THREE.DirectionalLight(0xffffff, 0.4);
-  dir2.position.set(-1, -0.5, -1);
-  scene.add(dir2);
+function normalizeObject(obj) {
+  const box = new THREE.Box3().setFromObject(obj);
+  const size = box.getSize(new THREE.Vector3());
+  const scale = 2.6 / (Math.max(size.x, size.y, size.z) || 1);
+  obj.scale.setScalar(scale);
+  box.setFromObject(obj);
+  const center = box.getCenter(new THREE.Vector3());
+  obj.position.sub(center);
+  return obj;
+}
 
-  controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  controls.dampingFactor = 0.08;
-  controls.enablePan = false;
-  controls.minDistance = 10;
-  controls.maxDistance = 2000;
+let group = null, modelCache = {};
+function setModel(product) {
+  if (group) {
+    scene.remove(group);
+    group.traverse((o) => { if (o.geometry) o.geometry.dispose(); });
+  }
+  group = new THREE.Group();
+  scene.add(group);
 
-  window.addEventListener("resize", () => {
-    const w = wrap.clientWidth;
-    const h = wrap.clientHeight;
-    camera.aspect = w / h;
+  const showPlaceholder = () => {
+    const p = buildPlaceholder();
+    p.position.y = -0.15;
+    group.add(p);
+  };
+
+  if (!product.modelFile) {
+    showPlaceholder();
+    return;
+  }
+  if (modelCache[product.modelFile]) {
+    group.add(modelCache[product.modelFile].clone());
+    return;
+  }
+  loadModelAuto(
+    product.modelFile,
+    (obj) => {
+      obj.position.y = -0.15;
+      modelCache[product.modelFile] = obj;
+      group.add(obj.clone());
+    },
+    showPlaceholder
+  );
+}
+
+/* rotasi: auto + drag */
+let rotY = 0, rotX = -0.12, vel = 0.005, dragging = false, lx = 0, ly = 0, pauseUntil = 0;
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+renderer.domElement.style.cursor = "grab";
+function onDown(e) { dragging = true; lx = e.clientX; ly = e.clientY; pauseUntil = Date.now() + RESUME_MS; }
+function onMove(e) {
+  if (!dragging) return;
+  rotY += (e.clientX - lx) * 0.008;
+  rotX += (e.clientY - ly) * 0.005;
+  rotX = Math.max(-0.9, Math.min(0.5, rotX));
+  lx = e.clientX; ly = e.clientY;
+}
+function onUp() { dragging = false; }
+renderer.domElement.addEventListener("pointerdown", onDown);
+addEventListener("pointermove", onMove);
+addEventListener("pointerup", onUp);
+
+function tick() {
+  requestAnimationFrame(tick);
+  if (!dragging && !reduced) rotY += vel;
+  if (group) {
+    group.rotation.y = rotY;
+    group.rotation.x = rotX;
+  }
+  renderer.render(scene, camera);
+}
+tick();
+
+/* ================= LAYOUT / SCALING (frame 1080x1920 ke layar) ================= */
+const fit = document.getElementById("fit");
+function rescale() {
+  const s = Math.min(innerWidth / 1080, innerHeight / 1920);
+  fit.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+addEventListener("resize", rescale);
+
+/* ================= STATE / NAVIGASI ================= */
+let cur = 0, curProd = 0, slideTimer, prodTimer;
+
+function mountViewer() {
+  const slide = SLIDES[cur];
+  if (slide.kind !== "products") return; // slide intro pakai foto, bukan canvas
+  const stage = slideEls()[cur].querySelector(".stage");
+  stage.insertBefore(renderer.domElement, stage.firstChild);
+  const r = () => {
+    const b = stage.getBoundingClientRect();
+    const s = Math.min(innerWidth / 1080, innerHeight / 1920) || 1;
+    renderer.setSize(b.width / s, b.height / s, false);
+    camera.aspect = (b.width / s) / (b.height / s);
     camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
+  };
+  requestAnimationFrame(r);
+  addEventListener("resize", r);
+}
+
+function selectProduct(j, user) {
+  const slide = SLIDES[cur];
+  if (slide.kind !== "products") return;
+  curProd = j;
+  const p = slide.products[j];
+  slideEls()[cur].querySelectorAll(".feat").forEach((f, i) => f.classList.toggle("sel", i === j));
+  [...pickerEl.children].forEach((b, i) => b.classList.toggle("sel", i === j));
+  const nameEl = slideEls()[cur].querySelector(".stName b");
+  if (nameEl) nameEl.textContent = p.name;
+  setModel(p);
+  rotY = 0;
+  if (user) pauseUntil = Date.now() + RESUME_MS;
+}
+
+function buildPicker() {
+  pickerEl.innerHTML = "";
+  const slide = SLIDES[cur];
+  if (slide.kind === "products") {
+    slide.products.forEach((p, j) => {
+      const b = document.createElement("button");
+      b.className = "pick";
+      b.textContent = p.short;
+      b.onclick = () => selectProduct(j, true);
+      pickerEl.appendChild(b);
+    });
+  } else {
+    // slide intro: tampilkan klien terpercaya sebagai chip statis
+    (slide.trustedClients || []).forEach((name) => {
+      const b = document.createElement("button");
+      b.className = "pick static";
+      b.textContent = name;
+      pickerEl.appendChild(b);
+    });
+  }
+}
+
+function goSlide(i, user) {
+  cur = (i + SLIDES.length) % SLIDES.length;
+  slideEls().forEach((el, k) => el.classList.toggle("on", k === cur));
+  dotEls().forEach((d, k) => d.classList.toggle("on", k === cur));
+  buildPicker();
+  mountViewer();
+  if (SLIDES[cur].kind === "products") selectProduct(0, false);
+  if (user) pauseUntil = Date.now() + RESUME_MS;
+  restartTimers();
+}
+
+function restartTimers() {
+  clearInterval(slideTimer);
+  clearInterval(prodTimer);
+  prodTimer = setInterval(() => {
+    if (Date.now() < pauseUntil) return;
+    const slide = SLIDES[cur];
+    if (slide.kind === "products") selectProduct((curProd + 1) % slide.products.length, false);
+  }, PRODUCT_MS);
+  slideTimer = setInterval(() => {
+    if (Date.now() < pauseUntil) return;
+    goSlide(cur + 1, false);
+  }, SLIDE_MS);
+}
+
+/* ================= INIT ================= */
+document.addEventListener("DOMContentLoaded", () => {
+  renderChrome();
+  buildSlideDom();
+  rescale();
+
+  document.getElementById("prev").onclick = () => goSlide(cur - 1, true);
+  document.getElementById("next").onclick = () => goSlide(cur + 1, true);
+  slidesEl.addEventListener("click", (e) => {
+    const f = e.target.closest(".feat");
+    if (f && !f.classList.contains("static")) selectProduct(+f.dataset.p, true);
   });
 
-  animate();
-}
-
-function fitCameraToObject(object) {
-  const box = new THREE.Box3().setFromObject(object);
-  const size = box.getSize(new THREE.Vector3());
-  const center = box.getCenter(new THREE.Vector3());
-
-  const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  const fov = camera.fov * (Math.PI / 180);
-  let camDist = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-  camDist *= 1.6; // beri ruang napas di sekitar model
-
-  camera.position.set(center.x, center.y, center.z + camDist);
-  camera.near = camDist / 100;
-  camera.far = camDist * 100;
-  camera.updateProjectionMatrix();
-
-  controls.target.copy(center);
-  controls.update();
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  if (controls) controls.update();
-  if (renderer && scene && camera) renderer.render(scene, camera);
-}
+  goSlide(0, false);
+});
