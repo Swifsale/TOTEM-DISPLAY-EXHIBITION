@@ -217,7 +217,7 @@ const FEATURED_3D_PRODUCTS = [
    {
     code: "HybM",
     name: "Hybrid Melter",
-    modelFile: "assets/MF_HYBRID.stl", 
+    modelFile: "models/MF_HYBRID.stl", 
     specs: [
       { label: "Kategori", value: "Melting Furnace" },
       { label: "Material input", value: "Chip / serpihan logam" },
