@@ -67,7 +67,7 @@ const PRODUCT_SLIDES = [
       {
         name: "Hybrid Melter", short: "Hybrid Melter", code: "HybM",
         desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
-        modelFile: "",
+        modelFile: "MF_HYBRID.stl",
       },
     ],
   },
