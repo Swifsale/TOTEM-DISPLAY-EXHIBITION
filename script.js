@@ -83,7 +83,7 @@ function buildSlideDom() {
         <div class="stage">
           <div class="stName"><b></b><span>3D Product View</span></div>
           <div class="hint"><i>&#8635;</i> 360&deg;</div>
-          <div class="ph">Model belum diunggah — akan tampil placeholder generik</div>
+          <div class="ph">Model Belum ada</div>
         </div>`;
     }
 
@@ -150,8 +150,17 @@ function buildPlaceholder() {
 
 /* --- loader universal: pilih loader berdasarkan ekstensi file ---
    rotationDeg opsional: { x, y, z } dalam DERAJAT, diatur per-produk
-   lewat field `modelRotation` di data.js. Tidak ada tebakan otomatis
-   lagi di sini — orientasi mentah mengikuti file aslinya. */
+   lewat field `modelRotation` di data.js.*/
+const gltfLoader = (() => {
+  const l = new THREE.GLTFLoader();
+  if (window.THREE && THREE.DRACOLoader) {
+    const draco = new THREE.DRACOLoader();
+    draco.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.6/");
+    l.setDRACOLoader(draco);
+  }
+  return l;
+})();
+
 function loadModelAuto(url, rotationDeg, onSuccess, onFail) {
   const ext = (url.split(".").pop() || "").toLowerCase();
   const r = rotationDeg || {};
@@ -165,11 +174,11 @@ function loadModelAuto(url, rotationDeg, onSuccess, onFail) {
   };
 
   if ((ext === "glb" || ext === "gltf") && window.THREE && THREE.GLTFLoader && !window.__noGltf) {
-    new THREE.GLTFLoader().load(
+    gltfLoader.load(
       url,
       (g) => onSuccess(normalizeObject(applyRotation(g.scene))),
       undefined,
-      onFail
+      (err) => { console.error("GLTFLoader gagal memuat", url, err); onFail(); }
     );
   } else if (ext === "stl" && window.THREE && THREE.STLLoader && !window.__noStl) {
     new THREE.STLLoader().load(
@@ -181,7 +190,7 @@ function loadModelAuto(url, rotationDeg, onSuccess, onFail) {
         onSuccess(normalizeObject(applyRotation(m)));
       },
       undefined,
-      onFail
+      (err) => { console.error("STLLoader gagal memuat", url, err); onFail(); }
     );
   } else if (ext === "obj" && window.THREE && THREE.OBJLoader && !window.__noObj) {
     new THREE.OBJLoader().load(
@@ -191,9 +200,10 @@ function loadModelAuto(url, rotationDeg, onSuccess, onFail) {
         onSuccess(normalizeObject(applyRotation(obj)));
       },
       undefined,
-      onFail
+      (err) => { console.error("OBJLoader gagal memuat", url, err); onFail(); }
     );
   } else {
+    console.warn("loadModelAuto: format tidak dikenali/loader tidak tersedia untuk", url);
     onFail();
   }
 }
