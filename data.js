@@ -62,12 +62,12 @@ const PRODUCT_SLIDES = [
       {
         name: "Chip Smelter Melting Furnace", short: "Chip Smelter", code: "CSMF",
         desc: "Furnace peleburan khusus untuk material berbentuk chip/serpihan logam.",
-        modelFile: "models/csmf.stl", // contoh: sudah terisi (masih placeholder kubus)
+        modelFile: "", 
       },
       {
         name: "Hybrid Melter", short: "Hybrid Melter", code: "HybM",
         desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
-        modelFile: "MF_HYBRID.stl",
+        modelFile: "models/MF_HYBRID.stl",
       },
     ],
   },
@@ -84,7 +84,7 @@ const PRODUCT_SLIDES = [
       {
         name: "Rotary Heat Treatment Furnace", short: "Rotary HT", code: "ROTARY HT",
         desc: "Alur material pada rack rotary. Opsi panas: burner, hybrid, atau elektrik.",
-        modelFile: "",
+        modelFile: "models/ROTARY_HT.stl",
       },
     ],
   },
