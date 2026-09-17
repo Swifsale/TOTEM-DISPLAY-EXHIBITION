@@ -1,4 +1,3 @@
-
 // ---------------------------------------------------------------------------
 // Identitas di header & footer totem
 // ---------------------------------------------------------------------------
@@ -42,6 +41,12 @@ const INTRO_SLIDE = {
 // ---------------------------------------------------------------------------
 // Slide produk — tiap kategori jadi satu slide, tiap item jadi satu "feat"
 // yang bisa disentuh untuk mengganti model 3D di panel kanan/stage.
+//
+// modelRotation (opsional): { x, y, z } dalam DERAJAT, untuk mengoreksi
+// orientasi model 3D yang rebah/miring saat pertama dimuat. Defaultnya
+// tidak ada rotasi paksa apa pun — kalau modelnya sudah tegak sejak di-
+// export, field ini boleh dihapus/dibiarkan semua 0. Kalau masih miring,
+// coba kelipatan 90 (90, -90, 180) pada sumbu yang sesuai.
 // ---------------------------------------------------------------------------
 const PRODUCT_SLIDES = [
   {
@@ -62,12 +67,13 @@ const PRODUCT_SLIDES = [
       {
         name: "Chip Smelter Melting Furnace", short: "Chip Smelter", code: "CSMF",
         desc: "Furnace peleburan khusus untuk material berbentuk chip/serpihan logam.",
-        modelFile: "", 
+        modelFile: "",
       },
       {
         name: "Hybrid Melter", short: "Hybrid Melter", code: "HybM",
         desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
         modelFile: "models/MF_HYBRID.stl",
+        modelRotation: { x: 0, y: 0, z: 0 }, // <- kalau masih rebah, coba ubah angka ini (kelipatan 90)
       },
     ],
   },
@@ -85,6 +91,7 @@ const PRODUCT_SLIDES = [
         name: "Rotary Heat Treatment Furnace", short: "Rotary HT", code: "ROTARY HT",
         desc: "Alur material pada rack rotary. Opsi panas: burner, hybrid, atau elektrik.",
         modelFile: "models/ROTARY_HT.stl",
+        modelRotation: { x: 0, y: 0, z: 0 }, // <- kalau masih rebah, coba ubah angka ini (kelipatan 90)
       },
     ],
   },
