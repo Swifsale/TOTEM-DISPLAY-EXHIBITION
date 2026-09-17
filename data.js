@@ -2,7 +2,7 @@
 // Identitas di header & footer totem
 // ---------------------------------------------------------------------------
 const TOTEM_HEADER = {
-  logoText: "SWIF",                 // teks singkat di kotak logo (dipakai jika logo image gagal dimuat)
+  logoText: "SWIF",                 
   logoImage: "assets/logo-swifasia.png",
   company: "PT SWIF ASIA",
   companySub: "Industrial Furnace & Heat Treatment",
@@ -17,7 +17,7 @@ const TOTEM_FOOTER = {
 };
 
 // ---------------------------------------------------------------------------
-// Slide pembuka (intro perusahaan) — tampil sebagai slide pertama
+// Slide pembuka (intro perusahaan)
 // ---------------------------------------------------------------------------
 const INTRO_SLIDE = {
   badge: "TENTANG KAMI",
@@ -57,7 +57,7 @@ const PRODUCT_SLIDES = [
       {
         name: "Tower Melting Furnace", short: "Tower Melting", code: "TWM",
         desc: "Furnace peleburan tipe menara untuk lini produksi dengan alur vertikal.",
-        modelFile: "", // -- lengkapi path .glb/.stl/.obj bila sudah ada --
+        modelFile: "", 
       },
       {
         name: "Crucible Melting Furnace", short: "Crucible", code: "CMF",
@@ -73,7 +73,7 @@ const PRODUCT_SLIDES = [
         name: "Hybrid Melter", short: "Hybrid Melter", code: "HybM",
         desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
         modelFile: "models/MF_HYBRID.stl",
-        modelRotation: { x: 0, y: 0, z: 0 }, // <- kalau masih rebah, coba ubah angka ini (kelipatan 90)
+        modelRotation: { x: 0, y: 0, z: 0 }, 
       },
     ],
   },
