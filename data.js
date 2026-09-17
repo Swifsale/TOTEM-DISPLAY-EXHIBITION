@@ -90,7 +90,7 @@ const PRODUCT_SLIDES = [
       {
         name: "Rotary Heat Treatment Furnace", short: "Rotary HT", code: "ROTARY HT",
         desc: "Alur material pada rack rotary. Opsi panas: burner, hybrid, atau elektrik.",
-        modelFile: "models/ROTARY_HT.stl",
+        modelFile: "models/ROTARY_HT.glb",
         modelRotation: { x: 0, y: 0, z: 0 }, // <- kalau masih rebah, coba ubah angka ini (kelipatan 90)
       },
     ],
