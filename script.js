@@ -1,5 +1,3 @@
-
-
 const SLIDE_MS = 30000, PRODUCT_MS = 8000, RESUME_MS = 20000;
 
 /* ================= GABUNGKAN SLIDE DARI data.js ================= */
@@ -150,14 +148,26 @@ function buildPlaceholder() {
   return g;
 }
 
-/* --- loader universal: pilih loader berdasarkan ekstensi file --- */
-function loadModelAuto(url, onSuccess, onFail) {
+/* --- loader universal: pilih loader berdasarkan ekstensi file ---
+   rotationDeg opsional: { x, y, z } dalam DERAJAT, diatur per-produk
+   lewat field `modelRotation` di data.js. Tidak ada tebakan otomatis
+   lagi di sini — orientasi mentah mengikuti file aslinya. */
+function loadModelAuto(url, rotationDeg, onSuccess, onFail) {
   const ext = (url.split(".").pop() || "").toLowerCase();
+  const r = rotationDeg || {};
+  const applyRotation = (obj) => {
+    obj.rotation.set(
+      THREE.MathUtils.degToRad(r.x || 0),
+      THREE.MathUtils.degToRad(r.y || 0),
+      THREE.MathUtils.degToRad(r.z || 0)
+    );
+    return obj;
+  };
 
   if ((ext === "glb" || ext === "gltf") && window.THREE && THREE.GLTFLoader && !window.__noGltf) {
     new THREE.GLTFLoader().load(
       url,
-      (g) => onSuccess(normalizeObject(g.scene)),
+      (g) => onSuccess(normalizeObject(applyRotation(g.scene))),
       undefined,
       onFail
     );
@@ -168,8 +178,7 @@ function loadModelAuto(url, onSuccess, onFail) {
         geometry.center();
         geometry.computeVertexNormals();
         const m = new THREE.Mesh(geometry, M.steel());
-        m.rotation.x = -Math.PI / 2;
-        onSuccess(normalizeObject(m));
+        onSuccess(normalizeObject(applyRotation(m)));
       },
       undefined,
       onFail
@@ -179,7 +188,7 @@ function loadModelAuto(url, onSuccess, onFail) {
       url,
       (obj) => {
         obj.traverse((c) => { if (c.isMesh) c.material = M.steel(); });
-        onSuccess(normalizeObject(obj));
+        onSuccess(normalizeObject(applyRotation(obj)));
       },
       undefined,
       onFail
@@ -225,6 +234,7 @@ function setModel(product) {
   }
   loadModelAuto(
     product.modelFile,
+    product.modelRotation,
     (obj) => {
       obj.position.y = -0.15;
       modelCache[product.modelFile] = obj;
