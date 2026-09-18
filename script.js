@@ -45,9 +45,13 @@ function buildSlideDom() {
     d.className = "slide";
 
     if (s.kind === "intro" || s.kind === "info") {
-      const hasPhoto = !!s.backgroundImage;
-      const stageClass = hasPhoto ? "stage photo" : "stage";
+      const hasVideo = !!s.backgroundVideo;
+      const hasPhoto = !hasVideo && !!s.backgroundImage;
+      const stageClass = hasVideo ? "stage video" : hasPhoto ? "stage photo" : "stage";
       const stageStyle = hasPhoto ? ` style="background-image:url('${s.backgroundImage}')"` : "";
+      const videoTag = hasVideo
+        ? `<video class="bgvid" src="${s.backgroundVideo}" autoplay muted loop playsinline></video>`
+        : "";
       d.innerHTML = `
         <div class="badge">${s.badge}</div>
         <h1>${s.title}</h1>
@@ -63,6 +67,7 @@ function buildSlideDom() {
           .join("")}
         </div>
         <div class="${stageClass}"${stageStyle}>
+          ${videoTag}
           <div class="stName"><b>${s.stageLabel || ""}</b><span>${s.stageSub || ""}</span></div>
           <div class="stat-chips">${s.stats
             .map((st) => `<div class="stat-chip"><b>${st.value}</b><span>${st.label}</span></div>`)
