@@ -1,21 +1,3 @@
-/**
- * data.js — Totem Display SWIF Asia (gaya slideshow + panel 3D)
- * -----------------------------------------------------------------------
- * SATU-SATUNYA file yang perlu diedit untuk update teks/produk/3D.
- * Konten produk & spesifikasi di bawah diambil dari materi presentasi
- * resmi perusahaan (Bahan_Presentasi_Exhibition.pptx).
- *
- * FORMAT FILE 3D YANG DIDUKUNG: .glb / .gltf (disarankan, bisa bawa warna),
- * .stl, .obj — isi `modelFile` dengan path filenya di folder models/.
- *
- * SPESIFIKASI (opsional): field `specs` pada tiap produk — array berisi
- * maksimal 4 objek {label, value} — akan tampil sebagai kartu angka kecil
- * di atas panel 3D produk terkait. Kosongkan array-nya kalau belum ada
- * angka pasti untuk produk tersebut.
- *
- * modelRotation (opsional): { x, y, z } dalam DERAJAT, untuk mengoreksi
- * orientasi model 3D yang rebah/miring saat pertama dimuat.
- */
 
 // ---------------------------------------------------------------------------
 // Identitas di header & footer totem
@@ -121,7 +103,7 @@ const PRODUCT_SLIDES = [
       {
         name: "Hybrid Melter", short: "Hybrid Melter", code: "HybM",
         desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
-        modelFile: "models/MF_HYBRID.stl",
+        modelFile: "models/MF_HYBRID.glb",
         modelRotation: { x: 0, y: 0, z: 0 },
         specs: [],
       },
@@ -157,7 +139,7 @@ const PRODUCT_SLIDES = [
       {
         name: "Rotary Heat Treatment Furnace", short: "Rotary HT", code: "ROTARY HT",
         desc: "Alur material pada rack rotary. Opsi panas: burner, hybrid, atau elektrik.",
-        modelFile: "models/ROTARY_HT.stl",
+        modelFile: "models/ROTARY_HT.glb",
         modelRotation: { x: 0, y: 0, z: 0 },
         specs: [],
       },
