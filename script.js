@@ -3,6 +3,7 @@ const SLIDE_MS = 30000, PRODUCT_MS = 8000, RESUME_MS = 20000;
 /* ================= GABUNGKAN SLIDE DARI data.js ================= */
 const SLIDES = [
   { kind: "intro", ...INTRO_SLIDE },
+  ...(typeof INFO_SLIDES !== "undefined" ? INFO_SLIDES.map((s) => ({ kind: "info", ...s })) : []),
   ...PRODUCT_SLIDES.map((s) => ({ kind: "products", ...s })),
 ];
 
@@ -43,7 +44,10 @@ function buildSlideDom() {
     const d = document.createElement("div");
     d.className = "slide";
 
-    if (s.kind === "intro") {
+    if (s.kind === "intro" || s.kind === "info") {
+      const hasPhoto = !!s.backgroundImage;
+      const stageClass = hasPhoto ? "stage photo" : "stage";
+      const stageStyle = hasPhoto ? ` style="background-image:url('${s.backgroundImage}')"` : "";
       d.innerHTML = `
         <div class="badge">${s.badge}</div>
         <h1>${s.title}</h1>
@@ -58,8 +62,8 @@ function buildSlideDom() {
           )
           .join("")}
         </div>
-        <div class="stage photo" style="background-image:url('${s.backgroundImage}')">
-          <div class="stName"><b>Warisan Sanken Sangyo</b><span>Sejak 1949, Jepang</span></div>
+        <div class="${stageClass}"${stageStyle}>
+          <div class="stName"><b>${s.stageLabel || ""}</b><span>${s.stageSub || ""}</span></div>
           <div class="stat-chips">${s.stats
             .map((st) => `<div class="stat-chip"><b>${st.value}</b><span>${st.label}</span></div>`)
             .join("")}
@@ -83,7 +87,8 @@ function buildSlideDom() {
         <div class="stage">
           <div class="stName"><b></b><span>3D Product View</span></div>
           <div class="hint"><i>&#8635;</i> 360&deg;</div>
-          <div class="ph">Model Belum ada</div>
+          <div class="ph">Model belum diunggah — akan tampil placeholder generik</div>
+          <div class="stat-chips spec-chips"></div>
         </div>`;
     }
 
@@ -150,7 +155,8 @@ function buildPlaceholder() {
 
 /* --- loader universal: pilih loader berdasarkan ekstensi file ---
    rotationDeg opsional: { x, y, z } dalam DERAJAT, diatur per-produk
-   lewat field `modelRotation` di data.js.*/
+   lewat field `modelRotation` di data.js. Tidak ada tebakan otomatis
+   lagi di sini — orientasi mentah mengikuti file aslinya. */
 const gltfLoader = (() => {
   const l = new THREE.GLTFLoader();
   if (window.THREE && THREE.DRACOLoader) {
@@ -318,6 +324,16 @@ function selectProduct(j, user) {
   [...pickerEl.children].forEach((b, i) => b.classList.toggle("sel", i === j));
   const nameEl = slideEls()[cur].querySelector(".stName b");
   if (nameEl) nameEl.textContent = p.name;
+  const specWrap = slideEls()[cur].querySelector(".spec-chips");
+  if (specWrap) {
+    const specs = (p.specs || []).slice(0, 4);
+    specWrap.innerHTML = specs
+      .map((s) => `<div class="stat-chip"><b>${s.value}</b><span>${s.label}</span></div>`)
+      .join("");
+    specWrap.style.display = specs.length ? "grid" : "none";
+  }
+  const phEl = slideEls()[cur].querySelector(".ph");
+  if (phEl) phEl.style.display = p.modelFile ? "none" : "";
   setModel(p);
   rotY = 0;
   if (user) pauseUntil = Date.now() + RESUME_MS;
