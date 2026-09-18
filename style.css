@@ -1,3 +1,9 @@
+/* =========================================================================
+   SWIF ASIA — Totem Display (gaya slideshow + panel 3D, terinspirasi
+   pola interaksi totem SAL: frame tetap 1080x1920 yang diskalakan ke layar,
+   slide auto-play, panel 3D di stage, picker pills, nav & dots).
+   Palet direcolor ke identitas SWIF Asia: dasar gelap + merah dari logo.
+   ========================================================================= */
 
 :root{
   --ink:#0B0E0C; --ink-deep:#070908; --ink-soft:#141A16;
