@@ -1,6 +1,3 @@
-// ---------------------------------------------------------------------------
-// Identitas di header & footer totem
-// ---------------------------------------------------------------------------
 const TOTEM_HEADER = {
   logoText: "SWIF",
   logoImage: "assets/logo-swifasia.png",
@@ -52,8 +49,10 @@ const INFO_SLIDES = [
     tag: '"0 kali repair sejak unit pertama terpasang."',
     stageLabel: "Rekam Jejak",
     stageSub: "Tercatat sejak unit dipasang",
+    backgroundImage: "assets/background-hero.jpg",
+    
     timeline: [
-      { year: "01", title: "Trusted by Leading OEMs", text: "Dipercaya Suzuki Indomobil Motor, Astra Otoparts Nusa Metal, Astra Daihatsu Motor, & Progress Die Cast." },
+      { year: "02", title: "Trusted by Leading OEMs", text: "Dipercaya Suzuki Indomobil Motor, Astra Otoparts Nusa Metal, Astra Daihatsu Motor, & Progress Die Cast." },
       { year: "02", title: "Zero-Repair Track Record", text: "Seluruh unit terpasang belum pernah tercatat mengalami kerusakan/perbaikan sejak instalasi." },
       { year: "03", title: "Certified Safety Standard", text: "Sistem combustion produk heat treatment memenuhi standar keselamatan JIS B8514." },
       { year: "04", title: "Custom-Engineered Design", text: "Fleksibel merancang kapasitas pemanas & dimensi furnace sesuai kebutuhan spesifik customer." },
@@ -68,10 +67,6 @@ const INFO_SLIDES = [
   },
 ];
 
-// ---------------------------------------------------------------------------
-// Slide produk — tiap kategori jadi satu slide, tiap item jadi satu "feat"
-// yang bisa disentuh untuk mengganti model 3D di panel kanan/stage.
-// ---------------------------------------------------------------------------
 const PRODUCT_SLIDES = [
   {
     badge: "LINI PRODUK",
@@ -121,7 +116,7 @@ const PRODUCT_SLIDES = [
       {
         name: "T6 Heat Treatment Furnace", short: "T6 Roller Hearth", code: "T6",
         desc: "Roller Hearth Type — untuk processing cylinder head, alur proses 15 zona (solution heating & soaking, quenching, aging heating & soaking), dikendalikan otomatis via damper berbasis thermocouple. Sistem terlengkap di jajaran produk SWIF Asia.",
-        modelFile: "", modelRotation: { x: 0, y: 0, z: 0 },
+        modelFile: "models/ROTARY_HT.glb", modelRotation: { x: 0, y: 0, z: 0 },
         specs: [
           { label: "Solution Furnace", value: "505±10°C" },
           { label: "Quenching Tank", value: "85±5°C" },
@@ -129,15 +124,6 @@ const PRODUCT_SLIDES = [
           { label: "Gas Burner Capacity", value: "350 kW" },
         ],
       },
-      {
-        name: "Rotary Heat Treatment Furnace", short: "Rotary HT", code: "ROTARY HT",
-        desc: "Alur material pada rack rotary. Opsi panas: burner, hybrid, atau elektrik.",
-        modelFile: "models/ROTARY_HT.glb",
-        modelRotation: { x: 0, y: 0, z: 0 },
-        specs: [],
-      },
-    ],
-  },
   {
     badge: "LINI PRODUK",
     title: "Aluminium Holding Furnace",
@@ -210,25 +196,6 @@ const PRODUCT_SLIDES = [
           { label: "Process Cycle", value: "180 min" },
         ],
       },
-    ],
-  },
-  {
-    badge: "PERALATAN PENDUKUNG",
-    title: "Peralatan Pendukung",
-    tag: '"Kelengkapan lini produksi furnace."',
-    products: [
-      { name: "Ladle Device", short: "Ladle", code: "LD", desc: "Perangkat bantu penuangan/pemindahan logam cair.", modelFile: "", specs: [] },
-      { name: "Porter Metal Transfer", short: "Porter", code: "PMT", desc: "Sistem transfer logam antar-stasiun produksi.", modelFile: "", specs: [] },
-      { name: "Dust Collector", short: "Dust Collector", code: "DC", desc: "Sistem penangkap debu untuk menjaga kualitas udara area produksi.", modelFile: "", specs: [] },
-    ],
-  },
-  {
-    badge: "SPARE PARTS & LAYANAN",
-    title: "Spare Parts & Layanan",
-    tag: '"Dukungan purna jual 24/7."',
-    products: [
-      { name: "Spare Parts Furnace", short: "Spare Parts", code: "PARTS", desc: "Komponen pengganti orisinal, termasuk immersion heater Atherm — menjaga performa furnace tetap optimal.", modelFile: "", specs: [] },
-      { name: "Layanan Purna Jual", short: "Layanan", code: "SVC", desc: "Perawatan berkala, fabrikasi, serta perbaikan/modifikasi panel kontrol, refraktori, dan mekanikal.", modelFile: "", specs: [] },
     ],
   },
 ];
