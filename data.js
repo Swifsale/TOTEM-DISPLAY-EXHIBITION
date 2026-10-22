@@ -68,9 +68,9 @@ const HOME_PAGES = [
       image: "assets/home/hybrid-melter.png",
     },
     pillars: [
-      { label: "ENERGY SAVING",   color: "blue", icon: "assets/icons/energy.png" },
-      { label: "HIGH SAFETY",     color: "dark", icon: "assets/icons/safety.png" },
-      { label: "PRODUCT QUALITY", color: "red",  icon: "assets/icons/quality.png" },
+      { label: "ENERGY SAVING",   color: "blue", icon: "assets/icons/energy.gif" },
+      { label: "HIGH SAFETY",     color: "dark", icon: "assets/icons/safety.gif" },
+      { label: "PRODUCT QUALITY", color: "red",  icon: "assets/icons/quality.gif" },
     ],
     cta: { label: "LIHAT DETAIL PRODUK & 3D", sub: "Sentuh untuk eksplorasi interaktif" },
   },
