@@ -66,8 +66,19 @@ function bgVars(bg) {
   if (!bg || !bg.photo) return "";
   return `--photo:url('${attr(bg.photo)}');--photo-op:${bg.opacity == null ? 0.24 : bg.opacity};--photo-pos:${attr(bg.pos || "center")}`;
 }
+/* Spiral (SVG, digambar & diputar oleh CSS) — dibuat sekali, dipakai ulang di tiap halaman */
+const SPIRAL = (() => {
+  const turns = 5, b = 300 / (turns * 2 * Math.PI); let d = "";
+  for (let t = 0; t <= turns * 2 * Math.PI; t += 0.1) {
+    const r = 14 + b * t;
+    d += (d ? "L" : "M") + (r * Math.cos(t)).toFixed(1) + " " + (r * Math.sin(t)).toFixed(1);
+  }
+  return d;
+})();
+const spiralSVG = (cls) => `<svg class="sp ${cls}" viewBox="-320 -320 640 640" aria-hidden="true"><path d="${SPIRAL}"/></svg>`;
 const BG_HTML = '<i class="blob b1"></i><i class="blob b2"></i><i class="ring"></i><i class="ribbon"></i>' +
-  '<i class="w w3"></i><i class="w w2"></i><i class="w w1"></i><i class="w main"></i><i class="photo"></i><i class="glow"></i>';
+  '<i class="w w3"></i><i class="w w2"></i><i class="w w1"></i><i class="w main"></i><i class="photo"></i>' +
+  spiralSVG("s1") + spiralSVG("s2") + spiralSVG("s3") + '<i class="rings a"></i><i class="rings b"></i><i class="glow"></i>';
 const logoHTML = () =>
   `<div class="logo"><img src="${attr(CONFIG.LOGO_IMAGE)}" alt="PT SWIF Asia" onerror="this.parentNode.classList.add('fb')"><b>SWIF</b></div>`;
 const imgHTML = (src) => (src ? `<img src="${attr(src)}" alt="" onerror="this.style.display='none'">` : "");
@@ -123,14 +134,10 @@ function whyBody(p) {
   const photos = (p.photos || []).map((u, i) => `<div class="sl${i === 0 ? " on" : ""}" style="background-image:url('${attr(u)}')"></div>`).join("");
   const dots = (p.photos || []).map((_, i) => `<i class="${i === 0 ? "on" : ""}"></i>`).join("");
   const pts = p.points.map((x) => `<div class="pt"><em>${esc(x.n)}</em><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div>`).join("");
-  const tile = (c) => `<div class="lt">${c.logo ? `<img src="${attr(c.logo)}" alt="${attr(c.name)}" onerror="this.replaceWith(document.createTextNode('${attr(c.name).replace(/'/g, "\\'")}'))">` : esc(c.name)}</div>`;
-  const half = (list) => list.concat(list).map(tile).join("");           // tiap separuh harus lebih lebar dari layar
-  const fwd = CLIENTS, rev = CLIENTS.slice().reverse();
   return `<div class="slider" id="slider"><div class="ph"><b>FOTO COMPANY PROFILE</b><span>tambahkan foto di data.js (photos)</span></div>${photos}<div class="sdots">${dots}</div></div>
     <div class="pts">${pts}</div>
-    <div class="trust"><div class="th"><b>DIPERCAYA OLEH</b><span>◀ SLIDING LOOP ▶</span></div>
-      <div class="mq"><div class="track">${half(fwd)}${half(fwd)}</div></div>
-      <div class="mq r"><div class="track">${half(rev)}${half(rev)}</div></div></div>`;
+    <div class="trust" id="trust"><div class="th"><b>DIPERCAYA OLEH</b></div>
+      <div class="mq"><div class="track"></div></div><div class="mq r"><div class="track"></div></div></div>`;
 }
 function pageHTML(p, i, total, tabs) {
   const geo = PAGE_GEO[p.type] || PAGE_GEO.pillar;
@@ -174,7 +181,8 @@ function detailHTML() {
   const bg = PAGE_BG.detail;
   return `<div class="dbg" style="${bgVars(bg)}">${bg && bg.photo ? '<i class="photo"></i>' : ""}<i class="g1"></i><i class="g2"></i>
       <i class="rg" style="width:900px;height:900px"></i><i class="rg r2" style="width:1250px;height:1250px"></i><i class="rg" style="width:1600px;height:1600px"></i>
-      <i class="nn" style="--c:#2F7BFF;left:-420px;top:1180px"></i><i class="nn" style="--c:#F2A93B;left:-300px;top:1620px;opacity:.35"></i><i class="nn" style="--c:#FF3B41;left:-200px;top:1500px;opacity:.4"></i></div>
+      <i class="nn" style="--c:#2F7BFF;left:-420px;top:1180px"></i><i class="nn" style="--c:#F2A93B;left:-300px;top:1620px;opacity:.35"></i><i class="nn" style="--c:#FF3B41;left:-200px;top:1500px;opacity:.4"></i>
+      ${spiralSVG("s1")}${spiralSVG("s2")}<i class="rings a"></i></div>
     <header class="top">${logoHTML()}<div class="tagpill">3D VIEW</div></header>
     <div class="dtitle"><div class="lbl" id="dCat"></div><h1 id="dName"></h1></div>
     <div class="dstage" id="dStage">
@@ -183,12 +191,12 @@ function detailHTML() {
       <i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>
       <div class="hud" id="hudLive"><span class="dot"></span>3D LIVE VIEW</div>
       <div class="hud" id="hudRot">↻ 360°</div>
-      <div class="hud" id="hudNo">MODEL 3D SEGERA HADIR</div>
       <div class="hud" id="hudIso">KEMBALI KE ISOMETRIC SETELAH ${Math.round(CONFIG.ISO_RESET_MS / 1000)} DETIK</div>
+      <div class="dbars" id="dBars"></div>
       <div class="dstats" id="dStats"></div>
     </div>
     <div class="dpick" id="dPick"></div>
-    <div class="dtext"><div class="dh"><b>PENJELASAN DETAIL PRODUK</b><span>AUTO-SCROLL ↓</span></div>
+    <div class="dtext"><div class="dh"><b>PENJELASAN DETAIL PRODUK</b><span>AUTO-SCROLL</span></div>
       <div class="win" id="dWin"><div class="scroll" id="dScroll"></div><i class="fade t"></i><i class="fade b"></i><div class="bar"><i id="dThumb"></i></div></div></div>
     <footer class="dfoot"><div class="grp">
       <button class="btn back dk" data-act="back"><span>←</span>KEMBALI</button><button class="btn home dk" data-act="home">HOME</button></div>${qrRow()}</footer>`;
@@ -245,11 +253,7 @@ function uiTick() {
     const r = loop.tick(now);
     if (r.advance) { showHome(S.cur + 1); }
     const seg = els.segs.children[S.cur];
-    if (seg) seg.firstChild.style.width = Math.round((r.holding ? r.progress : r.progress) * 100) + "%";
-    els.nav.classList.toggle("hold", r.holding);
-    els.cap.textContent = r.holding
-      ? `MODE PENJELASAN  ·  LOOP LANJUT ${Math.ceil(r.holdLeft / 1000)} DETIK`
-      : `${Math.round(CONFIG.PAGE_MS / 1000)} DETIK / HALAMAN  ·  SENTUH = JEDA ${Math.round(CONFIG.HOLD_MS / 1000)} DETIK`;
+    if (seg) seg.firstChild.style.width = Math.round(r.progress * 100) + "%";
     // slider foto (Why SWIFA)
     if (HOME_PAGES[S.cur].type === "why") sliderTick(now);
   } else if (CONFIG.DETAIL_IDLE_MS && now - S.touchAt > CONFIG.DETAIL_IDLE_MS) {
@@ -270,45 +274,76 @@ function sliderTick(now) {
 /* ===========================================================================
    DETAIL — pilih produk, statistik, teks bergulir
    =========================================================================== */
-const SC = { pos: 0, wait: 1.5, max: 0 };
+const SC = { pos: 0, h: 0, wait: 1.5, drag: false, resumeAt: 0, lastY: 0 };
+const BAR_COLORS = { energy: "linear-gradient(90deg,#F2A93B,#E8562C)", durability: "linear-gradient(90deg,#2F7BFF,#0B2C86)", adaptable: "linear-gradient(90deg,#E8562C,#C81D25)" };
+
+/** Judul panjang: kecilkan font agar maksimal 1 baris (84px) atau 2 baris (≤64px) — tidak menabrak container. */
+function fitTitle() {
+  const h = $("#dName");
+  for (const size of [84, 72, 64, 58, 52]) {
+    const lh = Math.round(size * 1.07);
+    h.style.fontSize = size + "px"; h.style.lineHeight = lh + "px";
+    const lines = Math.round(h.scrollHeight / lh), max = size >= 72 ? 1 : 2;
+    if (lines <= max) return;
+  }
+}
+function renderBars(m) {
+  const box = $("#dBars");
+  if (!m || typeof METRIC_LABELS === "undefined") { box.style.display = "none"; box.innerHTML = ""; return; }
+  box.style.display = "";
+  box.innerHTML = METRIC_LABELS.map((x) => {
+    const v = Math.max(0, Math.min(100, Math.round(Number(m[x.key]) || 0)));
+    return `<div class="bar2"><div class="bl"><b>${esc(x.label)}</b><span>${v}%</span></div><div class="bt"><i data-w="${v}" style="background:${BAR_COLORS[x.key] || BAR_COLORS.energy}"></i></div></div>`;
+  }).join("");
+  requestAnimationFrame(() => requestAnimationFrame(() => box.querySelectorAll("i[data-w]").forEach((i) => { i.style.width = i.dataset.w + "%"; })));
+}
 function selectProduct(j) {
   const cat = PRODUCT_CATEGORIES[S.cat], p = cat.products[j];
   S.prod = j;
   document.querySelectorAll("#dPick .pk").forEach((b, k) => b.classList.toggle("sel", k === j));
   $("#dName").innerHTML = titleWithLast(String(p.name).toUpperCase());
+  fitTitle();
   // statistik di dalam container 3D
   const specs = (p.specs || []).slice(0, 4);
-  const stage = $("#dStage");
-  stage.classList.toggle("nostats", !specs.length);
+  $("#dStage").classList.toggle("nostats", !specs.length);
   $("#dStats").style.gridTemplateColumns = `repeat(${Math.max(1, specs.length)},1fr)`;
   $("#dStats").innerHTML = specs.map((s) => `<div class="dstat"><b>${esc(s.value)}</b><span>${esc(s.label)}</span></div>`).join("");
-  // teks penjelasan
-  const paras = p.detail && p.detail.length ? p.detail : [p.desc];
-  $("#dScroll").innerHTML = paras.map((t) => `<p>${esc(t)}</p>`).join("");
-  SC.pos = 0; SC.wait = 1.5; applyScroll();
-  requestAnimationFrame(measureScroll);
+  renderBars(p.metrics);
+  buildScroll(p.detail && p.detail.length ? p.detail : [p.desc]);
   setModel(p);
 }
-function measureScroll() {
-  SC.max = Math.max(0, $("#dScroll").offsetHeight - $("#dWin").clientHeight);
-  $(".win .bar").style.display = SC.max > 4 ? "" : "none";
+
+/* ---- Teks penjelasan: bergulir terus-menerus (loop mulus), pelan; bisa digeser jari lalu lanjut sendiri ---- */
+function buildScroll(paras) {
+  const sc = $("#dScroll"), one = paras.map((t) => `<p>${esc(t)}</p>`).join("");
+  sc.innerHTML = `<div class="blk">${one}</div>`;
+  SC.pos = 0; SC.wait = 1.5; SC.h = 0; SC.resumeAt = 0;
+  requestAnimationFrame(() => {
+    const blk = sc.firstChild; if (!blk) return;
+    SC.h = blk.offsetHeight;
+    const copies = Math.max(2, Math.ceil($("#dWin").clientHeight / Math.max(1, SC.h)) + 1);
+    sc.innerHTML = Array(copies).fill(`<div class="blk">${one}</div>`).join("");
+    applyScroll();
+  });
 }
 function applyScroll() {
+  if (!SC.h) return;
+  SC.pos = ((SC.pos % SC.h) + SC.h) % SC.h;
   $("#dScroll").style.transform = `translateY(${(-SC.pos).toFixed(1)}px)`;
-  const barH = $(".win .bar").clientHeight;
-  $("#dThumb").style.top = (SC.max > 0 ? (barH - 60) * (SC.pos / SC.max) : 0).toFixed(1) + "px";
+  $("#dThumb").style.top = ((($(".win .bar").clientHeight - 60) * SC.pos) / SC.h).toFixed(1) + "px";
 }
-/** Teks bergulir pelan; diam sebentar di ujung bawah, lalu kembali ke atas. */
 function scrollTick(dt) {
-  if (SC.max <= 4) return;
-  if (SC.wait > 0) {
-    SC.wait -= dt;
-    if (SC.wait <= 0 && SC.pos >= SC.max) { SC.pos = 0; SC.wait = 1.5; applyScroll(); }
-    return;
-  }
-  SC.pos = Math.min(SC.max, SC.pos + CONFIG.SCROLL_SPEED * dt);
-  if (SC.pos >= SC.max) SC.wait = 2.5;
+  if (!SC.h || SC.drag || Date.now() < SC.resumeAt) return;
+  if (SC.wait > 0) { SC.wait -= dt; return; }
+  SC.pos += CONFIG.SCROLL_SPEED * dt;
   applyScroll();
+}
+function bindScrollDrag() {
+  const w = $("#dWin");
+  w.addEventListener("pointerdown", (e) => { SC.drag = true; SC.lastY = e.clientY; w.setPointerCapture && w.setPointerCapture(e.pointerId); });
+  w.addEventListener("pointermove", (e) => { if (!SC.drag) return; SC.pos += (SC.lastY - e.clientY) / V.scale; SC.lastY = e.clientY; applyScroll(); });
+  const up = () => { if (SC.drag) { SC.drag = false; SC.resumeAt = Date.now() + 3000; } };
+  w.addEventListener("pointerup", up); w.addEventListener("pointercancel", up);
 }
 
 /* ===========================================================================
@@ -430,10 +465,49 @@ function renderFrame(t) {
 }
 function startRender() {
   if (V.ok && V.renderer.domElement.parentNode !== els.view) els.view.insertBefore(V.renderer.domElement, els.view.firstChild);
-  resizeViewer(); measureScroll();
+  resizeViewer();
   if (!V.raf) { V.last = 0; V.raf = requestAnimationFrame(renderFrame); }
 }
 function stopRender() { if (V.raf) { cancelAnimationFrame(V.raf); V.raf = 0; } }
+
+/* ===========================================================================
+   LOGO CUSTOMER — sliding looping, mengikuti file yang ada (CLIENT_LOGOS + penomoran otomatis)
+   =========================================================================== */
+const probeImg = (url) => new Promise((res) => { const i = new Image(); i.onload = () => res(url); i.onerror = () => res(null); i.src = url; });
+async function discoverLogos() {
+  const dir = CONFIG.CLIENT_DIR || "", found = [], seen = new Set();
+  const norm = (f) => (/^(https?:)?\/\//.test(f) || f.startsWith("/") || f.startsWith("assets/") ? f : dir + f);
+  const listed = (typeof CLIENT_LOGOS !== "undefined" ? CLIENT_LOGOS : []).map(norm);
+  const got = await Promise.all(listed.map(probeImg));
+  got.forEach((u) => { if (u && !seen.has(u)) { seen.add(u); found.push(u); } });
+  const A = CONFIG.CLIENT_AUTO;
+  if (A && A.enabled) {
+    let miss = 0;
+    for (let n = 1; n <= (A.max || 60) && miss < 3; n++) {
+      let hit = null;
+      for (const ext of A.exts || ["png"]) { hit = await probeImg(`${dir}${n}.${ext}`); if (hit) break; }
+      if (hit) { miss = 0; if (!seen.has(hit)) { seen.add(hit); found.push(hit); } } else miss++;
+    }
+  }
+  return found;
+}
+const imgReady = (img) => new Promise((res) => (img.complete ? res() : (img.onload = img.onerror = () => res())));
+async function buildMarquee() {
+  const trust = document.getElementById("trust"); if (!trust) return;
+  const urls = await discoverLogos();
+  if (!urls.length) { trust.style.display = "none"; return; }
+  const tile = (u) => `<div class="lt"><img src="${attr(u)}" alt=""></div>`;
+  for (const row of trust.querySelectorAll(".mq")) {
+    const track = row.querySelector(".track"), list = row.classList.contains("r") ? urls.slice().reverse() : urls;
+    track.innerHTML = list.map(tile).join("");
+    await Promise.all([...track.querySelectorAll("img")].map(imgReady));
+    const unit = track.scrollWidth + 20;                          // lebar satu putaran + celah
+    const reps = Math.max(1, Math.ceil(1100 / unit));
+    const half = Array(reps).fill(list.map(tile).join("")).join("");
+    track.innerHTML = half + half;                                // -50% = tepat satu separuh → loop mulus
+    track.style.animationDuration = Math.max(8, (unit * reps) / (CONFIG.MARQUEE_SPEED || 45)) + "s";
+  }
+}
 
 /* ===========================================================================
    Skala layar, input global, start
@@ -456,7 +530,7 @@ function onTap(e) {
 }
 
 function start() {
-  els = { home: $("#home"), products: $("#products"), detail: $("#detail"), nav: $("#nav"), segs: $("#segs"), cap: $("#cap") };
+  els = { home: $("#home"), products: $("#products"), detail: $("#detail"), nav: $("#nav"), segs: $("#segs") };
   const total = HOME_PAGES.length;
   const tabs = HOME_PAGES.map((p, i) => (p.tab ? { label: p.tab, i } : null)).filter(Boolean);
   $("#homePages").innerHTML = HOME_PAGES.map((p, i) => pageHTML(p, i, total, tabs)).join("");
@@ -468,6 +542,8 @@ function start() {
 
   loop = new LoopController({ pageMs: CONFIG.PAGE_MS, holdMs: CONFIG.HOLD_MS, immuneMs: CONFIG.IMMUNE_MS, now: Date.now() });
   initViewer();
+  bindScrollDrag();
+  buildMarquee();
 
   // sentuhan di mana pun (termasuk tombol) dihitung oleh loop; urutan capture agar selalu tercatat
   addEventListener("pointerdown", () => { S.touchAt = Date.now(); if (S.mode === "home") loop.touch(Date.now()); }, true);
@@ -485,5 +561,5 @@ function start() {
   setInterval(uiTick, 100);
 }
 
-if (typeof module !== "undefined" && module.exports) module.exports = { LoopController, pageHTML, productsHTML, detailHTML, geoVars, titleWithLast, esc };
+if (typeof module !== "undefined" && module.exports) module.exports = { LoopController, pageHTML, productsHTML, detailHTML, geoVars, titleWithLast, esc, discoverLogos };
 if (typeof window !== "undefined" && typeof document !== "undefined") start();
