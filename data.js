@@ -159,10 +159,7 @@ const HOME_PAGES = [
                   — logo baru langsung muncul, tanpa mengubah kode.
    2) DAFTAR    : tulis nama file di bawah (relatif terhadap CONFIG.CLIENT_DIR).
    File yang tidak ditemukan dilewati; jumlah logo bebas, barisnya menyesuaikan sendiri. */
-const CLIENT_LOGOS = [
-  // "KYB.png",
-  // "TMMIN.png",
-  // "kyowa.png",
+const CLIENT_LOGOS = [ "KYB.png", "TMMIN.png", "kyowa.png", "Astemo_logo.jpg", "aisin.jpg", "antam.png", "cmwiho.png", "artpiston.png","toyoda.jpg", "akebono-logi.jpg","logo-lg 1.png","logo-suzuki-indomobil 1.png","logoright 1.png"
 ];
 
 /* ---------------------------------------------------------------------------
@@ -211,6 +208,8 @@ const PRODUCT_CATEGORIES = [
           { label: "Gas Burner Capacity", value: "350 kW" },
         ],
       },
+   ],
+},
   {
     letter: "B", color: "dark", title: "HEATING FURNACE", sub: "Drying Oven · Heating Furnace Batch-Boggie",
     tag: "Melengkapi tahap akhir proses coating & finishing.",
@@ -279,6 +278,8 @@ const PRODUCT_CATEGORIES = [
           { label: "Klien", value: "Suzuki (2016), Astra Otoparts (2018)" },
           { label: "Repair Tercatat", value: "0 kali" },
         ] },
+       ],
+  },
   {
     letter: "E", color: "dark", wide: true, title: "AUXILIARY",
     sub: "Molten transfer device · Molten metal pump · Ladle pre-heat · Degassing · Conveyor · Heat exchanger · Automatic damper",
