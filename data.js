@@ -171,9 +171,9 @@ const HOME_PAGES = [
    2) DAFTAR    : tulis nama file di bawah (relatif terhadap CONFIG.CLIENT_DIR).
    File yang tidak ditemukan dilewati; jumlah logo bebas, barisnya menyesuaikan sendiri. */
 const CLIENT_LOGOS = [
-  // "suzuki.png",
-  // "lg.png",
-  // "central-motor-wheel.png",
+  // "KYB.png",
+  // "TMMIN.png",
+  // "kyowa.png",
 ];
 
 /* ---------------------------------------------------------------------------
