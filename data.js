@@ -1,20 +1,9 @@
-/* =========================================================================
-   SWIF ASIA — Totem Display · DATA
-   Semua teks, gambar, dan pengaturan ada di file ini.
-   Struktur mengikuti MASTER LAYOUT di Figma:
-     1) HOME LOOP   : 5 halaman berulang otomatis (HOME_PAGES)
-     2) MAIN PRODUCT: menu kategori produk (PRODUCT_CATEGORIES)
-     3) PAGE 3D VIEW: detail produk + model 3D (isi tiap produk)
-   Path gambar/video/model relatif terhadap index.html.
-   File yang belum ada tidak membuat error — area itu tampil kosong/placeholder.
-   ========================================================================= */
-
 /* ---------------------------------------------------------------------------
    PENGATURAN (waktu dalam milidetik)
    --------------------------------------------------------------------------- */
 const CONFIG = {
   PAGE_MS: 15000,        // 1 halaman home = 15 detik
-  HOLD_MS: 90000,        // setelah disentuh, loop berhenti 90 detik (masa penjelasan)
+  HOLD_MS: 60000,        // setelah disentuh, loop berhenti 60 detik (masa penjelasan)
   IMMUNE_MS: 10000,      // 10 detik pertama setelah sentuhan: sentuhan lain diabaikan (anti error)
   ISO_RESET_MS: 10000,   // model 3D kembali ke tampilan isometric setelah 10 detik tanpa interaksi
   DETAIL_IDLE_MS: 0,     // 0 = halaman produk/3D tidak otomatis kembali ke home. Isi mis. 180000 untuk kembali setelah 3 menit.
@@ -197,11 +186,11 @@ const METRIC_LABELS = [
 
 const PRODUCT_CATEGORIES = [
   {
-    letter: "A", color: "blue", title: "HEAT TREATMENT", sub: "T5 Roller Hearth · T6 Roller Hearth · Rotary HT",
+    letter: "A", color: "blue", title: "HEAT TREATMENT", sub: "T5 Rotary Heat treatment · T6 Rotary Heat treatment",
     tag: "Dari proses kontinu compressor hingga cylinder head skala besar.",
     products: [
       {
-        name: "T5 Heat Treatment Furnace", short: "T5 Roller Hearth", metrics: SKOR(80, 80, 80),
+        name: "T5 Heat Treatment Furnace", short: "T5 Rotary Heat treament", metrics: SKOR(90, 85, 90),
         desc: "Roller Hearth Type — heat treatment kontinu untuk komponen compressor. Re-circulated hot air memanfaatkan panas buangan exhaust untuk pre-heating, mengoptimalkan efisiensi energi. Combustion system sesuai JIS B8514.",
         modelFile: "", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
@@ -212,9 +201,9 @@ const PRODUCT_CATEGORIES = [
         ],
       },
       {
-        name: "T6 Heat Treatment Furnace", short: "T6 Roller Hearth", metrics: SKOR(80, 80, 80),
+        name: "T6 Heat Treatment Furnace", short: "T6 Rotary Heat treatment", metrics: SKOR(80, 80, 80),
         desc: "Roller Hearth Type — untuk processing cylinder head, alur proses 15 zona (solution heating & soaking, quenching, aging heating & soaking), dikendalikan otomatis via damper berbasis thermocouple. Sistem terlengkap di jajaran produk SWIF Asia.",
-        modelFile: "", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
+        modelFile: "models/ROTARY_HT.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
           { label: "Solution Furnace", value: "505±10°C" },
           { label: "Quenching Tank", value: "85±5°C" },
@@ -222,13 +211,6 @@ const PRODUCT_CATEGORIES = [
           { label: "Gas Burner Capacity", value: "350 kW" },
         ],
       },
-      {
-        name: "Rotary Heat Treatment Furnace", short: "Rotary HT", metrics: SKOR(80, 80, 80),
-        desc: "Alur material pada rack rotary. Opsi panas: burner, hybrid, atau elektrik.",
-        modelFile: "models/ROTARY_HT.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "", specs: [],
-      },
-    ],
-  },
   {
     letter: "B", color: "dark", title: "HEATING FURNACE", sub: "Drying Oven · Heating Furnace Batch-Boggie",
     tag: "Melengkapi tahap akhir proses coating & finishing.",
@@ -285,7 +267,7 @@ const PRODUCT_CATEGORIES = [
     ],
   },
   {
-    letter: "D", color: "blue", title: "HOLDING", sub: "Aluminium Holding Furnace 700 – 2500 kg",
+    letter: "D", color: "blue", title: "HOLDING", sub: "Holding Furnace 700 – 2500 kg",
     tag: "Kapasitas 700 – 2500 kg, siap tuang tanpa pernah direpair.",
     products: [
       { name: "Under Heater — 1000 kg", short: "Under 1000kg", metrics: SKOR(80, 80, 80),
@@ -297,35 +279,6 @@ const PRODUCT_CATEGORIES = [
           { label: "Klien", value: "Suzuki (2016), Astra Otoparts (2018)" },
           { label: "Repair Tercatat", value: "0 kali" },
         ] },
-      { name: "Roof Heater — 700 kg", short: "Roof 700kg", metrics: SKOR(80, 80, 80),
-        desc: "Untuk kebutuhan kapasitas lebih kecil — pemanas diposisikan di bagian atas tungku. Dipercaya PT. Progress Die Cast sejak 2020, 0 kali repair.",
-        modelFile: "", image: "",
-        specs: [
-          { label: "Kapasitas", value: "700 kg" },
-          { label: "Heater Capacity", value: "6×3 kW = 18 kW" },
-          { label: "Klien", value: "Progress Die Cast (2020)" },
-          { label: "Repair Tercatat", value: "0 kali" },
-        ] },
-      { name: "Side (SA) Heater — 1500 kg", short: "Side 1500kg", metrics: SKOR(80, 80, 80),
-        desc: "Bagian dari proyek 5 unit untuk PT. Astra Daihatsu Motor (2021), 2 unit kapasitas ini. Beroperasi tanpa kerusakan hingga kini.",
-        modelFile: "", image: "",
-        specs: [
-          { label: "Kapasitas", value: "1500 kg" },
-          { label: "Heater Capacity", value: "2×15 kW = 30 kW/unit" },
-          { label: "Klien", value: "Astra Daihatsu Motor (2021) — 2 unit" },
-          { label: "Repair Tercatat", value: "0 kali" },
-        ] },
-      { name: "Side (SA) Heater — 2500 kg", short: "Side 2500kg", metrics: SKOR(80, 80, 80),
-        desc: "Varian kapasitas terbesar dari proyek 5 unit PT. Astra Daihatsu Motor (2021), 3 unit kapasitas ini. Beroperasi tanpa kerusakan hingga kini.",
-        modelFile: "", image: "",
-        specs: [
-          { label: "Kapasitas", value: "2500 kg" },
-          { label: "Heater Capacity", value: "3×15 kW = 45 kW/unit" },
-          { label: "Klien", value: "Astra Daihatsu Motor (2021) — 3 unit" },
-          { label: "Repair Tercatat", value: "0 kali" },
-        ] },
-    ],
-  },
   {
     letter: "E", color: "dark", wide: true, title: "AUXILIARY",
     sub: "Molten transfer device · Molten metal pump · Ladle pre-heat · Degassing · Conveyor · Heat exchanger · Automatic damper",
