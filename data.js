@@ -18,8 +18,13 @@ const CONFIG = {
   IMMUNE_MS: 10000,      // 10 detik pertama setelah sentuhan: sentuhan lain diabaikan (anti error)
   ISO_RESET_MS: 10000,   // model 3D kembali ke tampilan isometric setelah 10 detik tanpa interaksi
   DETAIL_IDLE_MS: 0,     // 0 = halaman produk/3D tidak otomatis kembali ke home. Isi mis. 180000 untuk kembali setelah 3 menit.
-  SCROLL_SPEED: 26,      // kecepatan teks penjelasan produk (px per detik)
+  SCROLL_SPEED: 16,      // kecepatan teks penjelasan produk (px per detik) — kecil = pelan
   SLIDER_MS: 4000,       // pergantian foto company profile (halaman Why SWIFA)
+
+  // Logo customer (halaman Why SWIFA) — lihat CLIENT_LOGOS di bawah
+  CLIENT_DIR: "assets/clients/",
+  MARQUEE_SPEED: 45,     // kecepatan logo bergeser (px per detik)
+  CLIENT_AUTO: { enabled: true, max: 60, exts: ["png", "jpg", "jpeg", "webp", "svg"] },
 
   LOGO_IMAGE: "assets/logo-swifasia.png",
   QR_IMAGE: "assets/qr-swifa.png",           // gambar QR menuju website utama
@@ -96,7 +101,6 @@ const HOME_PAGES = [
       label: "PENGHEMATAN ENERGI SPESIFIK",
       from: "800", to: "680", unit: "kWh/ton aluminium  ·  produksi 1 ton/jam",
       percent: "15%", percentLabel: "LEBIH HEMAT",
-      note: "*Data simulasi lapangan. Potensi penghematan bergantung pada desain, tarif energi, profil produksi, serta strategi pengoperasiannya.",
     },
   },
 
@@ -161,13 +165,15 @@ const HOME_PAGES = [
 ];
 
 /* Logo customer — baris sliding looping di halaman Why SWIFA.
-   Tambahkan sebanyak mungkin; jika file belum ada, nama customer yang tampil.
-   TODO: samakan daftar dengan logo di Figma (Frame 10: Suzuki, LG, Central Motor Wheel, dll). */
-const CLIENTS = [
-  { name: "Suzuki Indomobil Motor",     logo: "assets/clients/suzuki.png" },
-  { name: "Astra Otoparts Nusa Metal",  logo: "assets/clients/astra-otoparts.png" },
-  { name: "Astra Daihatsu Motor",       logo: "assets/clients/astra-daihatsu.png" },
-  { name: "Progress Die Cast",          logo: "assets/clients/progress-die-cast.png" },
+   Ada DUA cara menambah logo (boleh dipakai bersamaan, urutan: daftar dulu, lalu otomatis):
+   1) OTOMATIS  : taruh file bernama 1.png, 2.png, 3.png ... (atau .jpg/.webp/.svg) di assets/clients/
+                  — logo baru langsung muncul, tanpa mengubah kode.
+   2) DAFTAR    : tulis nama file di bawah (relatif terhadap CONFIG.CLIENT_DIR).
+   File yang tidak ditemukan dilewati; jumlah logo bebas, barisnya menyesuaikan sendiri. */
+const CLIENT_LOGOS = [
+  // "suzuki.png",
+  // "lg.png",
+  // "central-motor-wheel.png",
 ];
 
 /* ---------------------------------------------------------------------------
@@ -179,13 +185,23 @@ const CLIENTS = [
      modelFile (.glb/.gltf/.stl/.obj) + modelRotation {x,y,z} derajat
      image : gambar render, dipakai bila modelFile kosong
    --------------------------------------------------------------------------- */
+/* Bar chart 3D View (kanan atas): ENERGY · DURABILITY · ADAPTABLE dalam persen.
+   ⚠ Semua produk masih memakai nilai CONTOH 80% — ganti per produk: metrics: SKOR(energy, durability, adaptable).
+   Hapus baris metrics pada produk bila bar chart tidak ingin ditampilkan untuk produk itu. */
+const SKOR = (energy, durability, adaptable) => ({ energy, durability, adaptable });
+const METRIC_LABELS = [
+  { key: "energy", label: "ENERGY" },
+  { key: "durability", label: "DURABILITY" },
+  { key: "adaptable", label: "ADAPTABLE" },
+];
+
 const PRODUCT_CATEGORIES = [
   {
     letter: "A", color: "blue", title: "HEAT TREATMENT", sub: "T5 Roller Hearth · T6 Roller Hearth · Rotary HT",
     tag: "Dari proses kontinu compressor hingga cylinder head skala besar.",
     products: [
       {
-        name: "T5 Heat Treatment Furnace", short: "T5 Roller Hearth",
+        name: "T5 Heat Treatment Furnace", short: "T5 Roller Hearth", metrics: SKOR(80, 80, 80),
         desc: "Roller Hearth Type — heat treatment kontinu untuk komponen compressor. Re-circulated hot air memanfaatkan panas buangan exhaust untuk pre-heating, mengoptimalkan efisiensi energi. Combustion system sesuai JIS B8514.",
         modelFile: "", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
@@ -196,7 +212,7 @@ const PRODUCT_CATEGORIES = [
         ],
       },
       {
-        name: "T6 Heat Treatment Furnace", short: "T6 Roller Hearth",
+        name: "T6 Heat Treatment Furnace", short: "T6 Roller Hearth", metrics: SKOR(80, 80, 80),
         desc: "Roller Hearth Type — untuk processing cylinder head, alur proses 15 zona (solution heating & soaking, quenching, aging heating & soaking), dikendalikan otomatis via damper berbasis thermocouple. Sistem terlengkap di jajaran produk SWIF Asia.",
         modelFile: "", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
@@ -207,7 +223,7 @@ const PRODUCT_CATEGORIES = [
         ],
       },
       {
-        name: "Rotary Heat Treatment Furnace", short: "Rotary HT",
+        name: "Rotary Heat Treatment Furnace", short: "Rotary HT", metrics: SKOR(80, 80, 80),
         desc: "Alur material pada rack rotary. Opsi panas: burner, hybrid, atau elektrik.",
         modelFile: "models/ROTARY_HT.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "", specs: [],
       },
@@ -218,7 +234,7 @@ const PRODUCT_CATEGORIES = [
     tag: "Melengkapi tahap akhir proses coating & finishing.",
     products: [
       {
-        name: "Drying Oven Furnace", short: "Drying Oven",
+        name: "Drying Oven Furnace", short: "Drying Oven", metrics: SKOR(80, 80, 80),
         desc: "Untuk drying core paint — material dimasukkan langsung ke ruang heating.",
         modelFile: "", image: "",
         specs: [
@@ -229,7 +245,7 @@ const PRODUCT_CATEGORIES = [
         ],
       },
       {
-        name: "Heating Furnace (Batch-Boggie)", short: "Batch-Boggie",
+        name: "Heating Furnace (Batch-Boggie)", short: "Batch-Boggie", metrics: SKOR(80, 80, 80),
         desc: "Untuk coating hardening — material diletakkan pada boggie yang masuk ke ruang furnace.",
         modelFile: "", image: "",
         specs: [
@@ -245,14 +261,14 @@ const PRODUCT_CATEGORIES = [
     letter: "C", color: "red", title: "MELTING", sub: "Tower · Crucible · Chip Smelter · Hybrid Melter",
     tag: "Kapasitas 100 kg/jam – 4 ton/jam.",
     products: [
-      { name: "Tower Melting Furnace", short: "Tower Melting",
+      { name: "Tower Melting Furnace", short: "Tower Melting", metrics: SKOR(80, 80, 80),
         desc: "Furnace peleburan tipe menara untuk lini produksi dengan alur vertikal.", modelFile: "", image: "", specs: [] },
-      { name: "Crucible Melting Furnace", short: "Crucible",
+      { name: "Crucible Melting Furnace", short: "Crucible", metrics: SKOR(80, 80, 80),
         desc: "Melt & holding logam cair di sisi sel pengecoran, opsi standar JIS B8415:2008.", modelFile: "", image: "", specs: [] },
-      { name: "Chip Smelter Melting Furnace", short: "Chip Smelter",
+      { name: "Chip Smelter Melting Furnace", short: "Chip Smelter", metrics: SKOR(80, 80, 80),
         desc: "Furnace peleburan khusus untuk material berbentuk chip/serpihan logam.", modelFile: "", image: "", specs: [] },
       {
-        name: "Hybrid Melter", short: "Hybrid Melter",
+        name: "Hybrid Melter", short: "Hybrid Melter", metrics: SKOR(80, 80, 80),
         desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
         detail: [
           "Teknologi peleburan logam yang menggabungkan dua sumber panas, yaitu Gas Burner dan Electric Heater, dalam satu sistem melting furnace (tungku peleburan). Teknologi ini dirancang untuk mendukung proses peleburan yang lebih efisien dan ramah lingkungan.",
@@ -272,7 +288,7 @@ const PRODUCT_CATEGORIES = [
     letter: "D", color: "blue", title: "HOLDING", sub: "Aluminium Holding Furnace 700 – 2500 kg",
     tag: "Kapasitas 700 – 2500 kg, siap tuang tanpa pernah direpair.",
     products: [
-      { name: "Under Heater — 1000 kg", short: "Under 1000kg",
+      { name: "Under Heater — 1000 kg", short: "Under 1000kg", metrics: SKOR(80, 80, 80),
         desc: "Dipercaya PT. Suzuki Indomobil Motor (2016) & PT. Astra Otoparts Nusa Metal (2018) dengan desain identik. 0 kali repair/kerusakan sejak dipasang.",
         modelFile: "", image: "",
         specs: [
@@ -281,7 +297,7 @@ const PRODUCT_CATEGORIES = [
           { label: "Klien", value: "Suzuki (2016), Astra Otoparts (2018)" },
           { label: "Repair Tercatat", value: "0 kali" },
         ] },
-      { name: "Roof Heater — 700 kg", short: "Roof 700kg",
+      { name: "Roof Heater — 700 kg", short: "Roof 700kg", metrics: SKOR(80, 80, 80),
         desc: "Untuk kebutuhan kapasitas lebih kecil — pemanas diposisikan di bagian atas tungku. Dipercaya PT. Progress Die Cast sejak 2020, 0 kali repair.",
         modelFile: "", image: "",
         specs: [
@@ -290,7 +306,7 @@ const PRODUCT_CATEGORIES = [
           { label: "Klien", value: "Progress Die Cast (2020)" },
           { label: "Repair Tercatat", value: "0 kali" },
         ] },
-      { name: "Side (SA) Heater — 1500 kg", short: "Side 1500kg",
+      { name: "Side (SA) Heater — 1500 kg", short: "Side 1500kg", metrics: SKOR(80, 80, 80),
         desc: "Bagian dari proyek 5 unit untuk PT. Astra Daihatsu Motor (2021), 2 unit kapasitas ini. Beroperasi tanpa kerusakan hingga kini.",
         modelFile: "", image: "",
         specs: [
@@ -299,7 +315,7 @@ const PRODUCT_CATEGORIES = [
           { label: "Klien", value: "Astra Daihatsu Motor (2021) — 2 unit" },
           { label: "Repair Tercatat", value: "0 kali" },
         ] },
-      { name: "Side (SA) Heater — 2500 kg", short: "Side 2500kg",
+      { name: "Side (SA) Heater — 2500 kg", short: "Side 2500kg", metrics: SKOR(80, 80, 80),
         desc: "Varian kapasitas terbesar dari proyek 5 unit PT. Astra Daihatsu Motor (2021), 3 unit kapasitas ini. Beroperasi tanpa kerusakan hingga kini.",
         modelFile: "", image: "",
         specs: [
@@ -316,19 +332,19 @@ const PRODUCT_CATEGORIES = [
     tag: "Kelengkapan lini produksi furnace.",
     products: [
       // TODO: isi deskripsi tiap item (sementara teks ringkas)
-      { name: "Molten Transfer Device", short: "Molten Transfer",
+      { name: "Molten Transfer Device", short: "Molten Transfer", metrics: SKOR(80, 80, 80),
         desc: "Perangkat pemindah logam cair: overhead, bottom carrier, atau ladle forklift.", modelFile: "", image: "", specs: [] },
-      { name: "Molten Metal Pump", short: "Metal Pump",
+      { name: "Molten Metal Pump", short: "Metal Pump", metrics: SKOR(80, 80, 80),
         desc: "Pompa untuk memindahkan logam cair antar-stasiun produksi.", modelFile: "", image: "", specs: [] },
-      { name: "Ladle Pre-Heat", short: "Ladle Pre-Heat",
+      { name: "Ladle Pre-Heat", short: "Ladle Pre-Heat", metrics: SKOR(80, 80, 80),
         desc: "Pemanas awal ladle sebelum dipakai menampung logam cair.", modelFile: "", image: "", specs: [] },
-      { name: "Degassing", short: "Degassing",
+      { name: "Degassing", short: "Degassing", metrics: SKOR(80, 80, 80),
         desc: "Sistem penghilang gas pada logam cair.", modelFile: "", image: "", specs: [] },
-      { name: "Conveyor", short: "Conveyor",
+      { name: "Conveyor", short: "Conveyor", metrics: SKOR(80, 80, 80),
         desc: "Sistem konveyor untuk mengalirkan material antar-proses.", modelFile: "", image: "", specs: [] },
-      { name: "Heat Exchanger", short: "Heat Exchanger",
+      { name: "Heat Exchanger", short: "Heat Exchanger", metrics: SKOR(80, 80, 80),
         desc: "Penukar panas yang memanfaatkan panas dari gas buang.", modelFile: "", image: "assets/home/heat-exchanger.png", specs: [] },
-      { name: "Automatic Damper", short: "Auto Damper",
+      { name: "Automatic Damper", short: "Auto Damper", metrics: SKOR(80, 80, 80),
         desc: "Damper otomatis untuk mengatur aliran udara/gas pada furnace.", modelFile: "", image: "", specs: [] },
     ],
   },
