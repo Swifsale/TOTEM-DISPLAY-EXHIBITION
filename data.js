@@ -208,8 +208,6 @@ const PRODUCT_CATEGORIES = [
           { label: "Heating System", value: "Electric/Gas Burner" },
         ],
       },
-   ],
-},
     {
         name: "T6 Rotary Heat Treatment Furnace", short: "T6 Rotary Heat Treatment Furnace", metrics: SKOR(80, 80, 80),
         desc: "T6 merupakan proses perlakuan panas (heat treatment) pada aluminium yang bertujuan meningkatkan kekuatan, kekerasan, dan sifat mekanis material. Proses ini terdiri dari pemanasan (solution heat treatment), pendinginan cepat (quenching), dan pemanasan kembali (artificial aging). Melalui proses ini, komponen aluminium dapat memiliki ketahanan dan kualitas yang lebih baik. T6 banyak digunakan pada industri otomotif dan manufaktur yang membutuhkan komponen aluminium berkekuatan tinggi.",
