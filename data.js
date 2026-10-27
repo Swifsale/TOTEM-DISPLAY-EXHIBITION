@@ -187,9 +187,9 @@ const PRODUCT_CATEGORIES = [
     tag: "Dari proses kontinu compressor hingga cylinder head skala besar.",
     products: [
       {
-        name: "T5 Heat Treatment Furnace", short: "T5 Rotary Heat treament", metrics: SKOR(90, 85, 90),
+        name: "T6 Batch Heat Treatment Furnace", short: "T6 Batch Rotary Heat treament", metrics: SKOR(90, 85, 90),
         desc: "Roller Hearth Type — heat treatment kontinu untuk komponen compressor. Re-circulated hot air memanfaatkan panas buangan exhaust untuk pre-heating, mengoptimalkan efisiensi energi. Combustion system sesuai JIS B8514.",
-        modelFile: "", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
+        modelFile: "models/BATCH_TYPE.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
           { label: "Operating Temp (max 300°C)", value: "240°C" },
           { label: "Hot Air Circulation", value: "331 m³/min" },
@@ -198,8 +198,21 @@ const PRODUCT_CATEGORIES = [
         ],
       },
       {
-        name: "T6 Heat Treatment Furnace", short: "T6 Rotary Heat treatment", metrics: SKOR(80, 80, 80),
-        desc: "Roller Hearth Type — untuk processing cylinder head, alur proses 15 zona (solution heating & soaking, quenching, aging heating & soaking), dikendalikan otomatis via damper berbasis thermocouple. Sistem terlengkap di jajaran produk SWIF Asia.",
+        name: "Crucible Furnace", short: "Crucible Furnace", metrics: SKOR(90, 95, 87),
+        desc: "Crucible Melting Furnace adalah tungku industri yang digunakan untuk melebur logam menjadi cair atau mempertahankan logam agar tetap cair sebelum proses pengecoran (casting).Secara sederhana, bayangkan ada sebuah wadah khusus yang tahan terhadap suhu sangat tinggi di dalam tungku. Logam dimasukkan ke wadah tersebut, kemudian dipanaskan sampai mencair. Setelah itu, logam cair dapat digunakan untuk proses produksi atau dijaga suhunya sampai dibutuhkan.Crucible furnace berguna ketika pabrik membutuhkan proses peleburan logam dengan kapasitas yang sesuai kebutuhan produksi, atau membutuhkan logam cair di dekat mesin pengecoran (casting cell)",
+        modelFile: "models/CRUCIBLE.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
+        specs: [
+          { label: "Daya Pemanas", value: "25-125 kW" },
+          { label: "Suhu Maksimal", value: "±950°C" },
+          { label: "Kapasitas", value: "Up to 1000Kg" },
+          { label: "Heating System", value: "Electric/Gas Burner" },
+        ],
+      },
+   ],
+},
+    {
+        name: "T6 Rotary Heat Treatment Furnace", short: "T6 Rotary Heat Treatment Furnace", metrics: SKOR(80, 80, 80),
+        desc: "T6 merupakan proses perlakuan panas (heat treatment) pada aluminium yang bertujuan meningkatkan kekuatan, kekerasan, dan sifat mekanis material. Proses ini terdiri dari pemanasan (solution heat treatment), pendinginan cepat (quenching), dan pemanasan kembali (artificial aging). Melalui proses ini, komponen aluminium dapat memiliki ketahanan dan kualitas yang lebih baik. T6 banyak digunakan pada industri otomotif dan manufaktur yang membutuhkan komponen aluminium berkekuatan tinggi.",
         modelFile: "models/ROTARY_HT.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
           { label: "Solution Furnace", value: "505±10°C" },
@@ -226,9 +239,9 @@ const PRODUCT_CATEGORIES = [
         ],
       },
       {
-        name: "Heating Furnace (Batch-Boggie)", short: "Batch-Boggie", metrics: SKOR(80, 80, 80),
-        desc: "Untuk coating hardening — material diletakkan pada boggie yang masuk ke ruang furnace.",
-        modelFile: "", image: "",
+        name: "Annealing Furnace", short: "Annealing furnace", metrics: SKOR(80, 80, 80),
+        desc: "Annealing Furnace merupakan peralatan perlakuan panas (heat treatment) yang berfungsi memanaskan material logam pada temperatur dan waktu penahanan (holding time) tertentu, diikuti proses pendinginan terkontrol. Proses ini bertujuan mengurangi tegangan sisa (residual stress), meningkatkan keuletan (ductility), serta mengoptimalkan struktur mikro material. Pengendalian temperatur dan laju pendinginan dilakukan untuk memperoleh sifat mekanis sesuai spesifikasi teknis. Annealing Furnace banyak diaplikasikan pada industri pengecoran, otomotif, dan manufaktur komponen logam.",
+        modelFile: "models/ANNEALING.glb", image: "",
         specs: [
           { label: "Operating Temp", value: "500°C" },
           { label: "Hot Air Circulation", value: "250 m³/min" },
@@ -244,8 +257,6 @@ const PRODUCT_CATEGORIES = [
     products: [
       { name: "Tower Melting Furnace", short: "Tower Melting", metrics: SKOR(80, 80, 80),
         desc: "Furnace peleburan tipe menara untuk lini produksi dengan alur vertikal.", modelFile: "", image: "", specs: [] },
-      { name: "Crucible Melting Furnace", short: "Crucible", metrics: SKOR(80, 80, 80),
-        desc: "Melt & holding logam cair di sisi sel pengecoran, opsi standar JIS B8415:2008.", modelFile: "", image: "", specs: [] },
       { name: "Chip Smelter Melting Furnace", short: "Chip Smelter", metrics: SKOR(80, 80, 80),
         desc: "Furnace peleburan khusus untuk material berbentuk chip/serpihan logam.", modelFile: "", image: "", specs: [] },
       {
@@ -270,13 +281,13 @@ const PRODUCT_CATEGORIES = [
     tag: "Kapasitas 700 – 2500 kg, siap tuang tanpa pernah direpair.",
     products: [
       { name: "Under Heater — 1000 kg", short: "Under 1000kg", metrics: SKOR(80, 80, 80),
-        desc: "Dipercaya PT. Suzuki Indomobil Motor (2016) & PT. Astra Otoparts Nusa Metal (2018) dengan desain identik. 0 kali repair/kerusakan sejak dipasang.",
-        modelFile: "", image: "",
+        desc: "Holding Furnace merupakan peralatan termal industri yang berfungsi mempertahankan logam cair pada temperatur operasional yang stabil sebelum proses pengecoran (casting). Sistem ini dilengkapi pengendalian temperatur untuk meminimalkan kehilangan panas, menjaga homogenitas suhu, serta mengurangi risiko pembentukan oksida pada permukaan logam cair. Pengaturan temperatur yang presisi membantu menjaga kualitas material dan kestabilan proses produksi. Holding Furnace banyak digunakan pada industri pengecoran aluminium dan manufaktur komponen logam.",
+        modelFile: "models/HOLDING.glb", image: "",
         specs: [
-          { label: "Kapasitas", value: "1000 kg" },
+          { label: "Kapasitas", value: "Up to 1000 kg" },
           { label: "Heater Capacity", value: "2×8 kW = 16 kW" },
-          { label: "Klien", value: "Suzuki (2016), Astra Otoparts (2018)" },
-          { label: "Repair Tercatat", value: "0 kali" },
+          { label: "Efisiensi", value: "Up to 75%" },
+          { label: "Suhu", value: "700-1050°C" },
         ] },
        ],
   },
@@ -285,30 +296,29 @@ const PRODUCT_CATEGORIES = [
     sub: "Molten transfer device · Molten metal pump · Ladle pre-heat · Degassing · Conveyor · Heat exchanger · Automatic damper",
     tag: "Kelengkapan lini produksi furnace.",
     products: [
-      // TODO: isi deskripsi tiap item (sementara teks ringkas)
       { name: "Molten Transfer Device", short: "Molten Transfer", metrics: SKOR(80, 80, 80),
-        desc: "Perangkat pemindah logam cair: overhead, bottom carrier, atau ladle forklift.", modelFile: "", image: "", specs: [] },
+        desc: "Molten Transfer merupakan proses pemindahan logam cair dari furnace peleburan menuju holding furnace atau mesin pengecoran (casting machine) dengan menggunakan sistem transfer khusus. Proses ini dirancang untuk menjaga kestabilan temperatur, meminimalkan kehilangan panas, serta mengurangi risiko oksidasi dan kontaminasi selama pemindahan. Pengendalian aliran dan temperatur logam cair menjadi faktor penting dalam menjaga kualitas material dan konsistensi produksi. Sistem Molten Transfer banyak diaplikasikan pada industri pengecoran aluminium dan manufaktur komponen logam.", modelFile: "models/MOLTEN.glb", image: "", specs: [
+           { label: "kapasitas", value : "up to 500Kg" },
+           { label: "Efisinesi", value : "up to 85%"}, 
+           { label: "Suhu", value : "350-750°C"},
+        ] },
       { name: "Molten Metal Pump", short: "Metal Pump", metrics: SKOR(80, 80, 80),
         desc: "Pompa untuk memindahkan logam cair antar-stasiun produksi.", modelFile: "", image: "", specs: [] },
       { name: "Ladle Pre-Heat", short: "Ladle Pre-Heat", metrics: SKOR(80, 80, 80),
-        desc: "Pemanas awal ladle sebelum dipakai menampung logam cair.", modelFile: "", image: "", specs: [] },
+        desc: "Ladle Transfer merupakan proses pemindahan logam cair menggunakan wadah khusus (ladle) yang dirancang untuk menahan temperatur tinggi dan menjaga keamanan operasional. Sistem ini digunakan untuk mentransfer logam cair dari melting furnace menuju holding furnace atau mesin pengecoran (casting machine). Proses transfer dikendalikan untuk meminimalkan kehilangan panas, mencegah tumpahan, serta mengurangi risiko oksidasi dan kontaminasi logam cair. Ladle Transfer banyak diaplikasikan pada industri pengecoran aluminium dan manufaktur komponen logam.", 
+modelFile: "models/LADDLE.glb", image: "", specs: [
+   { label : "Kapasitas", value :"Up to 2000 kg" },
+   { label : "Program", value : "PLC/HMI"},
+   { label : "transfer speed", value : "Up to 50m/min"},
+] },
       { name: "Degassing", short: "Degassing", metrics: SKOR(80, 80, 80),
         desc: "Sistem penghilang gas pada logam cair.", modelFile: "", image: "", specs: [] },
       { name: "Conveyor", short: "Conveyor", metrics: SKOR(80, 80, 80),
         desc: "Sistem konveyor untuk mengalirkan material antar-proses.", modelFile: "", image: "", specs: [] },
       { name: "Heat Exchanger", short: "Heat Exchanger", metrics: SKOR(80, 80, 80),
-        desc: "Penukar panas yang memanfaatkan panas dari gas buang.", modelFile: "", image: "assets/home/heat-exchanger.png", specs: [] },
+        desc: "Penukar panas yang memanfaatkan panas dari gas buang.", modelFile: "", image: "", specs: [] },
       { name: "Automatic Damper", short: "Auto Damper", metrics: SKOR(80, 80, 80),
         desc: "Damper otomatis untuk mengatur aliran udara/gas pada furnace.", modelFile: "", image: "", specs: [] },
     ],
   },
 ];
-
-/* ---------------------------------------------------------------------------
-   ARSIP (tidak dipakai lagi) — item dari versi lama, disimpan agar tidak hilang:
-   Peralatan Pendukung : Ladle Device, Porter Metal Transfer, Dust Collector
-   Spare Parts & Layanan: Spare Parts Furnace (immersion heater Atherm), Layanan Purna Jual
-   Slogan footer lama  : "Heartful Thermal Technology." · "No.1 Furnace Manufacturer di ASEAN"
-   Slide lama "Tentang Kami": sejarah 1949 (Sanken Sangyo), 2011 PT SWIF Asia, Cikarang (GIIC).
-   Tambahkan kembali sebagai produk/halaman bila diperlukan.
-   --------------------------------------------------------------------------- */
