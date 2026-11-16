@@ -1,5 +1,3 @@
-   PENGATURAN (waktu dalam milidetik)
-   --------------------------------------------------------------------------- */
 const CONFIG = {
   PAGE_MS: 15000,        // 1 halaman home = 15 detik
   HOLD_MS: 60000,        // setelah disentuh, loop berhenti 60 detik (masa penjelasan)
