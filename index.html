@@ -7,25 +7,17 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Frame tetap 1080x1920, diskalakan ke layar oleh script.js -->
+ 
   <div id="fit">
-
-    <!-- MODE 1 · HOME LOOP (5 halaman, 15 detik / halaman) -->
-    <div id="home" class="mode on">
-      <div id="homePages"></div>
-      <nav id="nav" class="first">
-        <button class="btn back" id="bBack"><span>←</span>BACK</button>
-        <button class="btn home" id="bHome">HOME</button>
-        <div class="prog"><div id="segs"></div></div>
-        <button class="btn next" id="bNext">NEXT<span>→</span></button>
-      </nav>
-    </div>
-
-    <!-- MODE 2 · MAIN PRODUCT (menu kategori) -->
+    <!-- MODE 1 · HOME LOOP (8 layar, 15 detik / layar) -->
+    <div id="home" class="mode on"><div id="homePages"></div></div>
+    <!-- MODE 2 · 3D PRODUCT EXPLORER (pilih produk) -->
     <div id="products" class="mode"></div>
-
-    <!-- MODE 3 · PAGE 3D VIEW (detail produk) -->
+    <!-- MODE 3 · 3D VIEW (detail produk) -->
     <div id="detail" class="mode"></div>
+    <!-- MODE 4 · PRODUK UNGGULAN (dibuka dari footer) -->
+    <div id="featured" class="mode"></div>
+    <!-- header & footer dibuat oleh script.js -->
   </div>
 
   <!-- Pemuat library: coba folder vendor/ dulu (offline), jika tidak ada pakai CDN.
