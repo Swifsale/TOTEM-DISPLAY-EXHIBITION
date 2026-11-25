@@ -13,8 +13,8 @@ const CONFIG = {
   CLIENT_AUTO: { enabled: true, max: 60, exts: ["png", "jpg", "jpeg", "webp", "svg"] },
 
   // Header (atas setiap layar)
-  LOGO_IMAGE: "assets/logo-swifasia-mark.png",
-  FEATURED_IDLE_MS: 120000,  // layar Produk Unggulan kembali ke home setelah 2 menit tanpa sentuhan (0 = tidak)
+  LOGO_IMAGE: "assets/logo-swifasia.png",
+  FEATURED_IDLE_MS: 6000,  // layar Produk Unggulan kembali ke home setelah 1 menit tanpa sentuhan (0 = tidak)
   TAGLINE: "Heartful Thermal Technology",
   GROUP_LINE: "A Member of Sanken Sangyo Group, Japan",   // ⚠ cek ejaan nama grup sebelum pameran
   QR_IMAGE: "assets/qr-swifa.png",
