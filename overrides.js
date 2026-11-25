@@ -144,6 +144,25 @@
     const brand = $('.brand');
     if (!brand) return;
     brand.classList.add('brand-shine');
+    // Fixed rounded-rectangle path around the logo frame. Only the colored
+    // stroke segments animate; neither the logo nor the SVG frame rotates.
+    if (!brand.querySelector('.logo-chase')) {
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('class', 'logo-chase');
+      svg.setAttribute('viewBox', '0 0 100 40');
+      svg.setAttribute('preserveAspectRatio', 'none');
+      svg.setAttribute('aria-hidden', 'true');
+      const d = 'M 6 2 H 94 Q 98 2 98 6 V 34 Q 98 38 94 38 H 6 Q 2 38 2 34 V 6 Q 2 2 6 2 Z';
+      ['blue-light', 'red-light'].forEach(className => {
+        const path = document.createElementNS(svgNS, 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('pathLength', '1000');
+        path.setAttribute('class', className);
+        svg.appendChild(path);
+      });
+      brand.appendChild(svg);
+    }
     const logo = brand.querySelector('img');
     // Correct the stale filename in the original CONFIG/header markup.
     if (logo) {
