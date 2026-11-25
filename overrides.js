@@ -12,7 +12,8 @@
       "assets/company/12.jpg"
     ],
     // Tambahkan/hapus path gambar mascot sesuai jumlah yang diinginkan.
-    // Semua gambar memakai slot/layout yang sama dan berganti setiap 15 detik.
+    // Dipakai bergantian (tiap MASCOT_INTERVAL_MS) di layar yang tidak
+    // punya gambar khusus di MASCOT_GUIDE.
     MASCOT_IMAGES: [
       "assets/mascot/swifi-1.png",
       "assets/mascot/swifi-2.png",
@@ -23,6 +24,30 @@
     ],
     MASCOT_INTERVAL_MS: 15000,
     MASCOT_ROTATE_MS: 650,
+
+    /* ===== MASCOT PEMANDU — teks balon kata & gambar per layar =====
+       text  : isi balon kata. Kosongkan ("") untuk menyembunyikan balon.
+               Tulis *kata* untuk menebalkan/mewarnai kata tersebut.
+       image : (opsional) gambar mascot khusus untuk layar ini, mis.
+               "assets/mascot/swifi-home.png". Kosong = ikut MASCOT_IMAGES.
+       hide  : true = mascot tidak tampil di layar ini.
+       Kunci layar: home-1 … home-8, featured-1 … featured-4, products, detail */
+    MASCOT_GUIDE: {
+      "home-1":     { text: "Halo, aku *SWIFI*! Sentuh *START EXPLORATION* untuk mulai.", image: "" },
+      "home-2":     { text: "Lebih dari *40 pelanggan industri* sudah percaya pada kami!", image: "" },
+      "home-3":     { text: "Dari *desain* sampai *commissioning*, semua kami kerjakan.", image: "" },
+      "home-4":     { text: "*Keselamatan operator* selalu jadi prioritas utama.", image: "" },
+      "home-5":     { text: "Sentuh *kartu produk* untuk melihat model 3D-nya!", image: "" },
+      "home-6":     { text: "*Geser model 3D* untuk memutarnya, yuk coba!", image: "" },
+      "home-7":     { text: "Hemat energi, rendah emisi, menuju *Net Zero 2060*.", image: "" },
+      "home-8":     { text: "Butuh maintenance? *Tim lokal kami* siap membantu!", image: "" },
+      "featured-1": { text: "Hemat energi hingga *±25%*! Sentuh *LIHAT 3D*.", image: "" },
+      "featured-2": { text: "Daur ulang chip aluminium dengan *metal recovery ≥98%*.", image: "" },
+      "featured-3": { text: "Keseragaman temperatur hingga *±5°C*!", image: "" },
+      "featured-4": { text: "Transfer molten lebih *aman* dengan satu tombol.", image: "" },
+      "products":   { text: "Pilih produk yang ingin kamu lihat dalam *3D*!", image: "" },
+      "detail":     { text: "*Geser model* untuk memutar, atau pilih produk lain.", image: "" }
+    },
     // Kecepatan marquee dalam pixel/detik. Angka lebih kecil = lebih lambat.
     CUSTOMER_LOGO_SPEED: 8,
     // Model chip smelter belum ada di repository. Setelah file diunggah,
@@ -136,54 +161,137 @@
     setExplorerProduct(0);
   }
 
+  /* ---------------------------------------------------------------------
+     MASCOT PEMANDU — berdiri di pojok kanan bawah banner (hero) setiap
+     layar, dengan balon kata sesuai layar (lihat MASCOT_GUIDE di atas).
+     Posisi dihitung otomatis dari tinggi banner & tombol di dalamnya,
+     sehingga tidak pernah menutupi judul atau tombol.
+     --------------------------------------------------------------------- */
+  const escHTML = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const richText = (s) => escHTML(s).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+  function currentScreenKey() {
+    if (typeof S === 'undefined') return '';
+    if (S.mode === 'home') return 'home-' + (S.cur + 1);
+    if (S.mode === 'featured') return 'featured-' + (S.feat + 1);
+    return S.mode; // products | detail
+  }
+
   function installMascotSlot() {
     const fit = $('#fit');
-    if (!fit || $('#swifi-mascot-slot')) return;
-
+    if (!fit || $('#swifi-guide')) return;
     const images = (TOTEM_CUSTOM.MASCOT_IMAGES || []).filter(Boolean);
-    if (!images.length) return;
+    const GUIDE = TOTEM_CUSTOM.MASCOT_GUIDE || {};
 
     const slot = document.createElement('div');
-    slot.id = 'swifi-mascot-slot';
-    slot.className = 'swifi-mascot-slot';
-    slot.innerHTML = `
-      <img class="swifi-mascot-image" src="${images[0]}" alt="SWIFI mascot">
-      <span>SWIFI</span>`;
+    slot.id = 'swifi-guide';
+    slot.className = 'swifi-guide';
+    slot.innerHTML = `<i class="swifi-ground"></i><img class="swifi-img" alt="SWIFI mascot"><span class="swifi-fallback">SWIFI</span>`;
+    const bubble = document.createElement('div');
+    bubble.className = 'swifi-bubble';
+    bubble.innerHTML = '<b>SWIFI</b><p></p>';
     fit.appendChild(slot);
+    fit.appendChild(bubble);
 
-    const image = slot.querySelector('img');
-    let current = 0;
-    let switching = false;
+    const img = slot.querySelector('img');
+    img.addEventListener('error', () => slot.classList.add('no-image'));
+    img.addEventListener('load', () => slot.classList.remove('no-image'));
+    images.forEach((src) => { const pre = new Image(); pre.src = src; });
+
+    let rotIndex = 0, shownSrc = '', lastKey = null, lastGeom = '';
     const rotateMs = Math.max(200, Number(TOTEM_CUSTOM.MASCOT_ROTATE_MS) || 650);
 
-    image.addEventListener('error', function () {
-      slot.classList.add('no-image');
-    });
-    image.addEventListener('load', function () {
-      slot.classList.remove('no-image');
-    });
+    function setImage(src, animate) {
+      if (!src || src === shownSrc) return;
+      shownSrc = src;
+      if (!animate) { img.src = src; return; }
+      img.classList.add('is-rotating');
+      setTimeout(() => { img.src = src; img.classList.remove('is-rotating'); }, rotateMs / 2);
+    }
+    const screenImage = (cfg) => (cfg && cfg.image) || images[rotIndex % Math.max(1, images.length)] || '';
 
-    // Preload seluruh gambar agar pergantian tidak menampilkan gambar kosong.
-    images.forEach(src => {
-      const preload = new Image();
-      preload.src = src;
-    });
+    /** Ukur banner layar aktif lalu tempatkan mascot + balon kata. */
+    function place() {
+      const key = currentScreenKey();
+      const cfg = GUIDE[key] || {};
+      const pg = document.querySelector('.mode.on .pg.on');
+      const hero = pg && pg.querySelector('.hero');
+      if (!hero || cfg.hide) { slot.classList.add('off'); bubble.classList.add('off'); lastKey = key; return; }
 
-    if (images.length < 2) return;
+      const scale = (typeof V !== 'undefined' && V.scale) || 1;
+      const F = fit.getBoundingClientRect();
+      const loc = (r) => ({ l: (r.left - F.left) / scale, t: (r.top - F.top) / scale, r: (r.right - F.left) / scale, b: (r.bottom - F.top) / scale });
+      const H = loc(hero.getBoundingClientRect());
+      // Batas kanan teks judul/subjudul (mascot & balon tidak boleh melewati ini)
+      let textRight = 0;
+      // (Range mengukur lebar teks sebenarnya, bukan lebar kotak elemen)
+      hero.querySelectorAll('.htx h1, .htx .sub, .htx .ftl').forEach((e) => {
+        const rg = document.createRange(); rg.selectNodeContents(e);
+        [...rg.getClientRects()].forEach((r) => { if (r.width) textRight = Math.max(textRight, loc(r).r); });
+      });
+      hero.querySelectorAll('.htx .tagp, .htx .ftag, .htx .finset').forEach((e) => {
+        const r = e.getBoundingClientRect(); if (r.width) textRight = Math.max(textRight, loc(r).r);
+      });
+      // Dasar berdiri: tepi bawah banner, atau di atas tombol/area tombol di banner
+      let floor = H.b;
+      const blocker = hero.querySelector('.hbot') || hero.querySelector(':scope > button, :scope > .vlink');
+      if (blocker) floor = Math.min(floor, loc(blocker.getBoundingClientRect()).t - 6);
+      const room = floor - H.t;                      // tinggi ruang yang tersedia
 
-    window.setInterval(() => {
-      if (switching) return;
-      switching = true;
-      image.classList.add('is-rotating');
+      const tall = room >= 380;
+      const right = 26;
+      let mh = tall ? Math.min(300, room - 140) : Math.max(150, room - 22);
+      // Banner pendek: jangan sampai menabrak judul → perkecil sesuai ruang kosong
+      if (!tall) mh = Math.min(mh, (1080 - right - (textRight + 14)) / 0.72);
+      mh = Math.round(mh);
+      if (mh < 120) { slot.classList.add('off'); bubble.classList.add('off'); lastKey = key; lastGeom = ''; return; }
+      const mw = Math.round(mh * 0.72);
+      const mLeft = 1080 - right - mw, mTop = floor - mh;
 
-      window.setTimeout(() => {
-        current = (current + 1) % images.length;
-        image.src = images[current];
-        image.alt = `SWIFI mascot ${current + 1}`;
-        image.classList.remove('is-rotating');
-        switching = false;
-      }, rotateMs / 2);
-    }, Math.max(1000, Number(TOTEM_CUSTOM.MASCOT_INTERVAL_MS) || 15000));
+      const geom = [key, mh, mTop, mLeft, Math.round(textRight)].join('|');
+      if (geom !== lastGeom) {
+        lastGeom = geom;
+        Object.assign(slot.style, { left: mLeft + 'px', top: mTop + 'px', width: mw + 'px', height: mh + 'px' });
+
+        // Balon kata: di atas kepala (banner tinggi) atau di kiri mascot (banner pendek)
+        bubble.classList.remove('above', 'side');
+        const text = cfg.text || '';
+        let ok = !!text;
+        if (ok && tall) {
+          const bw = Math.min(330, 1080 - 20 - Math.max(textRight + 18, 640));
+          ok = bw >= 200;
+          bubble.classList.add('above');
+          Object.assign(bubble.style, { width: bw + 'px', left: (1080 - 20 - bw) + 'px', top: 'auto',
+            bottom: (1920 - (mTop + 8)) + 'px' });
+        } else if (ok) {
+          const bw = Math.min(300, mLeft + 14 - (textRight + 22));
+          ok = bw >= 220;
+          bubble.classList.add('side');
+          Object.assign(bubble.style, { width: bw + 'px', left: (mLeft + 14 - bw) + 'px', bottom: 'auto',
+            top: Math.max(H.t + 14, mTop + mh * 0.12) + 'px' });
+        }
+        bubble.classList.toggle('off', !ok);
+        if (key !== lastKey) {
+          bubble.querySelector('p').innerHTML = richText(text);
+          bubble.classList.remove('pop'); void bubble.offsetWidth; bubble.classList.add('pop');
+        }
+      }
+      slot.classList.remove('off');
+      setImage(screenImage(cfg), lastKey !== null && key !== lastKey);
+      lastKey = key;
+    }
+
+    place();
+    setInterval(place, 250);
+    window.addEventListener('resize', () => { lastGeom = ''; place(); }, { passive: true });
+
+    if (images.length > 1) {
+      setInterval(() => {
+        rotIndex = (rotIndex + 1) % images.length;
+        const cfg = GUIDE[currentScreenKey()] || {};
+        if (!cfg.image) setImage(screenImage(cfg), true);
+      }, Math.max(1000, Number(TOTEM_CUSTOM.MASCOT_INTERVAL_MS) || 15000));
+    }
   }
 
   function installLogoShine() {
