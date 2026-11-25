@@ -156,7 +156,7 @@ const HOME_PAGES = [
     pickLabel: "PILIH KATEGORI PRODUK",
     preview: {                                   // model 3D LIVE yang tampil di layar ini
       title: "Hybrid Melting Furnace (Tower Type)",
-      open: { cat: 0, prod: 1 },                 // produk di PRODUCT_CATEGORIES (model, rotasi & gambar diambil dari sana)
+      open: { cat: 0, prod: 0 },                 // produk di PRODUCT_CATEGORIES (model, rotasi & gambar diambil dari sana)
       link: "LIHAT DETAIL & SPESIFIKASI",        // tombol menuju halaman detail produk ini
       callout: { photo: "assets/home/assembly.jpg", text: "Sistem Combustion (JIS B 8415)" },
     },
@@ -250,7 +250,7 @@ const FEATURED_PAGES = [
     tagline: "Efisiensi Energi. Kualitas Aluminium. Desain Lebih Ringkas.",
     subtitle: "Teknologi hybrid yang menggabungkan gas burner untuk proses melting dan SA electric heater untuk proses holding.",
     photo: "assets/company/9.jpg",
-    open: { cat: 0, prod: 1 },
+    open: { cat: 0, prod: 0 },
     inset: { type: "principle", label: "PRINSIP OPERASI", items: [
       { icon: "fire", tone: "orange", title: "MELTING", sub: "Gas Burner", text: "Peleburan aluminium" },
       { icon: "bolt", tone: "blue", title: "HOLDING", sub: "SA Electric Heater", text: "Menjaga temperatur molten secara stabil" },
@@ -279,7 +279,7 @@ const FEATURED_PAGES = [
     tagline: "Recycle Aluminium Chips. *Save Space.* Recover More Metal.",
     subtitle: "Solusi peleburan aluminium briquette dengan sistem vortex melting yang ringkas dan efisien.",
     photo: "assets/company/13.jpg",
-    open: { cat: 1, prod: 1 },
+    // (tanpa tombol 3D: Briquette Melting System belum punya model 3D)
     inset: { type: "photo", photo: "", icon: "cube", label: "Aluminium Briquette (Chips)" },
     blocks: [
       { type: "banner", icon: "recycle", text: "TANPA PRETREATMENT LINE TERPISAH", accent: "LEBIH RINGKAS – LEBIH SEDIKIT EQUIPMENT" },
@@ -339,7 +339,7 @@ const FEATURED_PAGES = [
     tagline: "TRANSFER ALUMINIUM CAIR DENGAN OPERASI YANG LEBIH AMAN.",
     subtitle: "Pompa tipe pengeluaran molten metal untuk mentransfer aluminium cair dari furnace peleburan ke ladle, sebagai alternatif tapping konvensional yang lebih aman.",
     photo: "assets/company/3.jpg",
-    open: { cat: 3, prod: 2 },
+    // (tanpa tombol 3D: Kamogawa 2.0 belum punya model 3D)
     inset: { type: "stat", icon: "chart", value: "400 kg / 56 detik", accent: "≈ 429 kg/menit", note: "(hasil aktual operasi SWIFA)" },
     blocks: [
       { type: "cols", grow: true, items: [
@@ -397,10 +397,6 @@ const PRODUCT_CATEGORIES = [
     desc: "Peleburan dan penahanan aluminium yang efisien, aman dan hemat energi.",
     products: [
       {
-        name: "Tower Melting Furnace", short: "Tower Melting", metrics: SKOR(80, 80, 80),
-        desc: "Furnace peleburan tipe menara untuk lini produksi dengan alur vertikal.", modelFile: "", image: "", specs: [],
-      },
-      {
         name: "Hybrid Melter", short: "Hybrid Melter", metrics: SKOR(80, 80, 80),
         desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
         detail: [
@@ -448,14 +444,6 @@ const PRODUCT_CATEGORIES = [
     products: [
       { name: "Chip Smelter Melting Furnace", short: "Chip Smelter", metrics: SKOR(80, 80, 80),
         desc: "Furnace peleburan khusus untuk material berbentuk chip/serpihan logam.", modelFile: "", image: "", specs: [] },
-      { name: "Aluminium Briquette Melting System", short: "Briquette Melting", metrics: SKOR(80, 80, 80),
-        desc: "Solusi peleburan aluminium briquette dengan sistem vortex melting yang ringkas dan efisien, tanpa pretreatment line terpisah. Moisture dan cutting oil dibakar di melting chamber; gas hasil pembakaran mengalami afterburning. Dapat dirancang sebagai furnace khusus atau diintegrasikan melalui modifikasi holding chamber pada tower melting & holding furnace yang sudah ada.",
-        modelFile: "", image: "", specs: [
-          { value: "Hingga 60%", label: "Pengurangan footprint" },
-          { value: "≥98%", label: "Metal recovery" },
-          { value: "1/4", label: "Konsumsi bahan bakar" },
-          { value: "300–1.000 kg/jam", label: "Kapasitas melting" },
-        ] },
     ],
   },
   {
@@ -506,30 +494,12 @@ const PRODUCT_CATEGORIES = [
     photo: "assets/company/7.jpg",
     desc: "Berbagai furnace non-aluminium dan peralatan pendukung sesuai kebutuhan proses industri Anda.",
     products: [
-      {
-        name: "Drying Oven Furnace", short: "Drying Oven", metrics: SKOR(80, 80, 80),
-        desc: "Untuk drying core paint — material dimasukkan langsung ke ruang heating.",
-        modelFile: "", image: "",
-        specs: [
-          { label: "Operating Temp", value: "220°C" },
-          { label: "Hot Air Circulation", value: "400 m³/min" },
-          { label: "Gas Burner", value: "233 kW" },
-          { label: "Process Cycle", value: "60 min" },
-        ],
-      },
       { name: "Molten Transfer Device", short: "Molten Transfer", metrics: SKOR(80, 80, 80),
         desc: "Molten Transfer merupakan proses pemindahan logam cair dari furnace peleburan menuju holding furnace atau mesin pengecoran (casting machine) dengan menggunakan sistem transfer khusus. Proses ini dirancang untuk menjaga kestabilan temperatur, meminimalkan kehilangan panas, serta mengurangi risiko oksidasi dan kontaminasi selama pemindahan. Pengendalian aliran dan temperatur logam cair menjadi faktor penting dalam menjaga kualitas material dan konsistensi produksi. Sistem Molten Transfer banyak diaplikasikan pada industri pengecoran aluminium dan manufaktur komponen logam.",
         modelFile: "models/MOLTEN.glb", image: "", specs: [
           { label: "Kapasitas", value: "Up to 500 kg" },
           { label: "Efisiensi", value: "Up to 85%" },
           { label: "Suhu", value: "350-750°C" },
-        ] },
-      { name: "Kamogawa 2.0 Molten Metal Pump", short: "Kamogawa 2.0", metrics: SKOR(80, 80, 80),
-        desc: "Pompa tipe pengeluaran molten metal untuk mentransfer aluminium cair dari furnace peleburan ke ladle, sebagai alternatif tapping konvensional yang lebih aman. Pengeluaran molten cukup dengan satu tombol dan berhenti otomatis saat pemadaman listrik, gempa, atau emergency stop.",
-        modelFile: "", image: "", specs: [
-          { value: "≈429 kg/menit", label: "400 kg / 56 detik" },
-          { value: "Impeller", label: "Tipe pompa" },
-          { value: "±500 mm", label: "Kedalaman aluminium maks." },
         ] },
       { name: "Ladle Pre-Heat", short: "Ladle Pre-Heat", metrics: SKOR(80, 80, 80),
         desc: "Ladle Transfer merupakan proses pemindahan logam cair menggunakan wadah khusus (ladle) yang dirancang untuk menahan temperatur tinggi dan menjaga keamanan operasional. Sistem ini digunakan untuk mentransfer logam cair dari melting furnace menuju holding furnace atau mesin pengecoran (casting machine). Proses transfer dikendalikan untuk meminimalkan kehilangan panas, mencegah tumpahan, serta mengurangi risiko oksidasi dan kontaminasi logam cair. Ladle Transfer banyak diaplikasikan pada industri pengecoran aluminium dan manufaktur komponen logam.",
@@ -538,14 +508,6 @@ const PRODUCT_CATEGORIES = [
           { label: "Program", value: "PLC/HMI" },
           { label: "Transfer Speed", value: "Up to 50 m/min" },
         ] },
-      { name: "Degassing", short: "Degassing", metrics: SKOR(80, 80, 80),
-        desc: "Sistem penghilang gas pada logam cair.", modelFile: "", image: "", specs: [] },
-      { name: "Conveyor", short: "Conveyor", metrics: SKOR(80, 80, 80),
-        desc: "Sistem konveyor untuk mengalirkan material antar-proses.", modelFile: "", image: "", specs: [] },
-      { name: "Heat Exchanger", short: "Heat Exchanger", metrics: SKOR(80, 80, 80),
-        desc: "Penukar panas yang memanfaatkan panas dari gas buang.", modelFile: "", image: "assets/home/heat-exchanger.png", specs: [] },
-      { name: "Automatic Damper", short: "Auto Damper", metrics: SKOR(80, 80, 80),
-        desc: "Damper otomatis untuk mengatur aliran udara/gas pada furnace.", modelFile: "", image: "", specs: [] },
     ],
   },
 ];

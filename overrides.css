@@ -157,10 +157,8 @@
    .pks  : daftar produk per kategori di 3D PRODUCT EXPLORER (vertikal)
    #dPick: baris pilihan produk di halaman detail (horizontal) */
 .t-products .pcr { min-height: 0; overflow: hidden; }
-/* Bagi tinggi kartu sesuai jumlah produk: kategori 2 & 3 (sedikit produk)
-   lebih ringkas, kategori 4 (8 produk) mendapat ruang lebih. */
-.t-products .pcat:nth-child(2), .t-products .pcat:nth-child(3) { flex-grow: .8; }
-.t-products .pcat:nth-child(4) { flex-grow: 1.45; }
+/* Tinggi kartu kategori sama rata. Bila nanti satu kategori punya banyak
+   produk, beri ruang lebih, mis.: .t-products .pcat:nth-child(4) { flex-grow: 1.45; } */
 .t-products .pcr p { flex: none; }
 .drag-scroll { touch-action: none; overscroll-behavior: contain; cursor: grab; }
 .drag-scroll.dragging { cursor: grabbing; }

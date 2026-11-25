@@ -182,10 +182,10 @@
 
 
   const PREVIEW_PRODUCTS = [
-    { cat: 0, prod: 1, title: 'Hybrid Melting Furnace (Tower Type)' },
+    { cat: 0, prod: 0, title: 'Hybrid Melting Furnace (Tower Type)' },
     { cat: 1, prod: 0, title: 'Chip Smelting Furnace' },
     { cat: 2, prod: 1, title: 'T6 Rotary Heat Treatment Furnace' },
-    { cat: 3, prod: 1, title: 'Molten Transfer Device' }
+    { cat: 3, prod: 0, title: 'Molten Transfer Device' }
   ];
 
   function setExplorerProduct(index) {
