@@ -1,0 +1,100 @@
+/* SWIF Asia Totem custom motion layer */
+
+/* Page 03: horizontal photo slider (slide, not fade). */
+.factory-showcase {
+  position: absolute; inset: 0; overflow: hidden; border-radius: 14px;
+  background: #071a4a;
+}
+.factory-showcase-track { position: absolute; inset: 0; overflow: hidden; }
+.factory-slide {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  transform: translateX(100%); transition: transform .75s cubic-bezier(.22,.75,.25,1);
+  will-change: transform;
+}
+.factory-slide:first-child { transform: translateX(0); }
+.factory-slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.factory-showcase::after {
+  content: ""; position: absolute; inset: 45% 0 0;
+  background: linear-gradient(transparent, rgba(5,18,48,.72)); pointer-events: none;
+}
+.factory-showcase-caption {
+  position: absolute; left: 20px; bottom: 28px; z-index: 2; color: #fff;
+  font: italic 900 22px/1 "Mont"; text-shadow: 0 2px 8px #000;
+}
+.factory-showcase-dots {
+  position: absolute; right: 18px; bottom: 30px; z-index: 3;
+  display: flex; gap: 8px;
+}
+.factory-showcase-dots i {
+  display: block; width: 10px; height: 10px; border-radius: 8px;
+  background: rgba(255,255,255,.5); transition: width .25s, background .25s;
+}
+.factory-showcase-dots i.active { width: 30px; background: #ff202e; }
+
+/* Customer logos: slower, predictable pixel-per-second speed. */
+#trust .track { animation-timing-function: linear !important; }
+
+/* Mascot placeholder. Add assets/mascot/swifi.png to show the real artwork. */
+.swifi-mascot-slot {
+  position: absolute; z-index: 30; right: 28px; bottom: 292px;
+  width: 170px; height: 230px; display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end; pointer-events: none;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,.25));
+}
+.swifi-mascot-slot img {
+  display: block; max-width: 100%; max-height: 205px; object-fit: contain;
+}
+.swifi-mascot-slot span {
+  display: none; padding: 5px 14px; border-radius: 12px;
+  color: #fff; background: #102d69; font: italic 900 13px "Mont";
+}
+.swifi-mascot-slot.no-image span { display: block; }
+.swifi-mascot-slot.no-image img { display: none; }
+.swifi-mascot-slot.no-image {
+  width: 130px; height: 42px; right: 28px; bottom: 300px;
+  border: 1px dashed rgba(27,79,209,.45); border-radius: 12px;
+  background: rgba(255,255,255,.7); filter: none;
+}
+
+/* Upper third: moving blue/red shine around the logo container outline. */
+.brand { position: relative; isolation: isolate; }
+.brand-shine::after {
+  content: ""; position: absolute; inset: -5px; z-index: 2; border-radius: 5px;
+  padding: 3px; pointer-events: none;
+  background: conic-gradient(from 0deg, transparent 0 28%, #1b4fd1 34%, #69a4ff 39%,
+    transparent 45% 65%, #e3101e 72%, #ff7777 78%, transparent 84% 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: swifa-logo-chase 3.2s linear infinite;
+}
+@keyframes swifa-logo-chase { to { transform: rotate(360deg); } }
+
+/* Lower third: animated red/white wave line. */
+.fwave { overflow: hidden; animation: swifa-wave-drift 3.8s ease-in-out infinite alternate; }
+.fwave::before, .fwave::after {
+  content: ""; position: absolute; left: -8%; width: 116%; height: 24px;
+  border-radius: 50%; border-top: 4px solid #fff;
+  transform: translateX(0); animation: swifa-wave-slide 5s linear infinite;
+}
+.fwave::before { top: 18px; border-color: #fff; }
+.fwave::after { top: 25px; border-color: #ed1727; animation-duration: 3.6s; animation-direction: reverse; }
+@keyframes swifa-wave-drift {
+  from { transform: translateY(-5px) scaleY(.92); }
+  to { transform: translateY(6px) scaleY(1.08); }
+}
+@keyframes swifa-wave-slide {
+  from { transform: translateX(-4%); }
+  to { transform: translateX(4%); }
+}
+
+/* Existing SVG icons receive restrained motion without affecting hit targets. */
+.ic.icon-motion { transform-origin: 50% 50%; animation: swifa-icon-breathe 3.4s ease-in-out infinite; }
+@keyframes swifa-icon-breathe {
+  0%, 100% { filter: drop-shadow(0 0 0 rgba(47,107,255,0)); }
+  50% { filter: drop-shadow(0 0 4px rgba(47,107,255,.35)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .factory-slide, .brand-shine::after, .fwave, .fwave::before, .fwave::after, .ic.icon-motion {
+    animation: none !important; transition: none !important;
+  }
+}
