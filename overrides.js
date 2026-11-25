@@ -48,8 +48,13 @@
       "products":   { text: "Pilih produk yang ingin kamu lihat dalam *3D*!", image: "" },
       "detail":     { text: "*Geser model* untuk memutar, atau pilih produk lain.", image: "" }
     },
-    // Kecepatan marquee dalam pixel/detik. Angka lebih kecil = lebih lambat.
-    CUSTOMER_LOGO_SPEED: 8,
+    // ===== LOGO CUSTOMER (layar 02 Company Profile) =====
+    // "step"       = geser 1 logo, berhenti sebentar, lalu geser lagi (mudah dibaca)
+    // "continuous" = berjalan pelan tanpa henti
+    CUSTOMER_LOGO_MODE: "step",
+    CUSTOMER_LOGO_STEP_PAUSE_MS: 2200, // mode step: lama berhenti di tiap posisi
+    CUSTOMER_LOGO_STEP_MS: 800,        // mode step: lama gerakan geser 1 logo
+    CUSTOMER_LOGO_SPEED: 30,           // mode continuous: kecepatan (pixel/detik)
     // Model chip smelter belum ada di repository. Setelah file diunggah,
     // isi dengan path-nya, mis. "models/CHIP_SMELTER.glb".
     CHIP_SMELTER_MODEL: ""
@@ -86,15 +91,95 @@
     }, Math.max(2500, Number(CONFIG.SLIDER_MS) || 4000));
   }
 
-  function slowCustomerMarquee() {
-    const tracks = document.querySelectorAll('#trust .track');
-    tracks.forEach(track => {
-      const halfWidth = track.scrollWidth / 2;
-      if (halfWidth > 0) {
-        track.style.animationDuration = `${Math.max(45, halfWidth / TOTEM_CUSTOM.CUSTOMER_LOGO_SPEED)}s`;
-      }
+  /* ---------------------------------------------------------------------
+     LOGO CUSTOMER — slider baru (menggantikan marquee CSS lama).
+     Marquee lama dibangun saat layar 02 masih tersembunyi (lebar = 0),
+     sehingga logo disalin ribuan kali dan bergerak ±3.000 px/detik.
+     Versi ini: kotak logo berukuran tetap (tidak perlu mengukur layar),
+     digerakkan requestAnimationFrame dengan kecepatan konstan, dan
+     hanya berjalan saat layar 02 sedang tampil.
+     --------------------------------------------------------------------- */
+  const TILE_W = 200, TILE_GAP = 18, TILE_STEP = TILE_W + TILE_GAP;
+
+  function logoUrls() {
+    const dir = (typeof CONFIG !== 'undefined' && CONFIG.CLIENT_DIR) || 'assets/clients/';
+    const list = typeof CLIENT_LOGOS !== 'undefined' ? CLIENT_LOGOS : [];
+    const norm = (f) => (/^(https?:)?\/\//.test(f) || f.startsWith('/') || f.startsWith('assets/') ? f : dir + f);
+    const probe = (u) => new Promise((ok) => { const i = new Image(); i.onload = () => ok(u); i.onerror = () => ok(null); i.src = u; });
+    return Promise.all([...new Set(list.map(norm))].map(probe)).then((r) => r.filter(Boolean));
+  }
+
+  function installCustomerLogoSlider() {
+    const trust = $('#trust');
+    if (!trust) return;
+    // Lepas baris marquee lama agar buildMarquee() di script.js tidak menyentuhnya
+    trust.querySelectorAll('.mq').forEach((el) => el.remove());
+    const rails = [0, 1].map((k) => {
+      const rail = document.createElement('div');
+      rail.className = 'logo-rail' + (k ? ' rev' : '');
+      rail.innerHTML = '<div class="logo-rail-track"></div>';
+      trust.appendChild(rail);
+      return { el: rail, track: rail.firstChild, rev: !!k, w: 0, pos: 0 };
+    });
+
+    logoUrls().then((urls) => {
+      if (!urls.length) { trust.style.display = 'none'; return; }
+      // >= 10 logo: dibagi dua (atas / bawah) agar tidak ada logo tampil dobel.
+      // Lebih sedikit: kedua baris memakai semua logo dengan urutan berbeda.
+      const half = Math.ceil(urls.length / 2);
+      const lists = urls.length >= 10 ? [urls.slice(0, half), urls.slice(half)]
+        : [urls, urls.slice(half).concat(urls.slice(0, half))];
+      rails.forEach((r, k) => {
+        const list = lists[k];
+        const setW = list.length * TILE_STEP;                  // lebar satu set logo
+        const copies = Math.max(2, Math.ceil(1100 / setW) + 1); // cukup menutup lebar layar
+        const tiles = list.map((u) => `<div class="logo-tile"><img src="${u.replace(/"/g, '&quot;')}" alt="" draggable="false"></div>`).join('');
+        r.track.innerHTML = Array(copies).fill(tiles).join('');
+        r.w = setW;
+        r.pos = 0;
+      });
+
+      const mode = TOTEM_CUSTOM.CUSTOMER_LOGO_MODE === 'continuous' ? 'continuous' : 'step';
+      const speed = Math.max(5, Number(TOTEM_CUSTOM.CUSTOMER_LOGO_SPEED) || 30);
+      const pauseMs = Math.max(300, Number(TOTEM_CUSTOM.CUSTOMER_LOGO_STEP_PAUSE_MS) || 2200);
+      const moveMs = Math.max(200, Number(TOTEM_CUSTOM.CUSTOMER_LOGO_STEP_MS) || 800);
+      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      let last = 0;
+      // Baris bawah melangkah setengah siklus setelah baris atas (bergantian)
+      rails.forEach((r, i) => { r.phaseT = i ? -(pauseMs + moveMs) / 2 : 0; r.moving = false; r.from = 0; });
+
+      const draw = () => rails.forEach((r) => {
+        const p = ((r.pos % r.w) + r.w) % r.w;
+        const x = r.rev ? -(r.w - p) : -p;                     // baris bawah bergerak ke kanan
+        r.track.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
+      });
+      draw();
+
+      const frame = (t) => {
+        requestAnimationFrame(frame);
+        const visible = trust.offsetParent !== null;           // hanya saat layar 02 tampil
+        if (!visible) { last = 0; return; }
+        const dt = last ? Math.min(100, t - last) : 0;
+        last = t;
+        if (mode === 'continuous') {
+          rails.forEach((r) => { r.pos += speed * dt / 1000; });
+        } else {
+          rails.forEach((r) => {
+            r.phaseT += dt;
+            if (!r.moving && r.phaseT >= pauseMs) { r.moving = true; r.phaseT = 0; r.from = r.pos; }
+            if (r.moving) {
+              const k = Math.min(1, r.phaseT / moveMs);
+              r.pos = r.from + TILE_STEP * ease(k);
+              if (k >= 1) { r.moving = false; r.phaseT = 0; r.pos = (r.from + TILE_STEP) % r.w; }
+            }
+          });
+        }
+        draw();
+      };
+      requestAnimationFrame(frame);
     });
   }
+
 
   const PREVIEW_PRODUCTS = [
     { cat: 0, prod: 1, title: 'Hybrid Melting Furnace (Tower Type)' },
@@ -442,15 +527,11 @@
   function boot() {
     installDragScroll();
     installFactorySlideshow();
-    slowCustomerMarquee();
+    installCustomerLogoSlider();
     installCategoryPreview();
     installMascotSlot();
     installLogoShine();
     installAnimatedIconFallback();
-    // buildMarquee() is asynchronous; re-apply the speed after logo images load.
-    window.setTimeout(slowCustomerMarquee, 1200);
-    window.setTimeout(slowCustomerMarquee, 3500);
-    window.addEventListener('resize', slowCustomerMarquee, { passive: true });
   }
 
   if (document.readyState === 'loading') {
