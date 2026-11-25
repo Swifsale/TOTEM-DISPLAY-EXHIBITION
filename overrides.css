@@ -56,18 +56,39 @@
   background: rgba(255,255,255,.7); filter: none;
 }
 
-/* Upper third: moving blue/red shine around the logo container outline. */
+/* Upper third: two light segments chase along the fixed logo-frame perimeter.
+   The SVG itself never rotates; only stroke-dashoffset moves the light segments. */
 .brand { position: relative; isolation: isolate; }
-.brand-shine::after {
-  content: ""; position: absolute; inset: -5px; z-index: 2; border-radius: 5px;
-  padding: 3px; pointer-events: none;
-  background: conic-gradient(from 0deg, transparent 0 28%, #1b4fd1 34%, #69a4ff 39%,
-    transparent 45% 65%, #e3101e 72%, #ff7777 78%, transparent 84% 100%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
-  animation: swifa-logo-chase 3.2s linear infinite;
+.brand-shine .logo-chase {
+  position: absolute;
+  inset: -5px;
+  z-index: 4;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  overflow: visible;
+  pointer-events: none;
 }
-@keyframes swifa-logo-chase { to { transform: rotate(360deg); } }
+.logo-chase path {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 90 910;
+  animation: swifa-logo-dash 3.8s linear infinite;
+}
+.logo-chase .blue-light {
+  stroke: #287cff;
+  filter: drop-shadow(0 0 3px #287cff) drop-shadow(0 0 7px rgba(40,124,255,.8));
+}
+.logo-chase .red-light {
+  stroke: #ff2438;
+  animation-delay: -1.9s;
+  filter: drop-shadow(0 0 3px #ff2438) drop-shadow(0 0 7px rgba(255,36,56,.8));
+}
+@keyframes swifa-logo-dash {
+  from { stroke-dashoffset: 1000; }
+  to   { stroke-dashoffset: 0; }
+}
 
 /* Lower third: animated red/white wave line. */
 .fwave { overflow: hidden; animation: swifa-wave-drift 3.8s ease-in-out infinite alternate; }
@@ -94,7 +115,7 @@
   50% { filter: drop-shadow(0 0 4px rgba(47,107,255,.35)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .factory-slide, .brand-shine::after, .fwave, .fwave::before, .fwave::after, .ic.icon-motion {
+  .factory-slide, .logo-chase path, .fwave, .fwave::before, .fwave::after, .ic.icon-motion {
     animation: none !important; transition: none !important;
   }
 }
