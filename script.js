@@ -409,7 +409,11 @@ function syncViewer() {
   if (S.mode === "detail") return startRender("detail");
   const pg = HOME_PAGES[S.cur];
   if (S.mode === "home" && pg && pg.type === "explorer" && HOSTS.home) {
-    const o = pg.preview.open, p = PRODUCT_CATEGORIES[o.cat].products[o.prod];
+    // Ikuti produk yang sedang dipilih pengunjung (tombol LIHAT DETAIL menyimpan pilihannya),
+    // agar judul & model 3D tetap cocok saat kembali ke layar ini.
+    const lk = $("#hStage .vlink");
+    const o = lk && lk.dataset.cat !== undefined ? { cat: +lk.dataset.cat, prod: +lk.dataset.prod } : pg.preview.open;
+    const p = PRODUCT_CATEGORIES[o.cat].products[o.prod];
     startRender("home");
     if (V.shown !== "home:" + o.cat + ":" + o.prod) { V.shown = "home:" + o.cat + ":" + o.prod; setModel(p); }
     return;
