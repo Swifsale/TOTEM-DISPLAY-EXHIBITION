@@ -119,9 +119,9 @@ const HOME_PAGES = [
     items: [
       { icon: "fire", photo: "assets/home/assembly.jpg", title: "COMBUSTION SYSTEM SESUAI JIS B 8415",
         desc: "Desain dan integrasi combustion system mengacu pada standar JIS B 8415." },
-      { icon: "pump", photo: "assets/company/7.jpg", title: "MOLTEN PUMP",
+      { icon: "pump", photo: "assets/home/molten-pump.jpeg", title: "MOLTEN PUMP",
         desc: "Transfer molten aluminium ke ladle secara lebih aman, stabil dan terkendali." },
-      { icon: "robot", photo: "assets/company/3.jpg", title: "AUTOMATIC MOLTEN TRANSFER",
+      { icon: "robot", photo: "assets/home/molten-transfer.jpeg", title: "AUTOMATIC MOLTEN TRANSFER",
         desc: "Pemindahan molten aluminium secara otomatis untuk meminimalkan risiko dan paparan operator." },
       { icon: "shield", photo: "assets/company/12.jpg", title: "GAS DETECTION & EARTHQUAKE INTERLOCK",
         desc: "Deteksi kebocoran gas dan gempa yang terintegrasi dengan sistem interlock untuk penghentian operasi furnace secara otomatis." },
@@ -206,7 +206,7 @@ const HOME_PAGES = [
     type: "service",
     tag: "AFTER-SALES SERVICE & SUPPORT",
     photo: "assets/home/manufacturing.jpg",
-    title: ["LOCAL EXPERTISE."],
+    title: ["ONE STOP SOLUTION."],
     accent: ["LIFETIME PARTNERSHIP."],
     subtitle: "Jaga keamanan, keandalan, dan performa furnace Anda, hari ini dan jangka panjang.",
     items: [
@@ -214,7 +214,7 @@ const HOME_PAGES = [
         desc: "Preventive maintenance untuk operasi andal dan aman." },
       { icon: "tools", title: "REPAIR &", accent: "TROUBLESHOOTING", photo: "assets/company/8.jpg",
         desc: "Penanganan cepat oleh tim teknisi berpengalaman." },
-      { icon: "chart", title: "UPGRADE &", accent: "PERFORMANCE IMPROVEMENT", photo: "assets/home/engineering.jpg",
+      { icon: "chart", title: "UPGRADE &", accent: "PERFORMANCE IMPROVEMENT", photo: "assets/home/upgrade-performance.jpg",
         desc: "Upgrade sistem safety, control, combustion, dll. untuk operasi lebih aman, efisien, dan optimal." },
       { icon: "gear", title: "SPARE PARTS", accent: "SUPPORT", photo: "assets/company/7.jpg",
         desc: "Penyediaan suku cadang utama dan komponen furnace secara cepat dan terpercaya." },
@@ -290,9 +290,9 @@ const FEATURED_PAGES = [
         { icon: "chart", value: "300–1.000", unit: "kg/jam", label: "KAPASITAS MELTING" },
       ] },
       { type: "process", label: "PROSES SINGKAT", grow: true, steps: [
-        { photo: "", icon: "cube", label: "BRIQUETTE ALUMINIUM CHIPS" },
-        { photo: "", icon: "fire", label: "IMMERSION / VORTEX MELTING" },
-        { photo: "", icon: "furnace", label: "MOLTEN ALUMINIUM" },
+        { photo: "assets/home/briquette-step1-chips.png", icon: "cube", label: "BRIQUETTE ALUMINIUM CHIPS" },
+        { photo: "assets/home/briquette-step2-vortex.jpg", icon: "fire", label: "IMMERSION / VORTEX MELTING" },
+        { photo: "assets/home/briquette-step3-molten.jpg", icon: "furnace", label: "MOLTEN ALUMINIUM" },
       ], note: "Moisture dan cutting oil dibakar di melting chamber; gas hasil pembakaran mengalami afterburning." },
       { type: "cols", items: [
         { type: "compare", label: "DESAIN LEBIH RINGKAS", fromLabel: "Conventional Recycling Line", toLabel: "Briquette Melting System", value: "60%", valueLabel: "DOWN" },
@@ -327,8 +327,8 @@ const FEATURED_PAGES = [
         text: "Solusi heat treatment T6 dengan pemanas listrik penuh (full electric) yang telah diproduksi oleh SWIFA.",
         side: "Mendukung inisiatif *dekarbonisasi* dengan teknologi *full electric.*" },
       { type: "apps", label: "APLIKASI", grow: true, groups: [
-        { tag: "BASKETLESS", items: [{ photo: "", icon: "gear", label: "Wheel" }, { photo: "", icon: "cube", label: "Cylinder Heads" }] },
-        { tag: "TRAY", items: [{ photo: "", icon: "tools", label: "Brake Caliper" }, { photo: "", icon: "cube", label: "Other Small Parts" }] },
+        { tag: "BASKETLESS", items: [{ photo: "assets/home/app-wheel.png", icon: "gear", label: "Wheel" }, { photo: "assets/home/app-cylinder-head.png", icon: "cube", label: "Cylinder Heads" }] },
+        { tag: "TRAY", items: [{ photo: "assets/home/app-brake-caliper.png", icon: "tools", label: "Brake Caliper" }, { photo: "assets/home/app-small-parts.png", icon: "cube", label: "Other Small Parts" }] },
       ] },
     ],
   },

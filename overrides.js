@@ -40,7 +40,7 @@
       "home-5":     { text: "Sentuh *kartu produk* untuk melihat model 3D-nya!", image: "" },
       "home-6":     { text: "*Geser model 3D* untuk memutarnya, yuk coba!", image: "" },
       "home-7":     { text: "Hemat energi, rendah emisi, menuju *Net Zero 2060*.", image: "" },
-      "home-8":     { text: "Butuh maintenance? *Tim lokal kami* siap membantu!", image: "" },
+      "home-8":     { text: "Maintenance, repair, upgrade, spare parts: *semua di satu tempat*!", image: "" },
       "featured-1": { text: "Hemat energi hingga *±25%*! Sentuh *LIHAT 3D*.", image: "" },
       "featured-2": { text: "Daur ulang chip aluminium dengan *metal recovery ≥98%*.", image: "" },
       "featured-3": { text: "Keseragaman temperatur hingga *±5°C*!", image: "" },
