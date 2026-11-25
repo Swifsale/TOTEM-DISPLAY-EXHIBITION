@@ -34,15 +34,16 @@
 /* Customer logos: slower, predictable pixel-per-second speed. */
 #trust .track { animation-timing-function: linear !important; }
 
-/* Mascot placeholder. Add assets/mascot/swifi.png to show the real artwork. */
+/* Mascot: kanan atas (di header, sebelah kiri swoosh) agar tidak menutupi
+   tombol, kartu, atau teks di area konten mana pun. */
 .swifi-mascot-slot {
-  position: absolute; z-index: 30; right: 28px; bottom: 292px;
-  width: 170px; height: 230px; display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-end; pointer-events: none;
-  filter: drop-shadow(0 8px 16px rgba(0,0,0,.25));
+  position: absolute; z-index: 30; right: 128px; top: 6px;
+  width: 120px; height: 176px; display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-start; pointer-events: none;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,.28));
 }
 .swifi-mascot-slot img {
-  display: block; max-width: 100%; max-height: 205px; object-fit: contain;
+  display: block; max-width: 100%; max-height: 176px; object-fit: contain;
   transform: perspective(900px) rotateY(0deg);
   transform-origin: center center;
   opacity: 1;
@@ -61,7 +62,7 @@
 .swifi-mascot-slot.no-image span { display: block; }
 .swifi-mascot-slot.no-image img { display: none; }
 .swifi-mascot-slot.no-image {
-  width: 130px; height: 42px; right: 28px; bottom: 300px;
+  width: 130px; height: 42px; right: 128px; top: 54px;
   border: 1px dashed rgba(27,79,209,.45); border-radius: 12px;
   background: rgba(255,255,255,.7); filter: none;
 }
@@ -117,6 +118,41 @@
   from { transform: translateX(-4%); }
   to { transform: translateX(4%); }
 }
+
+/* ---------- Container yang bisa digeser (sentuh / mouse) ----------
+   .pks  : daftar produk per kategori di 3D PRODUCT EXPLORER (vertikal)
+   #dPick: baris pilihan produk di halaman detail (horizontal) */
+.t-products .pcr { min-height: 0; overflow: hidden; }
+/* Bagi tinggi kartu sesuai jumlah produk: kategori 2 & 3 (sedikit produk)
+   lebih ringkas, kategori 4 (8 produk) mendapat ruang lebih. */
+.t-products .pcat:nth-child(2), .t-products .pcat:nth-child(3) { flex-grow: .8; }
+.t-products .pcat:nth-child(4) { flex-grow: 1.45; }
+.t-products .pcr p { flex: none; }
+.drag-scroll { touch-action: none; overscroll-behavior: contain; cursor: grab; }
+.drag-scroll.dragging { cursor: grabbing; }
+.drag-scroll.dragging * { pointer-events: none; }
+.t-products .pks.drag-scroll {
+  flex: 0 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  align-content: flex-start; padding: 2px 16px 8px 2px; scrollbar-width: thin;
+  scrollbar-color: #2F6BFF #E3EAF7;
+}
+.t-products .pks.drag-scroll::-webkit-scrollbar { width: 6px; }
+.t-products .pks.drag-scroll::-webkit-scrollbar-track { background: #E3EAF7; border-radius: 3px; }
+.t-products .pks.drag-scroll::-webkit-scrollbar-thumb { background: #2F6BFF; border-radius: 3px; }
+/* Gradasi tepi = tanda masih ada pilihan lain */
+.t-products .pks.more-b { -webkit-mask-image: linear-gradient(#000 calc(100% - 34px), transparent); mask-image: linear-gradient(#000 calc(100% - 34px), transparent); }
+.t-products .pks.more-t { -webkit-mask-image: linear-gradient(transparent, #000 34px); mask-image: linear-gradient(transparent, #000 34px); }
+.t-products .pks.more-t.more-b { -webkit-mask-image: linear-gradient(transparent, #000 34px, #000 calc(100% - 34px), transparent); mask-image: linear-gradient(transparent, #000 34px, #000 calc(100% - 34px), transparent); }
+.dpick.more-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 60px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 60px), transparent); }
+.dpick.more-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 60px); mask-image: linear-gradient(90deg, transparent, #000 60px); }
+.dpick.more-l.more-r { -webkit-mask-image: linear-gradient(90deg, transparent, #000 60px, #000 calc(100% - 60px), transparent); mask-image: linear-gradient(90deg, transparent, #000 60px, #000 calc(100% - 60px), transparent); }
+.scroll-hint {
+  display: none; align-items: center; justify-content: center; gap: 6px; flex: none;
+  font: italic 800 13px/1 "Mont"; letter-spacing: .4px; color: #2F6BFF;
+}
+.scroll-hint.on { display: flex; }
+.scroll-hint .ic { font-size: 16px; stroke-width: 2.6; animation: swifa-hint-bob 1.4s ease-in-out infinite; }
+@keyframes swifa-hint-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 
 /* Existing SVG icons receive restrained motion without affecting hit targets. */
 .ic.icon-motion { transform-origin: 50% 50%; animation: swifa-icon-breathe 3.4s ease-in-out infinite; }

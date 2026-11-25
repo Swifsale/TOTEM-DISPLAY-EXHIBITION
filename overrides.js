@@ -227,7 +227,112 @@
     });
   }
 
+  /* ---------------------------------------------------------------------
+     DRAG-SCROLL — container bisa digeser dengan jari/mouse.
+     Dibuat manual (pointer events) karena banyak touch frame totem
+     mengirim event mouse, sehingga scroll bawaan browser tidak jalan.
+     Tap singkat tetap = klik; geser > 10px = scroll (klik dibatalkan).
+     --------------------------------------------------------------------- */
+  let suppressClickUntil = 0;
+  window.addEventListener('click', function (e) {
+    if (Date.now() < suppressClickUntil) {
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+    }
+  }, true);
+
+  const fitScale = () => (typeof V !== 'undefined' && V.scale) || 1;
+
+  function updateEdges(el, axis) {
+    const pos = axis === 'y' ? el.scrollTop : el.scrollLeft;
+    const max = axis === 'y' ? el.scrollHeight - el.clientHeight : el.scrollWidth - el.clientWidth;
+    el.classList.toggle(axis === 'y' ? 'more-t' : 'more-l', pos > 2);
+    el.classList.toggle(axis === 'y' ? 'more-b' : 'more-r', pos < max - 2);
+    if (el._hint) el._hint.classList.toggle('on', max > 2 && pos < max - 2);
+  }
+
+  function enableDragScroll(el, axis) {
+    if (!el || el._dragScroll) return;
+    el._dragScroll = true;
+    el.classList.add('drag-scroll');
+    let id = null, start = 0, startScroll = 0, dragging = false;
+    let lastPos = 0, lastT = 0, vel = 0, raf = 0;
+    const coord = (e) => (axis === 'y' ? e.clientY : e.clientX);
+    const get = () => (axis === 'y' ? el.scrollTop : el.scrollLeft);
+    const set = (v) => { if (axis === 'y') el.scrollTop = v; else el.scrollLeft = v; updateEdges(el, axis); };
+
+    el.addEventListener('pointerdown', (e) => {
+      if (e.button > 0) return;
+      cancelAnimationFrame(raf);
+      id = e.pointerId; start = coord(e); startScroll = get(); dragging = false;
+      lastPos = start; lastT = performance.now(); vel = 0;
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (e.pointerId !== id) return;
+      const d = (coord(e) - start) / fitScale();
+      if (!dragging && Math.abs(d) > 10) {
+        dragging = true; el.classList.add('dragging');
+        try { el.setPointerCapture(id); } catch (_) {}
+      }
+      if (!dragging) return;
+      set(startScroll - d);
+      const now = performance.now(), dt = now - lastT;
+      if (dt > 0) vel = 0.8 * ((lastPos - coord(e)) / fitScale() / dt) + 0.2 * vel;
+      lastPos = coord(e); lastT = now;
+    });
+    const end = (e) => {
+      if (e.pointerId !== id) return;
+      id = null;
+      if (!dragging) return;
+      dragging = false; el.classList.remove('dragging');
+      suppressClickUntil = Date.now() + 250;
+      // Sedikit momentum agar terasa natural
+      let v = vel * 16;
+      const step = () => {
+        if (Math.abs(v) < 0.5) return;
+        set(get() + v); v *= 0.92; raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+    el.addEventListener('scroll', () => updateEdges(el, axis), { passive: true });
+    // Roda mouse (untuk pengujian di PC)
+    el.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      set(get() + (axis === 'y' ? e.deltaY : (e.deltaX || e.deltaY)));
+    }, { passive: false });
+    updateEdges(el, axis);
+  }
+
+  function installDragScroll() {
+    // 3D PRODUCT EXPLORER: daftar produk tiap kategori
+    document.querySelectorAll('#products .pks').forEach((pks) => {
+      enableDragScroll(pks, 'y');
+      const hint = document.createElement('div');
+      hint.className = 'scroll-hint';
+      hint.innerHTML = 'GESER UNTUK PILIHAN LAIN <svg class="ic" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+      pks.after(hint);
+      pks._hint = hint;
+      updateEdges(pks, 'y');
+    });
+    // Halaman detail: baris pilihan produk (isinya berganti tiap kategori)
+    const pick = $('#dPick');
+    if (pick) {
+      enableDragScroll(pick, 'x');
+      new MutationObserver(() => requestAnimationFrame(() => updateEdges(pick, 'x')))
+        .observe(pick, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+    }
+    // Perbarui indikator saat layar dibuka / ukuran berubah
+    const refresh = () => requestAnimationFrame(() => {
+      document.querySelectorAll('#products .pks').forEach((el) => updateEdges(el, 'y'));
+      if (pick) updateEdges(pick, 'x');
+    });
+    new MutationObserver(refresh).observe(document.body, { attributes: true, attributeFilter: ['data-mode'] });
+    window.addEventListener('resize', refresh, { passive: true });
+  }
+
   function boot() {
+    installDragScroll();
     installFactorySlideshow();
     slowCustomerMarquee();
     installCategoryPreview();
