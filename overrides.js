@@ -11,8 +11,18 @@
       "assets/company/11.jpg",
       "assets/company/12.jpg"
     ],
-    // Ganti path ini setelah file mascot dimasukkan ke repository.
-    MASCOT_IMAGE: "assets/mascot/swifi.png",
+    // Tambahkan/hapus path gambar mascot sesuai jumlah yang diinginkan.
+    // Semua gambar memakai slot/layout yang sama dan berganti setiap 15 detik.
+    MASCOT_IMAGES: [
+      "assets/mascot/swifi-1.png",
+      "assets/mascot/swifi-2.png",
+      "assets/mascot/swifi-3.png",
+      "assets/mascot/swifi-4.png",
+       "assets/mascot/swifi-5.png",
+       "assets/mascot/swifi-6.png"
+    ],
+    MASCOT_INTERVAL_MS: 15000,
+    MASCOT_ROTATE_MS: 650,
     // Kecepatan marquee dalam pixel/detik. Angka lebih kecil = lebih lambat.
     CUSTOMER_LOGO_SPEED: 8,
     // Model chip smelter belum ada di repository saat patch dibuat.
@@ -128,16 +138,51 @@
   function installMascotSlot() {
     const fit = $('#fit');
     if (!fit || $('#swifi-mascot-slot')) return;
+
+    const images = (TOTEM_CUSTOM.MASCOT_IMAGES || []).filter(Boolean);
+    if (!images.length) return;
+
     const slot = document.createElement('div');
     slot.id = 'swifi-mascot-slot';
     slot.className = 'swifi-mascot-slot';
     slot.innerHTML = `
-      <img src="${TOTEM_CUSTOM.MASCOT_IMAGE}" alt="SWIFI mascot">
+      <img class="swifi-mascot-image" src="${images[0]}" alt="SWIFI mascot">
       <span>SWIFI</span>`;
-    slot.querySelector('img').addEventListener('error', function () {
+    fit.appendChild(slot);
+
+    const image = slot.querySelector('img');
+    let current = 0;
+    let switching = false;
+    const rotateMs = Math.max(200, Number(TOTEM_CUSTOM.MASCOT_ROTATE_MS) || 650);
+
+    image.addEventListener('error', function () {
       slot.classList.add('no-image');
     });
-    fit.appendChild(slot);
+    image.addEventListener('load', function () {
+      slot.classList.remove('no-image');
+    });
+
+    // Preload seluruh gambar agar pergantian tidak menampilkan gambar kosong.
+    images.forEach(src => {
+      const preload = new Image();
+      preload.src = src;
+    });
+
+    if (images.length < 2) return;
+
+    window.setInterval(() => {
+      if (switching) return;
+      switching = true;
+      image.classList.add('is-rotating');
+
+      window.setTimeout(() => {
+        current = (current + 1) % images.length;
+        image.src = images[current];
+        image.alt = `SWIFI mascot ${current + 1}`;
+        image.classList.remove('is-rotating');
+        switching = false;
+      }, rotateMs / 2);
+    }, Math.max(1000, Number(TOTEM_CUSTOM.MASCOT_INTERVAL_MS) || 15000));
   }
 
   function installLogoShine() {
