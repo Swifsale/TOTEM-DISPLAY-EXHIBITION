@@ -25,8 +25,9 @@
     MASCOT_ROTATE_MS: 650,
     // Kecepatan marquee dalam pixel/detik. Angka lebih kecil = lebih lambat.
     CUSTOMER_LOGO_SPEED: 8,
-    // Model chip smelter belum ada di repository saat patch dibuat.
-    CHIP_SMELTER_MODEL: "models/CHIP_SMELTER.glb"
+    // Model chip smelter belum ada di repository. Setelah file diunggah,
+    // isi dengan path-nya, mis. "models/CHIP_SMELTER.glb".
+    CHIP_SMELTER_MODEL: ""
   };
 
   const $ = (s, r = document) => r.querySelector(s);
@@ -100,7 +101,7 @@
 
     // Chip Smelter belum mempunyai GLB di repository. Siapkan path yang dapat
     // diisi user; jika file belum ada, viewer memakai fallback yang tersedia.
-    if (index === 1 && !product.modelFile) {
+    if (index === 1 && !product.modelFile && TOTEM_CUSTOM.CHIP_SMELTER_MODEL) {
       product.modelFile = TOTEM_CUSTOM.CHIP_SMELTER_MODEL;
     }
 
