@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="372" viewBox="0 0 700 372"><defs>
+  <radialGradient id="bg" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E4ECF8"/></radialGradient>
+  <linearGradient id="al" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBFCFE"/><stop offset=".45" stop-color="#D3DAE5"/><stop offset="1" stop-color="#9AA6B8"/></linearGradient>
+  <linearGradient id="alV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F7FB"/><stop offset="1" stop-color="#A9B4C5"/></linearGradient>
+  <linearGradient id="alD" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C3CBD8"/><stop offset="1" stop-color="#7E8A9E"/></linearGradient>
+  <linearGradient id="tire" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A4150"/><stop offset="1" stop-color="#151A24"/></linearGradient>
+  <radialGradient id="sh" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#0B1E4A" stop-opacity=".28"/><stop offset="1" stop-color="#0B1E4A" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="700" height="372" fill="url(#bg)"/>
+<g opacity=".35" stroke="#B8C8E6" stroke-width="1">
+  <path d="M0 62H700M0 124H700M0 186H700M0 248H700M0 310H700M70 0V372M140 0V372M210 0V372M280 0V372M350 0V372M420 0V372M490 0V372M560 0V372M630 0V372"/>
+</g>
+
+<ellipse cx="350" cy="330" rx="270" ry="18" fill="url(#sh)"/>
+<!-- A: L-bracket with holes -->
+<g transform="translate(70 120)">
+  <path d="M0 150 L0 40 Q0 20 20 20 L60 20 L60 110 L170 110 L170 150 Z" fill="url(#al)" stroke="#24345A" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M60 110 L80 92 L190 92 L170 110 Z" fill="url(#alV)" stroke="#24345A" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M170 110 L190 92 L190 132 L170 150 Z" fill="url(#alD)" stroke="#24345A" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M60 20 L80 2 L80 92 L60 110 Z" fill="url(#alD)" stroke="#24345A" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="30" cy="60" r="11" fill="#2B3446" stroke="#24345A" stroke-width="2"/>
+  <circle cx="30" cy="115" r="11" fill="#2B3446" stroke="#24345A" stroke-width="2"/>
+  <ellipse cx="120" cy="101" rx="12" ry="6" fill="#2B3446"/>
+</g>
+<!-- B: flanged housing (cylinder with flange) -->
+<g transform="translate(300 70)">
+  <ellipse cx="60" cy="200" rx="78" ry="26" fill="url(#alD)" stroke="#24345A" stroke-width="3"/>
+  <rect x="-18" y="176" width="156" height="24" fill="url(#alD)"/>
+  <ellipse cx="60" cy="176" rx="78" ry="26" fill="url(#al)" stroke="#24345A" stroke-width="3"/>
+  <path d="M10 176 L10 40 A50 18 0 0 0 110 40 L110 176 A50 18 0 0 1 10 176 Z" fill="url(#alV)" stroke="#24345A" stroke-width="3"/>
+  <ellipse cx="60" cy="40" rx="50" ry="18" fill="url(#al)" stroke="#24345A" stroke-width="3"/>
+  <ellipse cx="60" cy="40" rx="28" ry="10" fill="#2B3446"/>
+  <path d="M22 60 L22 160" stroke="#fff" stroke-width="5" opacity=".6" stroke-linecap="round"/>
+  <circle cx="-2" cy="182" r="6" fill="#2B3446"/><circle cx="122" cy="182" r="6" fill="#2B3446"/><circle cx="60" cy="196" r="6" fill="#2B3446"/>
+</g>
+<!-- C: knuckle / arm with two eyes -->
+<g transform="translate(470 110) rotate(-12)">
+  <path d="M20 40 C60 20 110 40 140 70 L160 95 C175 115 170 140 150 150 C130 160 110 150 100 132 L80 110 C60 95 30 100 15 85 C0 70 2 50 20 40 Z" fill="url(#al)" stroke="#24345A" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="30" cy="66" r="24" fill="url(#alV)" stroke="#24345A" stroke-width="3"/>
+  <circle cx="30" cy="66" r="11" fill="#2B3446"/>
+  <circle cx="140" cy="128" r="28" fill="url(#alV)" stroke="#24345A" stroke-width="3"/>
+  <circle cx="140" cy="128" r="13" fill="#2B3446"/>
+  <path d="M55 48 C90 40 118 58 136 80" fill="none" stroke="#fff" stroke-width="4" opacity=".7" stroke-linecap="round"/>
+</g>
+</svg>
