@@ -5,23 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <title>SWIF Asia — Totem Display</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="overrides.css">
 </head>
 <body>
- 
   <div id="fit">
-    <!-- MODE 1 · HOME LOOP (8 layar, 15 detik / layar) -->
     <div id="home" class="mode on"><div id="homePages"></div></div>
-    <!-- MODE 2 · 3D PRODUCT EXPLORER (pilih produk) -->
     <div id="products" class="mode"></div>
-    <!-- MODE 3 · 3D VIEW (detail produk) -->
     <div id="detail" class="mode"></div>
-    <!-- MODE 4 · PRODUK UNGGULAN (dibuka dari footer) -->
     <div id="featured" class="mode"></div>
-    <!-- header & footer dibuat oleh script.js -->
   </div>
-
-  <!-- Pemuat library: coba folder vendor/ dulu (offline), jika tidak ada pakai CDN.
-       Three.js bersifat opsional: tanpa library ini halaman tetap jalan (tanpa viewer 3D). -->
   <script>
   (function () {
     var LIBS = [
@@ -49,6 +41,7 @@
     });
     chain.then(function () { return load("data.js"); })
          .then(function () { return load("script.js"); })
+         .then(function () { return load("overrides.js"); })
          .catch(function (e) { document.body.insertAdjacentHTML("beforeend", "<pre style='color:#fff;padding:20px'>Gagal memuat: " + e.message + "</pre>"); });
   })();
   </script>
