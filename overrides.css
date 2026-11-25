@@ -34,37 +34,60 @@
 /* Customer logos: slower, predictable pixel-per-second speed. */
 #trust .track { animation-timing-function: linear !important; }
 
-/* Mascot placeholder. Add assets/mascot/swifi.png to show the real artwork. */
-.swifi-mascot-slot {
-  position: absolute; z-index: 30; right: 28px; bottom: 292px;
-  width: 170px; height: 230px; display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-end; pointer-events: none;
-  filter: drop-shadow(0 8px 16px rgba(0,0,0,.25));
+/* ---------- MASCOT PEMANDU (di banner/hero setiap layar) ----------
+   Posisi & ukuran diatur otomatis oleh overrides.js (installMascotSlot). */
+.swifi-guide {
+  position: absolute; z-index: 25; pointer-events: none;
+  transition: left .45s ease, top .45s ease, width .45s ease, height .45s ease, opacity .3s;
 }
-.swifi-mascot-slot img {
-  display: block; max-width: 100%; max-height: 205px; object-fit: contain;
-  transform: perspective(900px) rotateY(0deg);
-  transform-origin: center center;
-  opacity: 1;
+.swifi-guide.off, .swifi-bubble.off { opacity: 0; visibility: hidden; }
+.swifi-guide .swifi-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; object-position: center bottom;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,.45));
+  transform: perspective(900px) rotateY(0deg); transform-origin: center bottom;
   transition: transform .325s ease-in, opacity .325s ease-in;
-  backface-visibility: hidden;
-  will-change: transform, opacity;
+  animation: swifi-idle 3.2s ease-in-out infinite;
 }
-.swifi-mascot-slot img.is-rotating {
-  transform: perspective(900px) rotateY(90deg);
-  opacity: 0;
+.swifi-guide .swifi-img.is-rotating { transform: perspective(900px) rotateY(90deg); opacity: 0; }
+/* bayangan tanah di bawah kaki */
+.swifi-ground {
+  position: absolute; left: 14%; right: 14%; bottom: -6px; height: 14px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0,0,0,.45), transparent);
 }
-.swifi-mascot-slot span {
-  display: none; padding: 5px 14px; border-radius: 12px;
-  color: #fff; background: #102d69; font: italic 900 13px "Mont";
+.swifi-fallback {
+  display: none; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  padding: 8px 16px; border-radius: 12px; background: #102d69; color: #fff;
+  font: italic 900 16px "Mont"; border: 1px dashed rgba(255,255,255,.6);
 }
-.swifi-mascot-slot.no-image span { display: block; }
-.swifi-mascot-slot.no-image img { display: none; }
-.swifi-mascot-slot.no-image {
-  width: 130px; height: 42px; right: 28px; bottom: 300px;
-  border: 1px dashed rgba(27,79,209,.45); border-radius: 12px;
-  background: rgba(255,255,255,.7); filter: none;
+.swifi-guide.no-image .swifi-img { display: none; }
+.swifi-guide.no-image .swifi-fallback { display: block; }
+@keyframes swifi-idle { 0%,100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+
+/* Balon kata */
+.swifi-bubble {
+  position: absolute; z-index: 26; pointer-events: none;
+  padding: 12px 18px 14px; border-radius: 18px;
+  background: #fff; color: #122452; border: 2.5px solid #FFC20E;
+  box-shadow: 0 10px 24px rgba(4,14,40,.38);
+  transition: opacity .3s;
 }
+.swifi-bubble b {
+  display: inline-block; margin-bottom: 4px; padding: 3px 10px; border-radius: 8px;
+  background: #E3101E; color: #fff; font: italic 900 12px/1.1 "Mont"; letter-spacing: .6px;
+}
+.swifi-bubble p { font: italic 700 18px/1.3 "Mont"; }
+.swifi-bubble p em { font-style: italic; font-weight: 900; color: #1B4FD1; }
+/* ekor balon */
+.swifi-bubble::after, .swifi-bubble::before { content: ""; position: absolute; width: 0; height: 0; border: 0 solid transparent; }
+.swifi-bubble.above::before { right: 58px; bottom: -17px; border-width: 17px 13px 0 13px; border-top-color: #FFC20E; }
+.swifi-bubble.above::after  { right: 61px; bottom: -12px; border-width: 13px 10px 0 10px; border-top-color: #fff; }
+.swifi-bubble.side::before  { right: -17px; top: 22px; border-width: 12px 0 12px 17px; border-left-color: #FFC20E; }
+.swifi-bubble.side::after   { right: -12px; top: 25px; border-width: 9px 0 9px 13px; border-left-color: #fff; }
+.swifi-bubble.pop { animation: swifi-pop .5s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes swifi-pop { from { opacity: 0; transform: scale(.7) translateY(10px); } to { opacity: 1; transform: none; } }
+.swifi-bubble.above.pop { transform-origin: 85% 100%; }
+.swifi-bubble.side.pop  { transform-origin: 100% 30%; }
 
 /* Upper third: two light segments chase along the fixed logo-frame perimeter.
    The SVG itself never rotates; only stroke-dashoffset moves the light segments. */
@@ -117,6 +140,41 @@
   from { transform: translateX(-4%); }
   to { transform: translateX(4%); }
 }
+
+/* ---------- Container yang bisa digeser (sentuh / mouse) ----------
+   .pks  : daftar produk per kategori di 3D PRODUCT EXPLORER (vertikal)
+   #dPick: baris pilihan produk di halaman detail (horizontal) */
+.t-products .pcr { min-height: 0; overflow: hidden; }
+/* Bagi tinggi kartu sesuai jumlah produk: kategori 2 & 3 (sedikit produk)
+   lebih ringkas, kategori 4 (8 produk) mendapat ruang lebih. */
+.t-products .pcat:nth-child(2), .t-products .pcat:nth-child(3) { flex-grow: .8; }
+.t-products .pcat:nth-child(4) { flex-grow: 1.45; }
+.t-products .pcr p { flex: none; }
+.drag-scroll { touch-action: none; overscroll-behavior: contain; cursor: grab; }
+.drag-scroll.dragging { cursor: grabbing; }
+.drag-scroll.dragging * { pointer-events: none; }
+.t-products .pks.drag-scroll {
+  flex: 0 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  align-content: flex-start; padding: 2px 16px 8px 2px; scrollbar-width: thin;
+  scrollbar-color: #2F6BFF #E3EAF7;
+}
+.t-products .pks.drag-scroll::-webkit-scrollbar { width: 6px; }
+.t-products .pks.drag-scroll::-webkit-scrollbar-track { background: #E3EAF7; border-radius: 3px; }
+.t-products .pks.drag-scroll::-webkit-scrollbar-thumb { background: #2F6BFF; border-radius: 3px; }
+/* Gradasi tepi = tanda masih ada pilihan lain */
+.t-products .pks.more-b { -webkit-mask-image: linear-gradient(#000 calc(100% - 34px), transparent); mask-image: linear-gradient(#000 calc(100% - 34px), transparent); }
+.t-products .pks.more-t { -webkit-mask-image: linear-gradient(transparent, #000 34px); mask-image: linear-gradient(transparent, #000 34px); }
+.t-products .pks.more-t.more-b { -webkit-mask-image: linear-gradient(transparent, #000 34px, #000 calc(100% - 34px), transparent); mask-image: linear-gradient(transparent, #000 34px, #000 calc(100% - 34px), transparent); }
+.dpick.more-r { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 60px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 60px), transparent); }
+.dpick.more-l { -webkit-mask-image: linear-gradient(90deg, transparent, #000 60px); mask-image: linear-gradient(90deg, transparent, #000 60px); }
+.dpick.more-l.more-r { -webkit-mask-image: linear-gradient(90deg, transparent, #000 60px, #000 calc(100% - 60px), transparent); mask-image: linear-gradient(90deg, transparent, #000 60px, #000 calc(100% - 60px), transparent); }
+.scroll-hint {
+  display: none; align-items: center; justify-content: center; gap: 6px; flex: none;
+  font: italic 800 13px/1 "Mont"; letter-spacing: .4px; color: #2F6BFF;
+}
+.scroll-hint.on { display: flex; }
+.scroll-hint .ic { font-size: 16px; stroke-width: 2.6; animation: swifa-hint-bob 1.4s ease-in-out infinite; }
+@keyframes swifa-hint-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 
 /* Existing SVG icons receive restrained motion without affecting hit targets. */
 .ic.icon-motion { transform-origin: 50% 50%; animation: swifa-icon-breathe 3.4s ease-in-out infinite; }
