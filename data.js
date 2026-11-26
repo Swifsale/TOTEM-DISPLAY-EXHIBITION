@@ -67,8 +67,8 @@ const HOME_PAGES = [
     sliderLabel: "PROYEK SWIF ASIA",
     points: [
       { icon: "award", title: "Trusted by Leading OEMs", text: "Dipercaya produsen otomotif terkemuka" },
-      { icon: "check", title: "Zero-Repair Track Record", text: "Belum ada unit tercatat repair sejak instalasi" },
-      { icon: "shield", title: "Certified Safety Standard", text: "Sistem combustion mengacu pada JIS B 8415" },
+      { icon: "calendar", title: "Planned Shutdown Service", text: "Repair dijadwalkan saat shutdown libur panjang, produksi tetap berjalan" },
+      { icon: "handshake", title: "Easy & Flexible Deal", text: "Negosiasi mudah dan fleksibel sesuai kebutuhan proyek" },
       { icon: "gear", title: "Custom-Engineered Design", text: "Dirancang sesuai kebutuhan proses customer" },
     ],
     clientsLabel: "DIPERCAYA OLEH",
@@ -117,8 +117,8 @@ const HOME_PAGES = [
     accent: ["ENGINEERED", "INTO EVERY", "FURNACE."],
     subtitle: "Sistem keselamatan terintegrasi untuk operasi furnace yang lebih aman, stabil, dan andal.",
     items: [
-      { icon: "fire", photo: "assets/home/assembly.jpg", title: "COMBUSTION SYSTEM SESUAI JIS B 8415",
-        desc: "Desain dan integrasi combustion system mengacu pada standar JIS B 8415." },
+      { icon: "fire", photo: "assets/home/assembly.jpg", title: "SAFE & RELIABLE COMBUSTION SYSTEM",
+        desc: "Desain dan integrasi combustion system dengan standar keselamatan tinggi untuk operasi yang aman dan stabil." },
       { icon: "pump", photo: "assets/home/molten-pump.jpeg", title: "MOLTEN PUMP",
         desc: "Transfer molten aluminium ke ladle secara lebih aman, stabil dan terkendali." },
       { icon: "robot", photo: "assets/home/molten-transfer.jpeg", title: "AUTOMATIC MOLTEN TRANSFER",
@@ -135,7 +135,7 @@ const HOME_PAGES = [
     photo: "assets/company/5.jpg",
     title: ["COMPLETE"],
     accent: ["INDUSTRIAL", "FURNACE", "SOLUTIONS"],
-    subtitle: "Solusi furnace terintegrasi untuk industri aluminium, dari peleburan, daur ulang, heat treatment hingga peralatan pendukung.",
+    subtitle: "Solusi furnace terintegrasi untuk industri aluminium, dari melting, holding, daur ulang, heat treatment hingga peralatan pendukung.",
     valuesLabel: "NILAI UNTUK PELANGGAN",
     values: [
       { icon: "leaf", title: "Hemat Energi", text: "Efisiensi proses, biaya operasi lebih rendah." },
@@ -158,11 +158,11 @@ const HOME_PAGES = [
       title: "Hybrid Melting Furnace (Tower Type)",
       open: { cat: 0, prod: 0 },                 // produk di PRODUCT_CATEGORIES (model, rotasi & gambar diambil dari sana)
       link: "LIHAT DETAIL & SPESIFIKASI",        // tombol menuju halaman detail produk ini
-      callout: { photo: "assets/home/assembly.jpg", text: "Sistem Combustion (JIS B 8415)" },
+      callout: { photo: "assets/home/assembly.jpg", text: "Combustion System yang Aman & Andal" },
     },
     featuresLabel: "FITUR UTAMA",
     features: [
-      { icon: "fire", text: "Combustion System", sub: "(JIS B 8415)" },
+      { icon: "fire", text: "Combustion System", sub: "(Aman & Andal)" },
       { icon: "pump", text: "Molten Pump", sub: "(Opsional)" },
       { icon: "robot", text: "Automatic Molten Transfer", sub: "(Opsional)" },
       { icon: "shield", text: "Gas Detection & Earthquake Interlock" },
@@ -189,7 +189,7 @@ const HOME_PAGES = [
         desc: "Modifikasi sistem pembakaran (retrofit) pada furnace existing dengan hot air burner untuk menurunkan konsumsi energi secara signifikan." },
       { icon: "bolt", title: "HYBRID", accent: "ALUMINIUM MELTING FURNACE",
         photos: ["assets/home/hybrid-melter.png"], chips: ["Melting · Burner", "Holding · Electric Heater"], chipsSide: true,
-        desc: "Teknologi hybrid yang menggabungkan pembakaran (burner) untuk proses peleburan dan pemanas elektrik untuk proses penahanan (holding) yang lebih efisien dan rendah emisi." },
+        desc: "Teknologi hybrid yang menggabungkan pembakaran (burner) untuk proses melting dan pemanas elektrik untuk proses holding yang lebih efisien dan rendah emisi." },
       { icon: "bolt", title: "FULL ELECTRIC", accent: "T6 ROTARY FURNACE",
         photos: ["assets/company/2.jpg"],
         desc: "Rotary furnace T6 dengan pemanas elektrik penuh (full electric) untuk proses heat treatment aluminium parts yang bersih, efisien, dan rendah emisi." },
@@ -252,7 +252,7 @@ const FEATURED_PAGES = [
     photo: "assets/company/9.jpg",
     open: { cat: 0, prod: 0 },
     inset: { type: "principle", label: "PRINSIP OPERASI", items: [
-      { icon: "fire", tone: "orange", title: "MELTING", sub: "Gas Burner", text: "Peleburan aluminium" },
+      { icon: "fire", tone: "orange", title: "MELTING", sub: "Gas Burner", text: "Melting aluminium" },
       { icon: "bolt", tone: "blue", title: "HOLDING", sub: "SA Electric Heater", text: "Menjaga temperatur molten secara stabil" },
     ] },
     blocks: [
@@ -277,7 +277,7 @@ const FEATURED_PAGES = [
   {
     title: ["ALUMINIUM"], accent: ["BRIQUETTE"], title2: ["MELTING SYSTEM"],
     tagline: "Recycle Aluminium Chips. *Save Space.* Recover More Metal.",
-    subtitle: "Solusi peleburan aluminium briquette dengan sistem vortex melting yang ringkas dan efisien.",
+    subtitle: "Solusi melting aluminium briquette dengan sistem vortex melting yang ringkas dan efisien.",
     photo: "assets/company/13.jpg",
     // (tanpa tombol 3D: Briquette Melting System belum punya model 3D)
     inset: { type: "photo", photo: "", icon: "cube", label: "Aluminium Briquette (Chips)" },
@@ -321,7 +321,7 @@ const FEATURED_PAGES = [
         { icon: "heat", title: "TEMPERATURE UNIFORMITY", value: "±5°C", text: "Keseragaman temperatur soaking." },
         { icon: "move", title: "COMPACT INSTALLATION", text: "Hemat ruang (hingga 50%)*" },
         { icon: "monitor", title: "PRODUCT TRACEABILITY", text: "Rekaman & monitoring proses." },
-        { icon: "shield", title: "COMBUSTION SAFETY", value: "JIS B 8415", text: "Sistem pembakaran aman." },
+        { icon: "shield", title: "COMBUSTION SAFETY", text: "Sistem pembakaran aman & terkendali." },
       ], footnote: "* Pengurangan area instalasi hingga 50% berdasarkan brosur Sanken Sangyo (dibandingkan desain konvensional)." },
       { type: "innovation", label: "SWIFA INNOVATION", icon: "bolt", title: "FULL ELECTRIC", accent: "T6 ROTARY FURNACE",
         text: "Solusi heat treatment T6 dengan pemanas listrik penuh (full electric) yang telah diproduksi oleh SWIFA.",
@@ -337,7 +337,7 @@ const FEATURED_PAGES = [
   {
     title: ["KAMOGAWA 2.0"], accent: ["MOLTEN METAL PUMP"],
     tagline: "TRANSFER ALUMINIUM CAIR DENGAN OPERASI YANG LEBIH AMAN.",
-    subtitle: "Pompa tipe pengeluaran molten metal untuk mentransfer aluminium cair dari furnace peleburan ke ladle, sebagai alternatif tapping konvensional yang lebih aman.",
+    subtitle: "Pompa tipe pengeluaran molten metal untuk mentransfer aluminium cair dari melting furnace ke ladle, sebagai alternatif tapping konvensional yang lebih aman.",
     photo: "assets/company/3.jpg",
     // (tanpa tombol 3D: Kamogawa 2.0 belum punya model 3D)
     inset: { type: "stat", icon: "chart", value: "400 kg / 56 detik", accent: "≈ 429 kg/menit", note: "(hasil aktual operasi SWIFA)" },
@@ -394,13 +394,13 @@ const PRODUCT_CATEGORIES = [
     n: "1", icon: "furnace", title: "ALUMINIUM", accent: "MELTING & HOLDING FURNACE",
     menu: "Aluminium Melting & Holding Furnace",
     photo: "assets/company/9.jpg",
-    desc: "Peleburan dan penahanan aluminium yang efisien, aman dan hemat energi.",
+    desc: "Melting dan holding aluminium yang efisien, aman dan hemat energi.",
     products: [
       {
         name: "Hybrid Melter", short: "Hybrid Melter", metrics: SKOR(80, 80, 80),
         desc: "Gabungan gas burner & elektrik heater sebagai sumber panas — produk terbaru.",
         detail: [
-          "Teknologi peleburan logam yang menggabungkan dua sumber panas, yaitu Gas Burner dan Electric Heater, dalam satu sistem melting furnace (tungku peleburan). Teknologi ini dirancang untuk mendukung proses peleburan yang lebih efisien dan ramah lingkungan.",
+          "Teknologi melting logam yang menggabungkan dua sumber panas, yaitu Gas Burner dan Electric Heater, dalam satu sistem melting furnace. Teknologi ini dirancang untuk mendukung proses melting yang lebih efisien dan ramah lingkungan.",
           "Jangan menilai energy saving hanya dari total gas atau listrik yang digunakan. Produksi yang turun juga bisa membuat konsumsi energi total turun, meskipun efisiensi furnace justru memburuk. Ukuran utama yang perlu diperhatikan adalah Specific Energy Consumption (SEC), yaitu energi yang digunakan per satuan produksi.",
           "Sistem hybrid memungkinkan sumber panas dikombinasikan dalam satu peralatan. Potensi penghematan bergantung pada desain, tarif energi, profil produksi, serta strategi pengoperasiannya.",
         ],
@@ -414,7 +414,7 @@ const PRODUCT_CATEGORIES = [
       },
       {
         name: "Crucible Furnace", short: "Crucible Furnace", metrics: SKOR(90, 95, 87),
-        desc: "Crucible Melting Furnace adalah tungku industri yang digunakan untuk melebur logam menjadi cair atau mempertahankan logam agar tetap cair sebelum proses pengecoran (casting). Secara sederhana, bayangkan ada sebuah wadah khusus yang tahan terhadap suhu sangat tinggi di dalam tungku. Logam dimasukkan ke wadah tersebut, kemudian dipanaskan sampai mencair. Setelah itu, logam cair dapat digunakan untuk proses produksi atau dijaga suhunya sampai dibutuhkan. Crucible furnace berguna ketika pabrik membutuhkan proses peleburan logam dengan kapasitas yang sesuai kebutuhan produksi, atau membutuhkan logam cair di dekat mesin pengecoran (casting cell).",
+        desc: "Crucible Melting Furnace adalah tungku industri yang digunakan untuk melting logam menjadi cair atau holding logam agar tetap cair sebelum proses pengecoran (casting). Secara sederhana, bayangkan ada sebuah wadah khusus yang tahan terhadap suhu sangat tinggi di dalam tungku. Logam dimasukkan ke wadah tersebut, kemudian dipanaskan sampai mencair. Setelah itu, logam cair dapat digunakan untuk proses produksi atau dijaga suhunya sampai dibutuhkan. Crucible furnace berguna ketika pabrik membutuhkan proses melting logam dengan kapasitas yang sesuai kebutuhan produksi, atau membutuhkan logam cair di dekat mesin pengecoran (casting cell).",
         modelFile: "models/CRUCIBLE.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
           { label: "Daya Pemanas", value: "25-125 kW" },
@@ -443,7 +443,7 @@ const PRODUCT_CATEGORIES = [
     desc: "Solusi daur ulang aluminium untuk pemanfaatan material yang lebih optimal, hemat energi dan ramah lingkungan.",
     products: [
       { name: "Chip Smelter Melting Furnace", short: "Chip Smelter", metrics: SKOR(80, 80, 80),
-        desc: "Furnace peleburan khusus untuk material berbentuk chip/serpihan logam.", modelFile: "models/CHIP_SMELTER.glb", image: "", specs: [] },
+        desc: "Melting furnace khusus untuk material berbentuk chip/serpihan logam.", modelFile: "models/CHIP_SMELTER.glb", image: "", specs: [] },
     ],
   },
   {
@@ -454,7 +454,7 @@ const PRODUCT_CATEGORIES = [
     products: [
       {
         name: "T6 Batch Heat Treatment Furnace", short: "T6 Batch", metrics: SKOR(90, 85, 90),
-        desc: "Roller Hearth Type — heat treatment kontinu untuk komponen compressor. Re-circulated hot air memanfaatkan panas buangan exhaust untuk pre-heating, mengoptimalkan efisiensi energi. Combustion system mengacu pada JIS B 8415.",
+        desc: "Roller Hearth Type — heat treatment kontinu untuk komponen compressor. Re-circulated hot air memanfaatkan panas buangan exhaust untuk pre-heating, mengoptimalkan efisiensi energi. Combustion system dirancang dengan standar keselamatan tinggi.",
         modelFile: "models/BATCH_TYPE.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
           { label: "Operating Temp (max 300°C)", value: "240°C" },
@@ -477,7 +477,7 @@ const PRODUCT_CATEGORIES = [
       },
       {
         name: "Annealing Furnace", short: "Annealing", metrics: SKOR(80, 80, 80),
-        desc: "Annealing Furnace merupakan peralatan perlakuan panas (heat treatment) yang berfungsi memanaskan material logam pada temperatur dan waktu penahanan (holding time) tertentu, diikuti proses pendinginan terkontrol. Proses ini bertujuan mengurangi tegangan sisa (residual stress), meningkatkan keuletan (ductility), serta mengoptimalkan struktur mikro material. Pengendalian temperatur dan laju pendinginan dilakukan untuk memperoleh sifat mekanis sesuai spesifikasi teknis. Annealing Furnace banyak diaplikasikan pada industri pengecoran, otomotif, dan manufaktur komponen logam.",
+        desc: "Annealing Furnace merupakan peralatan perlakuan panas (heat treatment) yang berfungsi memanaskan material logam pada temperatur dan holding time tertentu, diikuti proses pendinginan terkontrol. Proses ini bertujuan mengurangi tegangan sisa (residual stress), meningkatkan keuletan (ductility), serta mengoptimalkan struktur mikro material. Pengendalian temperatur dan laju pendinginan dilakukan untuk memperoleh sifat mekanis sesuai spesifikasi teknis. Annealing Furnace banyak diaplikasikan pada industri pengecoran, otomotif, dan manufaktur komponen logam.",
         modelFile: "models/ANNEALING.glb", image: "",
         specs: [
           { label: "Operating Temp", value: "500°C" },
@@ -495,7 +495,7 @@ const PRODUCT_CATEGORIES = [
     desc: "Berbagai furnace non-aluminium dan peralatan pendukung sesuai kebutuhan proses industri Anda.",
     products: [
       { name: "Molten Transfer Device", short: "Molten Transfer", metrics: SKOR(80, 80, 80),
-        desc: "Molten Transfer merupakan proses pemindahan logam cair dari furnace peleburan menuju holding furnace atau mesin pengecoran (casting machine) dengan menggunakan sistem transfer khusus. Proses ini dirancang untuk menjaga kestabilan temperatur, meminimalkan kehilangan panas, serta mengurangi risiko oksidasi dan kontaminasi selama pemindahan. Pengendalian aliran dan temperatur logam cair menjadi faktor penting dalam menjaga kualitas material dan konsistensi produksi. Sistem Molten Transfer banyak diaplikasikan pada industri pengecoran aluminium dan manufaktur komponen logam.",
+        desc: "Molten Transfer merupakan proses pemindahan logam cair dari melting furnace menuju holding furnace atau mesin pengecoran (casting machine) dengan menggunakan sistem transfer khusus. Proses ini dirancang untuk menjaga kestabilan temperatur, meminimalkan kehilangan panas, serta mengurangi risiko oksidasi dan kontaminasi selama pemindahan. Pengendalian aliran dan temperatur logam cair menjadi faktor penting dalam menjaga kualitas material dan konsistensi produksi. Sistem Molten Transfer banyak diaplikasikan pada industri pengecoran aluminium dan manufaktur komponen logam.",
         modelFile: "models/MOLTEN.glb", image: "", specs: [
           { label: "Kapasitas", value: "Up to 500 kg" },
           { label: "Efisiensi", value: "Up to 85%" },

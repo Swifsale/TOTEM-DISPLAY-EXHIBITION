@@ -491,7 +491,9 @@ body[data-mode="products"] .dots i u,body[data-mode="detail"] .dots i u{display:
 .fchart .col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;width:96px}
 .fchart .col i{width:70px;background:linear-gradient(180deg,#9AA3B3,#4D5566);border-radius:6px 6px 0 0}
 .fchart .col.g i{background:linear-gradient(180deg,#7FD38B,#1E8A30)}
-.fchart .col b{font:900 22px/1 "Mont";color:var(--navy);margin-bottom:4px}
+.fchart .col .trk{flex:1;min-height:0;width:70px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.fchart .col i{flex:none}
+.fchart .col b{font:900 22px/1 "Mont";color:var(--navy);margin-bottom:6px;flex:none}
 .fchart .col small{margin-top:6px;font-weight:800;font-size:12px;text-align:center;line-height:1.1;color:var(--muted);background:#E8EDF6;border-radius:8px;padding:4px 6px}
 .fchart .col.g small{background:var(--green);color:#fff}
 .fchart .arw{font-size:30px;color:var(--green);align-self:center;stroke-width:2.6}

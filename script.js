@@ -244,9 +244,11 @@ const BLOCK = {
     const cards = b.items.map((c) => {
       let vis = "";
       if (c.chart) {
-        const h = (v) => Math.round((v / Math.max(c.chart.from, c.chart.to)) * 100);
-        vis = `<div class="fchart"><div class="col"><b>${c.chart.from}</b><i style="height:${h(c.chart.from)}%"></i><small>${esc(c.chart.fromLabel)}</small></div>
-          ${ic("right", "arw")}<div class="col g"><b>${c.chart.to}</b><i style="height:${h(c.chart.to)}%"></i><small>${esc(c.chart.toLabel)}</small></div></div>`;
+        // Tinggi batang proporsional terhadap nilai terbesar; angka menempel di atas batangnya.
+        const h = (v) => (v / Math.max(c.chart.from, c.chart.to)).toFixed(3);
+        const bar = (v) => `<div class="trk"><b>${v}</b><i style="height:calc((100% - 28px) * ${h(v)})"></i></div>`;
+        vis = `<div class="fchart"><div class="col">${bar(c.chart.from)}<small>${esc(c.chart.fromLabel)}</small></div>
+          ${ic("right", "arw")}<div class="col g">${bar(c.chart.to)}<small>${esc(c.chart.toLabel)}</small></div></div>`;
       } else if (c.photo !== undefined) vis = `<div class="fvis">${pic(c.photo, c.icon)}${c.overlay ? `<b class="ovl">${esc(c.overlay)}</b>` : ""}</div>`;
       const big = c.big ? `<div class="fbig"><b>${esc(c.big)}</b><span>${esc(c.bigLabel || "")}</span>${c.note ? `<small>${esc(c.note)}</small>` : ""}</div>` : "";
       const side = big || checks(c.points);
