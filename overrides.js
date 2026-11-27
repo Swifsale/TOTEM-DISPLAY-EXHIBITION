@@ -49,6 +49,16 @@
       "detail":     { text: "*Geser model* untuk memutar, atau pilih produk lain.", image: "" }
     },
 
+    /* ===== BGM — musik latar, diputar berulang (loop) =====
+       Tidak ada tombol volume di layar: atur volume dari speaker / Windows totem.
+       volume: 0–1 (0.35 = pelan & halus). Ganti lagu: timpa assets/audio/bgm.mp3. */
+    BGM: {
+      enabled: true,
+      src: "assets/audio/bgm.mp3",
+      volume: 0.35,
+      fadeInMs: 3000
+    },
+
     /* ===== MERCH QUEST — tombol "side quest" merchandise di header =====
        mode "tab": tombol membuka halaman campaign di TAB BARU pada totem.
                    Tab yang sama dipakai ulang, jadi tap berulang tidak membuka banyak tab.
@@ -607,6 +617,44 @@
     modal.addEventListener('pointerdown', arm);
   }
 
+  /* ---------------------------------------------------------------------
+     BGM — musik latar berulang dengan fade-in lembut.
+     Chrome tidak mengizinkan audio berbunyi sebelum ada interaksi, kecuali
+     dijalankan dengan --autoplay-policy=no-user-gesture-required. Jadi musik
+     dicoba diputar saat halaman terbuka, dan bila ditolak, mulai pada
+     sentuhan pertama di layar.
+     --------------------------------------------------------------------- */
+  function installBgm() {
+    const B = TOTEM_CUSTOM.BGM;
+    if (!B || !B.enabled || !B.src || window.__swifaBgm) return;
+    const audio = new Audio(B.src);
+    window.__swifaBgm = audio;
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = 0;
+    const target = Math.min(1, Math.max(0, Number(B.volume) || 0.35));
+    const fadeMs = Math.max(0, Number(B.fadeInMs) || 3000);
+
+    let fading = 0;
+    const fadeIn = () => {
+      cancelAnimationFrame(fading);
+      const t0 = performance.now(), v0 = audio.volume;
+      const step = (t) => {
+        const k = fadeMs ? Math.min(1, (t - t0) / fadeMs) : 1;
+        audio.volume = v0 + (target - v0) * k;
+        if (k < 1) fading = requestAnimationFrame(step);
+      };
+      fading = requestAnimationFrame(step);
+    };
+
+    const tryPlay = () => audio.play().then(() => { fadeIn(); detach(); return true; }).catch(() => false);
+    const onFirstTouch = () => { if (audio.paused) tryPlay(); };
+    const events = ['pointerdown', 'keydown', 'touchstart'];
+    const detach = () => events.forEach((ev) => window.removeEventListener(ev, onFirstTouch, true));
+    events.forEach((ev) => window.addEventListener(ev, onFirstTouch, { capture: true, passive: true }));
+    tryPlay();
+  }
+
   function boot() {
     installDragScroll();
     installFactorySlideshow();
@@ -616,6 +664,7 @@
     installLogoShine();
     installAnimatedIconFallback();
     installMerchQuest();
+    installBgm();
   }
 
   if (document.readyState === 'loading') {
