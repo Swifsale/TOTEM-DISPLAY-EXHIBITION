@@ -92,10 +92,21 @@
         sessionStorage.setItem(RETURN, JSON.stringify({ mode: S.mode, cur: S.cur, feat: S.feat, cat: S.cat, prod: S.prod, lastHome: S.lastHome }));
       }
     } catch (_) {}
+    releaseHeavy();
     const u = new URL(location.href);
     u.searchParams.delete("lang");
     location.replace(u.toString());
   }
+
+  /** Lepas 3D, video & audio sebelum halaman ditinggalkan. Tanpa ini browser butuh
+   *  belasan detik membongkar model 3D yang besar, sehingga ganti bahasa terasa macet. */
+  function releaseHeavy() {
+    try { if (typeof V !== "undefined" && V.renderer) { cancelAnimationFrame(V.raf); V.renderer.dispose(); V.renderer.forceContextLoss(); V.ok = false; } } catch (_) {}
+    try { document.querySelectorAll("video, audio").forEach((m) => { m.pause(); m.removeAttribute("src"); m.load(); }); } catch (_) {}
+    try { const a = window.__swifaBgm; if (a) { a.pause(); a.removeAttribute("src"); a.load(); } } catch (_) {}
+  }
+  // Juga saat halaman dimuat ulang dengan cara lain (Ctrl+F5, tombol Kembali ke Totem, dll.)
+  window.addEventListener("pagehide", releaseHeavy);
 
   /** Dipanggil setelah totem siap: kembali ke layar sebelum ganti bahasa. */
   function restoreScreen() {
