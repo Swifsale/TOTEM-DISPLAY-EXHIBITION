@@ -48,6 +48,30 @@
       "products":   { text: "Pilih produk yang ingin kamu lihat dalam *3D*!", image: "" },
       "detail":     { text: "*Geser model* untuk memutar, atau pilih produk lain.", image: "" }
     },
+
+    /* ===== MERCH QUEST — tombol "side quest" merchandise di header =====
+       Tombol membuka pop-up berisi QR code. Pengunjung scan dengan HP
+       (campaign memakai Instagram Story, jadi dikerjakan di HP, bukan di totem).
+       Ganti URL? Buat ulang QR: assets/merch/qr-campaign.svg */
+    MERCH_QUEST: {
+      enabled: true,
+      url: "https://swifsale.github.io/Campaign-For-Merch/",
+      qr: "assets/merch/qr-campaign.svg",
+      button: "GET MERCH",        // tulisan besar di tombol header
+      buttonSub: "SIDE QUEST",     // tulisan kecil di atasnya
+      kicker: "MINI SIDE QUEST",
+      title: "Foto Bareng *SWIFI*",
+      subtitle: "Selesaikan quest ini dan dapatkan *goodiebag* dari SWIF ASIA!",
+      steps: [
+        "Foto bareng *SWIFI*",
+        "Upload ke *Instagram Story*",
+        "Tag *@swifasia*",
+        "Tunjukkan Story ke tim booth & ambil *goodiebag*-mu!"
+      ],
+      scanText: "Scan dengan kamera HP",
+      mascot: "assets/mascot/swifi-1.png",
+      autoCloseMs: 60000          // pop-up tertutup sendiri bila tidak disentuh
+    },
     // ===== LOGO CUSTOMER (layar 02 Company Profile) =====
     // "step"       = geser 1 logo, berhenti sebentar, lalu geser lagi (mudah dibaca)
     // "continuous" = berjalan pelan tanpa henti
@@ -524,6 +548,55 @@
     window.addEventListener('resize', refresh, { passive: true });
   }
 
+  /* ---------------------------------------------------------------------
+     MERCH QUEST — tombol di header + pop-up QR code (lihat MERCH_QUEST).
+     --------------------------------------------------------------------- */
+  function installMerchQuest() {
+    const M = TOTEM_CUSTOM.MERCH_QUEST;
+    const header = $('header.top'), fit = $('#fit');
+    if (!M || !M.enabled || !header || !fit || $('#merch-btn')) return;
+    const gift = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 21V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>';
+
+    const btn = document.createElement('button');
+    btn.id = 'merch-btn';
+    btn.className = 'merch-btn';
+    btn.type = 'button';
+    btn.innerHTML = `<span class="mq-ic">${gift}</span><span class="mq-tx"><b>${escHTML(M.button)}</b><small>${escHTML(M.buttonSub)}</small></span>`;
+    header.appendChild(btn);
+
+    const modal = document.createElement('div');
+    modal.id = 'merch-modal';
+    modal.className = 'merch-modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = `
+      <div class="mq-card" role="dialog" aria-label="${escHTML(M.kicker)}">
+        <button class="mq-close" type="button" aria-label="Tutup">&times;</button>
+        <span class="mq-kicker">${gift}${escHTML(M.kicker)}</span>
+        <h2>${richText(M.title)}</h2>
+        <p class="mq-sub">${richText(M.subtitle)}</p>
+        <div class="mq-main">
+          <div class="mq-qr"><img src="${escHTML(M.qr)}" alt="QR code merch quest"><span>${escHTML(M.scanText)}</span></div>
+          <ol class="mq-steps">${(M.steps || []).map((t) => `<li><p>${richText(t)}</p></li>`).join('')}</ol>
+        </div>
+        <img class="mq-mascot" src="${escHTML(M.mascot)}" alt="" onerror="this.remove()">
+        <button class="mq-done" type="button">TUTUP</button>
+      </div>`;
+    fit.appendChild(modal);
+
+    let timer = 0;
+    const close = () => { modal.classList.remove('on'); modal.setAttribute('aria-hidden', 'true'); clearTimeout(timer); };
+    const arm = () => { clearTimeout(timer); timer = setTimeout(close, Math.max(10000, Number(M.autoCloseMs) || 60000)); };
+    const open = () => { modal.classList.add('on'); modal.setAttribute('aria-hidden', 'false'); arm(); };
+    // Tangani di sini agar klik tidak diteruskan ke navigasi totem di belakang pop-up
+    const stop = (e) => { e.stopPropagation(); };
+    btn.addEventListener('click', (e) => { stop(e); open(); });
+    modal.addEventListener('click', (e) => {
+      stop(e);
+      if (e.target === modal || e.target.closest('.mq-close, .mq-done')) close(); else arm();
+    });
+    modal.addEventListener('pointerdown', arm);
+  }
+
   function boot() {
     installDragScroll();
     installFactorySlideshow();
@@ -532,6 +605,7 @@
     installMascotSlot();
     installLogoShine();
     installAnimatedIconFallback();
+    installMerchQuest();
   }
 
   if (document.readyState === 'loading') {
