@@ -6,6 +6,7 @@
   <title>SWIF Asia — Totem Display</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="overrides.css">
+  <link rel="stylesheet" href="assets/fonts/noto-sans-jp.css">
 </head>
 <body>
   <div id="fit">
@@ -41,6 +42,8 @@
       chain = chain.then(function () { if (i > 0 && !window.THREE) return; return lib(pair); });
     });
     chain.then(function () { return load("data.js"); })
+         .then(function () { return load("i18n-dict.js"); })
+         .then(function () { return load("i18n.js"); })
          .then(function () { return load("script.js"); })
          .then(function () { return load("overrides.js"); })
          .catch(function (e) { document.body.insertAdjacentHTML("beforeend", "<pre style='color:#fff;padding:20px'>Gagal memuat: " + e.message + "</pre>"); });

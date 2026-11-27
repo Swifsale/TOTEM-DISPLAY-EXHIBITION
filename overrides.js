@@ -96,6 +96,11 @@
     CHIP_SMELTER_MODEL: ""
   };
 
+  /* Bahasa: terjemahkan teks tips mascot & Merch Quest (lihat i18n.js / i18n-dict.js) */
+  const I18N = window.I18N || null;
+  const tr = (s) => (I18N ? I18N.t(s) : s);
+  if (I18N) { I18N.tree(TOTEM_CUSTOM.MASCOT_GUIDE); I18N.tree(TOTEM_CUSTOM.MERCH_QUEST); }
+
   const $ = (s, r = document) => r.querySelector(s);
 
   function installFactorySlideshow() {
@@ -111,7 +116,7 @@
         <div class="factory-showcase-track">
           ${photos.map((src, i) => `<div class="factory-slide${i === 0 ? ' active' : ''}"><img src="${src}" alt="Foto fasilitas dan proses manufaktur SWIF Asia" loading="eager"></div>`).join('')}
         </div>
-        <div class="factory-showcase-caption">FASILITAS & PROYEK SWIF ASIA</div>
+        <div class="factory-showcase-caption">${escHTML(tr("FASILITAS & PROYEK SWIF ASIA"))}</div>
         <div class="factory-showcase-dots">${photos.map((_, i) => `<i class="${i === 0 ? 'active' : ''}"></i>`).join('')}</div>
       </div>`;
 
@@ -218,10 +223,10 @@
 
 
   const PREVIEW_PRODUCTS = [
-    { cat: 0, prod: 0, title: 'Hybrid Melting Furnace (Tower Type)' },
-    { cat: 1, prod: 0, title: 'Chip Smelting Furnace' },
-    { cat: 2, prod: 1, title: 'T6 Rotary Heat Treatment Furnace' },
-    { cat: 3, prod: 0, title: 'Molten Transfer Device' }
+    { cat: 0, prod: 0, title: tr('Hybrid Melting Furnace (Tower Type)') },
+    { cat: 1, prod: 0, title: tr('Chip Smelting Furnace') },
+    { cat: 2, prod: 1, title: tr('T6 Rotary Heat Treatment Furnace') },
+    { cat: 3, prod: 0, title: tr('Molten Transfer Device') }
   ];
 
   function setExplorerProduct(index) {
@@ -539,7 +544,7 @@
       enableDragScroll(pks, 'y');
       const hint = document.createElement('div');
       hint.className = 'scroll-hint';
-      hint.innerHTML = 'GESER UNTUK PILIHAN LAIN <svg class="ic" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+      hint.innerHTML = escHTML(tr('GESER UNTUK PILIHAN LAIN')) + ' <svg class="ic" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
       pks.after(hint);
       pks._hint = hint;
       updateEdges(pks, 'y');
@@ -591,7 +596,7 @@
           <ol class="mq-steps">${(M.steps || []).map((t) => `<li><p>${richText(t)}</p></li>`).join('')}</ol>
         </div>
         <img class="mq-mascot" src="${escHTML(M.mascot)}" alt="" onerror="this.remove()">
-        <button class="mq-done" type="button">TUTUP</button>
+        <button class="mq-done" type="button">${escHTML(tr("TUTUP"))}</button>
       </div>`;
     fit.appendChild(modal);
 
@@ -640,8 +645,8 @@
       cancelAnimationFrame(fading);
       const t0 = performance.now(), v0 = audio.volume;
       const step = (t) => {
-        const k = fadeMs ? Math.min(1, (t - t0) / fadeMs) : 1;
-        audio.volume = v0 + (target - v0) * k;
+        const k = fadeMs ? Math.max(0, Math.min(1, (t - t0) / fadeMs)) : 1;
+        audio.volume = Math.max(0, Math.min(1, v0 + (target - v0) * k));
         if (k < 1) fading = requestAnimationFrame(step);
       };
       fading = requestAnimationFrame(step);
@@ -665,6 +670,11 @@
     installAnimatedIconFallback();
     installMerchQuest();
     installBgm();
+    if (I18N) {
+      I18N.mountSwitcher($('#fit'));
+      I18N.restoreScreen();
+      if (I18N.missing.size) console.info('i18n: teks tanpa terjemahan (' + I18N.lang + '):', [...I18N.missing]);
+    }
   }
 
   if (document.readyState === 'loading') {

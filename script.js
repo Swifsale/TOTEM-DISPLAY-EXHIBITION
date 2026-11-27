@@ -44,6 +44,8 @@ const pad = (n) => String(n).padStart(2, "0");
 const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const attr = esc;
 const bgi = (u) => (u ? `background-image:url('${attr(u)}')` : "");
+const t = window.t || ((s) => s);
+const tBr = (s) => esc(t(s)).replace(/\n/g, "<br>");
 function $(s, r) { return (r || document).querySelector(s); }
 
 /* ---- Ikon garis (24×24). Nama dipakai di data.js ---- */
@@ -193,8 +195,8 @@ const RENDER = {
           <div class="dview" id="hView"><img class="dimg" id="hImg" alt=""></div>
           ${toolsHTML()}
           ${v.callout ? `<div class="callout"><div class="cph" style="${bgi(v.callout.photo)}"></div><span>${esc(v.callout.text)}</span></div>` : ""}
-          <button class="vlink" data-cat="${v.open.cat}" data-prod="${v.open.prod}">${esc(v.link || "LIHAT DETAIL")}${ic("right")}</button>
-          <div class="vhint">${ic("hand")}GESER UNTUK MEMUTAR 3D</div>
+          <button class="vlink" data-cat="${v.open.cat}" data-prod="${v.open.prod}">${esc(v.link || t("LIHAT DETAIL"))}${ic("right")}</button>
+          <div class="vhint">${ic("hand")}${esc(t("GESER UNTUK MEMUTAR 3D"))}</div>
         </div>
         <div class="sect">${rib(p.featuresLabel)}<div class="card feats">${feats}</div></div>
       </div>`;
@@ -233,7 +235,7 @@ function pageHTML(p, i) {
 const rich = (t) => esc(t).replace(/\*([^*]+)\*/g, "<em>$1</em>");
 /** Foto, atau kotak placeholder ber-ikon bila path kosong / gagal dimuat. */
 function pic(src, icon, cls) {
-  return `<div class="pic ${src ? "" : "ph"} ${cls || ""}" style="${bgi(src)}">${src ? "" : ic(icon || "cube") + "<small>FOTO MENYUSUL</small>"}</div>`;
+  return `<div class="pic ${src ? "" : "ph"} ${cls || ""}" style="${bgi(src)}">${src ? "" : ic(icon || "cube") + `<small>${esc(t("FOTO MENYUSUL"))}</small>`}</div>`;
 }
 const checks = (arr) => (arr && arr.length ? `<ul class="chk">${arr.map((t) => `<li>${ic("check")}<span>${esc(t)}</span></li>`).join("")}</ul>` : "");
 const sectWrap = (b, inner, cls) => (b.label ? `<div class="sect ${b.grow ? "grow" : ""}">${rib(b.label, b.ribbon || "")}<div class="card ${cls || ""}">${inner}</div></div>`
@@ -293,7 +295,7 @@ const BLOCK = {
   },
   video(b) {
     const inner = b.video ? `<video src="${attr(b.video)}" ${b.poster ? `poster="${attr(b.poster)}"` : ""} muted loop playsinline preload="auto"></video>`
-      : `<div class="vph">${ic("play")}<span>Area video akan ditambahkan</span></div>`;
+      : `<div class="vph">${ic("play")}<span>${esc(t("Area video akan ditambahkan"))}</span></div>`;
     // aspect (mis. "16/9"): kotak mengikuti rasio video, tidak meregang mengisi kolom
     const ar = b.aspect ? ` style="aspect-ratio:${attr(b.aspect)}"` : "";
     return `<div class="sect ${b.grow ? "grow" : ""}">${rib(b.label, "blue")}<div class="fvid ${b.aspect ? "fixed" : ""}"${ar}>${inner}</div></div>`;
@@ -325,15 +327,15 @@ function insetHTML(n) {
   return "";
 }
 function featuredPageHTML(p, i) {
-  const t = [...(p.title || []).map((l) => `<span class="w">${esc(l)}</span>`), ...(p.accent || []).map((l) => `<span class="a">${esc(l)}</span>`), ...(p.title2 || []).map((l) => `<span class="w">${esc(l)}</span>`)].join("<br>");
+  const ttl = [...(p.title || []).map((l) => `<span class="w">${esc(l)}</span>`), ...(p.accent || []).map((l) => `<span class="a">${esc(l)}</span>`), ...(p.title2 || []).map((l) => `<span class="w">${esc(l)}</span>`)].join("<br>");
   let link = "";
   if (p.open) {
     const pr = PRODUCT_CATEGORIES[p.open.cat] && PRODUCT_CATEGORIES[p.open.cat].products[p.open.prod];
-    if (pr) link = `<button class="vlink fopen" data-cat="${p.open.cat}" data-prod="${p.open.prod}" data-from="featured">${pr.modelFile ? ic("cube") + "LIHAT 3D" : "LIHAT DETAIL"}${ic("right")}</button>`;
+    if (pr) link = `<button class="vlink fopen" data-cat="${p.open.cat}" data-prod="${p.open.prod}" data-from="featured">${pr.modelFile ? ic("cube") + esc(t("LIHAT 3D")) : esc(t("LIHAT DETAIL"))}${ic("right")}</button>`;
   }
   return `<section class="pg fp" data-i="${i}">
     <div class="hero fhero"><div class="hph" style="${bgi(p.photo)}"></div><i class="hshade"></i>
-      <div class="htx"><div class="ftag"><span>PRODUK UNGGULAN KAMI</span></div><h1>${t}</h1><i class="uline"></i>
+      <div class="htx"><div class="ftag"><span>${esc(t("PRODUK UNGGULAN KAMI"))}</span></div><h1>${ttl}</h1><i class="uline"></i>
         ${p.tagline ? `<p class="ftl">${rich(p.tagline)}</p>` : ""}${p.subtitle ? `<p class="sub">${esc(p.subtitle)}</p>` : ""}${insetHTML(p.inset)}</div>
       ${link}</div>
     <div class="body">${p.blocks.map((b) => BLOCK[b.type](b)).join("")}</div></section>`;
@@ -348,13 +350,13 @@ function productsHTML() {
       <div class="pcph" style="${bgi(c.photo)}"><div class="bch">${ic(c.icon)}<div><b>${esc(c.n)}. ${esc(c.title)}</b><em>${esc(c.accent)}</em></div></div></div>
       <div class="pcr"><p>${esc(c.desc)}</p><div class="pks">${c.products.map((p, j) =>
         `<button class="pk" data-cat="${i}" data-prod="${j}">${p.modelFile ? ic("cube") : ""}<span>${esc(p.short || p.name)}</span></button>`).join("")}</div></div></div>`).join("");
-  return `<section class="pg on t-products">${heroHTML({ tag: "3D PRODUCT EXPLORER", photo: ex.photo, title: ["PILIH PRODUK"], accent: ["UNTUK 3D VIEW"],
-      subtitle: "Sentuh produk untuk melihat model 3D interaktif, spesifikasi, dan penjelasan detail." }, "3D")}
-    <div class="body">${rows}<div class="plegend">${ic("cube")}<span>= tersedia model 3D interaktif</span></div></div></section>`;
+  return `<section class="pg on t-products">${heroHTML({ tag: t("3D PRODUCT EXPLORER"), photo: ex.photo, title: [t("PILIH PRODUK")], accent: [t("UNTUK 3D VIEW")],
+      subtitle: t("Sentuh produk untuk melihat model 3D interaktif, spesifikasi, dan penjelasan detail.") }, "3D")}
+    <div class="body">${rows}<div class="plegend">${ic("cube")}<span>${esc(t("= tersedia model 3D interaktif"))}</span></div></div></section>`;
 }
 function toolsHTML() {
   return `<div class="tools">${[["rotate", "Putar 360°", "auto"], ["zoomin", "Zoom In", "in"], ["zoomout", "Zoom Out", "out"], ["reset", "Reset", "reset"]]
-    .map(([i, t, a]) => `<button class="tl" data-v="${a}">${ic(i)}<small>${t}</small></button>`).join("")}</div>`;
+    .map(([i, lbl, a]) => `<button class="tl" data-v="${a}">${ic(i)}<small>${esc(t(lbl))}</small></button>`).join("")}</div>`;
 }
 function detailHTML() {
   return `<section class="pg on t-detail">
@@ -363,26 +365,26 @@ function detailHTML() {
     <div class="body">
       <div class="dpick" id="dPick"></div>
       <div class="viewer live grow" id="dStage">
-        <div class="vtitle" id="dVt">3D LIVE VIEW</div><div class="v3d"><span class="dot"></span><b>3D<br>LIVE</b></div>
+        <div class="vtitle" id="dVt">${esc(t("3D LIVE VIEW"))}</div><div class="v3d"><span class="dot"></span><b>3D<br>LIVE</b></div>
         <div class="dview" id="dView"><img class="dimg" id="dImg" alt=""></div>
         ${toolsHTML()}
         <div class="dbars" id="dBars"></div>
-        <div class="vhint">${ic("hand")}GESER UNTUK MEMUTAR · KEMBALI KE ISOMETRIC SETELAH ${Math.round(CONFIG.ISO_RESET_MS / 1000)} DETIK</div>
+        <div class="vhint">${ic("hand")}${esc(t("GESER UNTUK MEMUTAR · KEMBALI KE ISOMETRIC SETELAH {n} DETIK").replace("{n}", Math.round(CONFIG.ISO_RESET_MS / 1000)))}</div>
       </div>
-      <div class="sect" id="dSpecWrap">${rib("SPESIFIKASI UTAMA")}<div class="card dstats" id="dStats"></div></div>
-      <div class="sect dtext">${rib("PENJELASAN PRODUK")}<div class="card win" id="dWin"><div class="scroll" id="dScroll"></div><i class="fade t"></i><i class="fade b"></i><div class="bar"><i id="dThumb"></i></div></div></div>
+      <div class="sect" id="dSpecWrap">${rib(t("SPESIFIKASI UTAMA"))}<div class="card dstats" id="dStats"></div></div>
+      <div class="sect dtext">${rib(t("PENJELASAN PRODUK"))}<div class="card win" id="dWin"><div class="scroll" id="dScroll"></div><i class="fade t"></i><i class="fade b"></i><div class="bar"><i id="dThumb"></i></div></div></div>
     </div></section>`;
 }
 function footerHTML() {
   return `<footer id="nav"><i class="fwave"></i>
     <div class="btns">
-      <button class="nb" data-act="home">${ic("home")}<span>HOME</span></button>
-      <button class="nb" data-act="back">${ic("left")}<span>BACK</span></button>
-      <button class="nb xfeat" data-act="featured">${ic("layers")}<span>PRODUK<br>UNGGULAN</span></button>
-      <button class="nb x3d" data-act="products">${ic("cube")}<span>3D PRODUCT<br>EXPLORER</span></button>
-      <button class="nb" data-act="next" id="bNext">${ic("right")}<span>NEXT</span></button>
+      <button class="nb" data-act="home">${ic("home")}<span>${tBr("HOME")}</span></button>
+      <button class="nb" data-act="back">${ic("left")}<span>${tBr("BACK")}</span></button>
+      <button class="nb xfeat" data-act="featured">${ic("layers")}<span>${tBr("PRODUK\nUNGGULAN")}</span></button>
+      <button class="nb x3d" data-act="products">${ic("cube")}<span>${tBr("3D PRODUCT\nEXPLORER")}</span></button>
+      <button class="nb" data-act="next" id="bNext">${ic("right")}<span>${tBr("NEXT")}</span></button>
     </div>
-    <div class="scr"><i></i><span id="scrLbl">SCREEN 01 / 08</span><i></i></div>
+    <div class="scr"><i></i><span id="scrLbl">${esc(t("SCREEN"))} 01 / 08</span><i></i></div>
     <div class="dots" id="dots"></div>
   </footer>`;
 }
@@ -435,18 +437,18 @@ function syncFooter() {
   const dots = els.dots, lbl = $("#scrLbl"), next = $("#bNext");
   next.classList.remove("off");
   if (S.mode === "home") {
-    lbl.textContent = `SCREEN ${pad(S.cur + 1)} / ${pad(HOME_PAGES.length)}`;
+    lbl.textContent = `${t("SCREEN")} ${pad(S.cur + 1)} / ${pad(HOME_PAGES.length)}`;
     dots.innerHTML = HOME_PAGES.map((_, k) => `<i class="${k === S.cur ? "on" : ""}"><u></u></i>`).join("");
   } else if (S.mode === "featured") {
-    lbl.textContent = `PRODUK UNGGULAN ${pad(S.feat + 1)} / ${pad(FEATURED_PAGES.length)}`;
+    lbl.textContent = `${t("PRODUK UNGGULAN")} ${pad(S.feat + 1)} / ${pad(FEATURED_PAGES.length)}`;
     dots.innerHTML = FEATURED_PAGES.map((_, k) => `<i class="${k === S.feat ? "on" : ""}"><u></u></i>`).join("");
   } else if (S.mode === "products") {
-    lbl.textContent = "3D PRODUCT EXPLORER · PILIH PRODUK";
+    lbl.textContent = t("3D PRODUCT EXPLORER · PILIH PRODUK");
     dots.innerHTML = "";
     next.classList.add("off");
   } else {
     const c = PRODUCT_CATEGORIES[S.cat];
-    lbl.textContent = `PRODUK ${pad(S.prod + 1)} / ${pad(c.products.length)}  ·  ${c.menu.toUpperCase()}`;
+    lbl.textContent = `${t("PRODUK")} ${pad(S.prod + 1)} / ${pad(c.products.length)}  ·  ${c.menu.toUpperCase()}`;
     dots.innerHTML = c.products.map((_, k) => `<i class="${k === S.prod ? "on" : ""}"><u></u></i>`).join("");
   }
   document.querySelectorAll("#nav .x3d").forEach((b) => b.classList.toggle("act", S.mode === "products" || S.mode === "detail"));
