@@ -663,6 +663,8 @@ function getGLTFLoader() {
   if (gltfLoader) return gltfLoader;
   gltfLoader = new THREE.GLTFLoader();
   if (THREE.DRACOLoader) { const d = new THREE.DRACOLoader(); d.setDecoderPath(CONFIG.DRACO_PATH); gltfLoader.setDRACOLoader(d); }
+  // Model yang dikompres Meshopt (EXT_meshopt_compression, mis. hasil glTF-Transform) butuh decoder ini
+  if (typeof MeshoptDecoder !== "undefined") gltfLoader.setMeshoptDecoder(MeshoptDecoder);
   return gltfLoader;
 }
 function normalizeObject(obj) {
