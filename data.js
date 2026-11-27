@@ -503,7 +503,7 @@ const PRODUCT_CATEGORIES = [
         ] },
       { name: "Ladle Pre-Heat", short: "Ladle Pre-Heat", metrics: SKOR(80, 80, 80),
         desc: "Ladle Transfer merupakan proses pemindahan logam cair menggunakan wadah khusus (ladle) yang dirancang untuk menahan temperatur tinggi dan menjaga keamanan operasional. Sistem ini digunakan untuk mentransfer logam cair dari melting furnace menuju holding furnace atau mesin pengecoran (casting machine). Proses transfer dikendalikan untuk meminimalkan kehilangan panas, mencegah tumpahan, serta mengurangi risiko oksidasi dan kontaminasi logam cair. Ladle Transfer banyak diaplikasikan pada industri pengecoran aluminium dan manufaktur komponen logam.",
-        modelFile: "models/LADDLE.glb", image: "", specs: [
+        modelFile: "models/LADDLE.stl", image: "", specs: [
           { label: "Kapasitas", value: "Up to 2000 kg" },
           { label: "Program", value: "PLC/HMI" },
           { label: "Transfer Speed", value: "Up to 50 m/min" },
