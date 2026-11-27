@@ -50,11 +50,13 @@
     },
 
     /* ===== MERCH QUEST — tombol "side quest" merchandise di header =====
-       Tombol membuka pop-up berisi QR code. Pengunjung scan dengan HP
-       (campaign memakai Instagram Story, jadi dikerjakan di HP, bukan di totem).
-       Ganti URL? Buat ulang QR: assets/merch/qr-campaign.svg */
+       mode "tab": tombol membuka halaman campaign di TAB BARU pada totem.
+                   Tab yang sama dipakai ulang, jadi tap berulang tidak membuka banyak tab.
+       mode "qr" : tombol membuka pop-up QR code untuk di-scan dengan HP
+                   (QR: assets/merch/qr-campaign.svg — buat ulang bila URL berubah). */
     MERCH_QUEST: {
       enabled: true,
+      mode: "tab",
       url: "https://swifsale.github.io/Campaign-For-Merch/",
       qr: "assets/merch/qr-campaign.svg",
       button: "GET MERCH",        // tulisan besar di tombol header
@@ -589,7 +591,13 @@
     const open = () => { modal.classList.add('on'); modal.setAttribute('aria-hidden', 'false'); arm(); };
     // Tangani di sini agar klik tidak diteruskan ke navigasi totem di belakang pop-up
     const stop = (e) => { e.stopPropagation(); };
-    btn.addEventListener('click', (e) => { stop(e); open(); });
+    btn.addEventListener('click', (e) => {
+      stop(e);
+      if (M.mode === 'qr') { open(); return; }
+      // Tab bernama tetap: tap berikutnya memakai & memfokuskan tab yang sama
+      const w = window.open(M.url, 'swifa-merch-quest');
+      if (!w) location.href = M.url;   // jika pop-up diblokir, buka di tab ini
+    });
     modal.addEventListener('click', (e) => {
       stop(e);
       if (e.target === modal || e.target.closest('.mq-close, .mq-done')) close(); else arm();
