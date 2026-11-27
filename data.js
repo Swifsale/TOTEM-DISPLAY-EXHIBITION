@@ -280,7 +280,8 @@ const FEATURED_PAGES = [
     subtitle: "Solusi melting aluminium briquette dengan sistem vortex melting yang ringkas dan efisien.",
     photo: "assets/company/13.jpg",
     // (tanpa tombol 3D: Briquette Melting System belum punya model 3D)
-    inset: { type: "photo", photo: "", icon: "cube", label: "Aluminium Briquette (Chips)" },
+    inset: { type: "text", icon: "cube", kicker: "BAHAN BAKU", label: "Aluminium Briquette (Chips)",
+             text: "Chip sisa machining yang dipadatkan, langsung dilebur *tanpa pretreatment line terpisah*." },
     blocks: [
       { type: "banner", icon: "recycle", text: "TANPA PRETREATMENT LINE TERPISAH", accent: "LEBIH RINGKAS – LEBIH SEDIKIT EQUIPMENT" },
       { type: "stats", items: [

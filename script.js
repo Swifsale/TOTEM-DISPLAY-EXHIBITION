@@ -319,6 +319,8 @@ function insetHTML(n) {
     `<div class="pi ${x.tone}">${ic(x.icon)}<b>${esc(x.title)}</b><em>${esc(x.sub)}</em><span>${esc(x.text)}</span></div>`).join(`<i class="plus">+</i>`)}</div></div>`;
   if (n.type === "photo") return `<div class="finset ph2">${pic(n.photo, n.icon)}<b>${esc(n.label)}</b></div>`;
   if (n.type === "note") return `<div class="finset note"><i></i><p>${esc(n.text)}</p></div>`;
+  // Kartu teks saja (tanpa foto): label kecil + judul + penjelasan singkat
+  if (n.type === "text") return `<div class="finset ftext">${ic(n.icon || "cube")}<div>${n.kicker ? `<small>${esc(n.kicker)}</small>` : ""}<b>${esc(n.label)}</b>${n.text ? `<p>${rich(n.text)}</p>` : ""}</div></div>`;
   if (n.type === "stat") return `<div class="finset fstat">${ic("chart")}<div><b>${esc(n.value)}</b><em>${esc(n.accent)}</em><small>${esc(n.note)}</small></div></div>`;
   return "";
 }

@@ -448,6 +448,12 @@ body[data-mode="products"] .dots i u,body[data-mode="detail"] .dots i u{display:
 .finset.ph2{display:flex;align-items:center;gap:14px;width:440px;background:rgba(255,255,255,.95);border-radius:18px;padding:10px;box-shadow:0 10px 24px rgba(0,0,0,.3)}
 .finset.ph2 .pic{width:240px;height:120px;border-radius:12px;flex:none}
 .finset.ph2 b{font:italic 800 20px/1.2 "Mont";color:var(--navy)}
+.finset.ftext{display:flex;align-items:center;gap:18px;width:520px;background:rgba(255,255,255,.95);border-radius:18px;padding:18px 22px;box-shadow:0 10px 24px rgba(0,0,0,.3)}
+.finset.ftext>.ic{flex:none;width:64px;height:64px;padding:14px;border-radius:16px;background:var(--navy);color:var(--yellow);stroke-width:2}
+.finset.ftext small{display:inline-block;margin-bottom:6px;padding:4px 10px;border-radius:7px;background:var(--red);color:#fff;font:italic 900 12px/1 "Mont";letter-spacing:.8px}
+.finset.ftext b{display:block;font:italic 900 22px/1.15 "Mont";color:var(--navy)}
+.finset.ftext p{margin-top:6px;font:600 15px/1.35 "Mont";color:#3A4A70}
+.finset.ftext p em{font-style:normal;font-weight:800;color:var(--red)}
 .finset.note{display:flex;gap:14px;width:420px;background:rgba(255,255,255,.95);border-radius:18px;padding:16px 18px;box-shadow:0 10px 24px rgba(0,0,0,.3)}
 .finset.note i{width:7px;flex:none;background:var(--red);transform:skewX(-14deg);border-radius:2px}
 .finset.note p{font:italic 700 19px/1.3 "Mont";color:var(--navy)}
