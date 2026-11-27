@@ -442,7 +442,7 @@ const PRODUCT_CATEGORIES = [
     photo: "assets/company/13.jpg",
     desc: "Solusi daur ulang aluminium untuk pemanfaatan material yang lebih optimal, hemat energi dan ramah lingkungan.",
     products: [
-      { name: "Chip Smelter Melting Furnace", short: "Chip Smelter", metrics: SKOR(80, 80, 80),
+      { name: "Chip Smelter Melting Furnace", short: "Chip Smelter", metrics: SKOR(90, 70, 85),
         desc: "Melting furnace khusus untuk material berbentuk chip/serpihan logam.", modelFile: "models/CHIP_SMELTER.glb", image: "", specs: [] },
     ],
   },
@@ -453,7 +453,7 @@ const PRODUCT_CATEGORIES = [
     desc: "Furnace untuk proses solution, aging (T4/T5/T6/T7) dengan kontrol temperatur presisi dan hasil yang konsisten.",
     products: [
       {
-        name: "T6 Batch Heat Treatment Furnace", short: "T6 Batch", metrics: SKOR(90, 85, 90),
+        name: "T6 Batch Heat Treatment Furnace", short: "T6 Batch", metrics: SKOR(95, 85, 80),
         desc: "Roller Hearth Type — heat treatment kontinu untuk komponen compressor. Re-circulated hot air memanfaatkan panas buangan exhaust untuk pre-heating, mengoptimalkan efisiensi energi. Combustion system dirancang dengan standar keselamatan tinggi.",
         modelFile: "models/BATCH_TYPE.glb", modelRotation: { x: 0, y: 0, z: 0 }, image: "",
         specs: [
@@ -464,7 +464,7 @@ const PRODUCT_CATEGORIES = [
         ],
       },
       {
-        name: "T6 Rotary Heat Treatment Furnace", short: "T6 Rotary", metrics: SKOR(80, 80, 80),
+        name: "T6 Rotary Heat Treatment Furnace", short: "T6 Rotary", metrics: SKOR(90, 85, 82),
         desc: "T6 merupakan proses perlakuan panas (heat treatment) pada aluminium yang bertujuan meningkatkan kekuatan, kekerasan, dan sifat mekanis material. Proses ini terdiri dari pemanasan (solution heat treatment), pendinginan cepat (quenching), dan pemanasan kembali (artificial aging). Melalui proses ini, komponen aluminium dapat memiliki ketahanan dan kualitas yang lebih baik. T6 banyak digunakan pada industri otomotif dan manufaktur yang membutuhkan komponen aluminium berkekuatan tinggi.",
         // File CAD ini rebah ke samping → diputar x:90 agar berdiri tegak (alas di bawah, burner di atas)
         modelFile: "models/ROTARY_HT.glb", modelRotation: { x: 90, y: 0, z: 0 }, image: "",
@@ -476,7 +476,7 @@ const PRODUCT_CATEGORIES = [
         ],
       },
       {
-        name: "Annealing Furnace", short: "Annealing", metrics: SKOR(80, 80, 80),
+        name: "Annealing Furnace", short: "Annealing", metrics: SKOR(95, 87, 78),
         desc: "Annealing Furnace merupakan peralatan perlakuan panas (heat treatment) yang berfungsi memanaskan material logam pada temperatur dan holding time tertentu, diikuti proses pendinginan terkontrol. Proses ini bertujuan mengurangi tegangan sisa (residual stress), meningkatkan keuletan (ductility), serta mengoptimalkan struktur mikro material. Pengendalian temperatur dan laju pendinginan dilakukan untuk memperoleh sifat mekanis sesuai spesifikasi teknis. Annealing Furnace banyak diaplikasikan pada industri pengecoran, otomotif, dan manufaktur komponen logam.",
         modelFile: "models/ANNEALING.glb", image: "",
         specs: [
@@ -494,7 +494,7 @@ const PRODUCT_CATEGORIES = [
     photo: "assets/company/7.jpg",
     desc: "Berbagai furnace non-aluminium dan peralatan pendukung sesuai kebutuhan proses industri Anda.",
     products: [
-      { name: "Molten Transfer Device", short: "Molten Transfer", metrics: SKOR(80, 80, 80),
+      { name: "Molten Transfer Device", short: "Molten Transfer", metrics: SKOR(98, 85, 85),
         desc: "Molten Transfer merupakan proses pemindahan logam cair dari melting furnace menuju holding furnace atau mesin pengecoran (casting machine) dengan menggunakan sistem transfer khusus. Proses ini dirancang untuk menjaga kestabilan temperatur, meminimalkan kehilangan panas, serta mengurangi risiko oksidasi dan kontaminasi selama pemindahan. Pengendalian aliran dan temperatur logam cair menjadi faktor penting dalam menjaga kualitas material dan konsistensi produksi. Sistem Molten Transfer banyak diaplikasikan pada industri pengecoran aluminium dan manufaktur komponen logam.",
         modelFile: "models/MOLTEN.glb", image: "", specs: [
           { label: "Kapasitas", value: "Up to 500 kg" },
