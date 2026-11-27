@@ -595,8 +595,10 @@
       stop(e);
       if (M.mode === 'qr') { open(); return; }
       // Tab bernama tetap: tap berikutnya memakai & memfokuskan tab yang sama
-      const w = window.open(M.url, 'swifa-merch-quest');
-      if (!w) location.href = M.url;   // jika pop-up diblokir, buka di tab ini
+      // ?from=totem → halaman campaign menampilkan tombol "Kembali ke Totem"
+      const url = M.url + (M.url.includes('?') ? '&' : '?') + 'from=totem';
+      const w = window.open(url, 'swifa-merch-quest');
+      if (!w) location.href = url;     // jika pop-up diblokir, buka di tab ini
     });
     modal.addEventListener('click', (e) => {
       stop(e);
