@@ -344,7 +344,9 @@ const FEATURED_PAGES = [
     blocks: [
       { type: "cols", grow: true, items: [
         { type: "stack", items: [
-          { type: "video", label: "VIDEO OPERASIONAL", video: "", poster: "", grow: true },   // video: "assets/video/kamogawa.mp4"
+          // Video horizontal 16:9 (848×478) — kotak mengikuti rasio video agar tidak terpotong
+          { type: "video", label: "VIDEO OPERASIONAL", video: "assets/video/kamogawa.mp4", poster: "assets/video/kamogawa-poster.jpg", aspect: "848/478" },
+          { type: "photo", label: "UNIT DI LAPANGAN", photo: "assets/home/molten-pump.jpeg", focus: "center 28%", caption: "Molten pump SWIF ASIA terpasang di lini produksi customer", grow: true },
           { type: "techinfo", label: "INFORMASI TEKNIS", items: [
             { icon: "gear", text: "Tipe Impeller Pump" },
             { icon: "heat", text: "Kedalaman Aluminium Maks.", value: "±500 mm" },

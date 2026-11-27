@@ -294,7 +294,14 @@ const BLOCK = {
   video(b) {
     const inner = b.video ? `<video src="${attr(b.video)}" ${b.poster ? `poster="${attr(b.poster)}"` : ""} muted loop playsinline preload="auto"></video>`
       : `<div class="vph">${ic("play")}<span>Area video akan ditambahkan</span></div>`;
-    return `<div class="sect ${b.grow ? "grow" : ""}">${rib(b.label, "blue")}<div class="fvid">${inner}</div></div>`;
+    // aspect (mis. "16/9"): kotak mengikuti rasio video, tidak meregang mengisi kolom
+    const ar = b.aspect ? ` style="aspect-ratio:${attr(b.aspect)}"` : "";
+    return `<div class="sect ${b.grow ? "grow" : ""}">${rib(b.label, "blue")}<div class="fvid ${b.aspect ? "fixed" : ""}"${ar}>${inner}</div></div>`;
+  },
+  photo(b) {
+    // Foto pengisi bergaya kartu; focus = posisi fokus foto (CSS background-position)
+    const pos = b.focus ? `;background-position:${attr(b.focus)}` : "";
+    return `<div class="sect ${b.grow ? "grow" : ""}">${rib(b.label, b.ribbon || "")}<div class="fphoto" style="${bgi(b.photo)}${pos}">${b.caption ? `<span class="fpcap">${esc(b.caption)}</span>` : ""}</div></div>`;
   },
   techinfo(b) {
     return sectWrap(b, `<div class="ftech">${b.items.map((x) => `<div class="ti">${ic(x.icon)}<div><span>${esc(x.text)}</span>${x.value ? `<b>${esc(x.value)}</b>` : ""}</div></div>`).join("<i class='vs'></i>")}</div>`);
