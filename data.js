@@ -121,7 +121,7 @@ const HOME_PAGES = [
         desc: "Desain dan integrasi combustion system dengan standar keselamatan tinggi untuk operasi yang aman dan stabil." },
       { icon: "pump", photo: "assets/home/molten-pump.jpeg", title: "MOLTEN PUMP",
         desc: "Transfer molten aluminium ke ladle secara lebih aman, stabil dan terkendali." },
-      { icon: "robot", photo: "assets/home/molten-transfer.jpeg", title: "AUTOMATIC MOLTEN TRANSFER",
+      { icon: "robot", photo: "assets/home/automatic-molten-transfer.jpg", title: "AUTOMATIC MOLTEN TRANSFER",
         desc: "Pemindahan molten aluminium secara otomatis untuk meminimalkan risiko dan paparan operator." },
       { icon: "shield", photo: "assets/company/12.jpg", title: "GAS DETECTION & EARTHQUAKE INTERLOCK",
         desc: "Deteksi kebocoran gas dan gempa yang terintegrasi dengan sistem interlock untuk penghentian operasi furnace secara otomatis." },
@@ -264,7 +264,7 @@ const FEATURED_PAGES = [
           points: ["Mengurangi oksidasi dan pembentukan dross", "Temperatur holding lebih stabil", "Kualitas molten aluminium lebih baik"] },
         { title: "DESAIN COMPACT", icon: "move", color: "blue", photo: "assets/company/5.jpg", overlay: "21% DOWN",
           points: ["±21% pengurangan footprint (vs. standard furnace)", "Desain tower yang ringkas dan efisien"] },
-        { title: "KONTROL TEMPERATUR PRESISI", icon: "heat", color: "blue", photo: "assets/home/assembly.jpg",
+        { title: "KONTROL TEMPERATUR PRESISI", icon: "heat", color: "blue", photo: "assets/home/holding-molten-direct-heating.jpg",
           big: "±3°C", bigLabel: "Kontrol temperatur holding", note: "(hasil aktual)",
           points: ["Pemanasan langsung pada molten", "Temperatur lebih stabil dan konsisten"] },
       ] },
@@ -439,7 +439,7 @@ const PRODUCT_CATEGORIES = [
   {
     n: "2", icon: "recycle", title: "ALUMINIUM", accent: "RECYCLING",
     menu: "Aluminium Recycling",
-    photo: "assets/company/13.jpg",
+    photo: "assets/home/aluminium-recycling-furnace.jpg",
     desc: "Solusi daur ulang aluminium untuk pemanfaatan material yang lebih optimal, hemat energi dan ramah lingkungan.",
     products: [
       { name: "Chip Smelter Melting Furnace", short: "Chip Smelter", metrics: SKOR(90, 70, 85),
