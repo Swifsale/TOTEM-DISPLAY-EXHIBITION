@@ -446,7 +446,7 @@ const PRODUCT_CATEGORIES = [
     desc: "Solusi daur ulang aluminium untuk pemanfaatan material yang lebih optimal, hemat energi dan ramah lingkungan.",
     products: [
       { name: "Chip Smelter Melting Furnace", short: "Chip Smelter", metrics: SKOR(90, 70, 85),
-        desc: "Melting furnace khusus untuk material berbentuk chip/serpihan logam.", modelFile: "models/CHIP_SMELTER.glb", image: "", specs: [] },
+        desc: "Melting furnace khusus untuk material berbentuk chip/serpihan logam.", modelFile: "models/CHIP_SMELTER.glb", modelRotation: { x: 90, y: 0, z: 0 }, image: "", specs: [] },   // file CAD rebah → x:90 agar alas di bawah
     ],
   },
   {
